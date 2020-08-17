@@ -1,29 +1,32 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const { db, fixtures, fabricate, empty } = require("../../../test/helpers/db")
-const app = require("../../../")
-const request = require("superagent")
-const { ObjectId } = require("mongojs")
+import { ObjectId } from "mongojs"
+import request from "superagent"
+const {
+  db,
+  fixtures,
+  fabricate,
+  empty,
+} = require("../../../test/helpers/db.coffee")
+const app = require("../../../index.coffee")
 
-describe("articles endpoints", function() {
-  beforeEach(function(done) {
+describe("articles endpoints", () => {
+  let user
+  let server
+  let token
+  beforeEach(done => {
     empty(() => {
-      this.token = fixtures().users.access_token
-      fabricate("users", {}, (err, user) => {
+      token = fixtures().users.access_token
+      fabricate("users", {}, (err, u) => {
         if (err) {
           done(err)
         }
-        this.user = user
-        this.server = app.listen(5000, () => done())
+        user = u
+        server = app.listen(5000, () => done())
       })
     })
   })
 
-  afterEach(function() {
-    this.server.close()
+  afterEach(() => {
+    server.close()
   })
 
   describe("as a non-logged in user", () =>
@@ -35,15 +38,15 @@ describe("articles endpoints", function() {
           { title: "Flowers on Flowers The Sequel", published: true },
           { published: false },
         ],
-        function(err, articles) {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .get("http://localhost:5000/articles?count=true")
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .end((error, res) => {
+              if (error) {
+                done(error)
               }
               res.body.total.should.equal(3)
               res.body.count.should.equal(2)
@@ -55,21 +58,21 @@ describe("articles endpoints", function() {
         }
       )))
 
-  describe("as a non-admin", function() {
-    beforeEach(function(done) {
-      this.normieToken =
+  describe("as a non-admin", () => {
+    let normieToken
+    beforeEach(done => {
+      normieToken =
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCIsInR5cGUiOiJVc2VyIn0.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwidHlwZSI6IlVzZXIiLCJwYXJ0bmVyX2lkcyI6W10sImlhdCI6MTUxNjIzOTAyMn0.1ONei7j20cbeusjWiUvTt-CTDCdpewnj3mbmIA_-Hbs"
-       fabricate(
+      fabricate(
         "users",
         {
           type: "User",
           name: "Normie",
-          access_token: this.normieToken,
+          access_token: normieToken,
           has_partner_access: false,
           _id: undefined,
         },
-        (err, normie) => {
-          this.normie = normie
+        (err, _normie) => {
           if (err) {
             done(err)
           }
@@ -78,12 +81,12 @@ describe("articles endpoints", function() {
       )
     })
 
-    it("does not allow featuring", function(done) {
+    it("does not allow featuring", done => {
       request
         .post("http://localhost:5000/articles")
-        .set({ "X-Access-Token": this.normieToken })
+        .set({ "X-Access-Token": normieToken })
         .send({ featured: true })
-        .end(function(err, res) {
+        .end((err, res) => {
           err.status.should.equal(401)
           res.body.message.should.containEql("must be an admin")
           done()
@@ -101,34 +104,34 @@ describe("articles endpoints", function() {
             published: false,
           },
         ],
-        function(err, articles) {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .get("http://localhost:5000/articles/5086df098523e60002000012")
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .end((error, _res) => {
+              if (error) {
+                done(error)
               }
-              err.status.should.equal(404)
+              error.status.should.equal(404)
               done()
             })
         }
       ))
   })
 
-  describe("as a channel member", function() {
-    it("creates articles", function(done) {
+  describe("as a channel member", () => {
+    it("creates articles", done => {
       request
         .post("http://localhost:5000/articles")
-        .set({ "X-Access-Token": this.token })
+        .set({ "X-Access-Token": token })
         .send({
           title: "Hi",
           partner_channel_id: "5086df098523e60002000012",
           author_id: "5086df098523e60002000012",
         })
-        .end(function(err, res) {
+        .end((err, res) => {
           if (err) {
             done(err)
           }
@@ -137,28 +140,28 @@ describe("articles endpoints", function() {
         })
     })
 
-    it("gets a list of articles by author", function(done) {
+    it("gets a list of articles by author", done => {
       fabricate(
         "articles",
         [
-          { title: "Flowers on Flowers", author_id: this.user._id },
-          { title: "Flowers on Flowers The Sequel", author_id: this.user._id },
+          { title: "Flowers on Flowers", author_id: user._id },
+          { title: "Flowers on Flowers The Sequel", author_id: user._id },
           {},
         ],
-        (err, articles) => {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .get(
               `http://localhost:5000/articles?author_id=${
-                this.user._id
+                user._id
               }&published=true&count=true`
             )
-            .set({ "X-Access-Token": this.token })
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
               }
               res.body.total.should.equal(3)
               res.body.count.should.equal(2)
@@ -171,7 +174,7 @@ describe("articles endpoints", function() {
       )
     })
 
-    it("gets a list of articles by channel", function(done) {
+    it("gets a list of articles by channel", done => {
       fabricate(
         "articles",
         [
@@ -181,7 +184,7 @@ describe("articles endpoints", function() {
             published: true,
           },
         ],
-        (err, articles) => {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
@@ -189,10 +192,10 @@ describe("articles endpoints", function() {
             .get(
               "http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true"
             )
-            .set({ "X-Access-Token": this.token })
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
               }
               res.body.total.should.equal(1)
               res.body.count.should.equal(1)
@@ -211,21 +214,21 @@ describe("articles endpoints", function() {
           { title: "Flowers on Flowers The Sequel", published: true },
           { published: false },
         ],
-        function(err, articles) {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .get("http://localhost:5000/articles?published=false")
-            .end(function(err, res) {
-              err.message.should.containEql("Unauthorized")
+            .end((error, res) => {
+              error.message.should.containEql("Unauthorized")
               res.body.message.should.containEql("published=true")
               done()
             })
         }
       ))
 
-    it("gets a single article", function(done) {
+    it("gets a single article", done => {
       fabricate(
         "articles",
         [
@@ -241,16 +244,16 @@ describe("articles endpoints", function() {
             published: true,
           },
         ],
-        (err, articles) => {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .get("http://localhost:5000/articles/5086df098523e60002000012")
-            .set({ "X-Access-Token": this.token })
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
               }
               res.body.sections[0].type.should.equal("text")
               res.body.sections[0].body.should.equal("Cows on the lawn")
@@ -261,7 +264,7 @@ describe("articles endpoints", function() {
       )
     })
 
-    it("gets a single article of a draft", function(done) {
+    it("gets a single article of a draft", done => {
       fabricate(
         "articles",
         [
@@ -272,16 +275,16 @@ describe("articles endpoints", function() {
             published: false,
           },
         ],
-        (err, articles) => {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .get("http://localhost:5000/articles/5086df098523e60002000012")
-            .set({ "X-Access-Token": this.token })
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
               }
               res.body.title.should.equal("Cows on the prarie")
               done()
@@ -290,7 +293,7 @@ describe("articles endpoints", function() {
       )
     })
 
-    it("updates an article", function(done) {
+    it("updates an article", done => {
       fabricate(
         "articles",
         [
@@ -301,7 +304,7 @@ describe("articles endpoints", function() {
             partner_channel_id: ObjectId("5086df098523e60002000012"),
           },
         ],
-        (err, articles) => {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
@@ -312,10 +315,10 @@ describe("articles endpoints", function() {
               author_id: "5086df098523e60002000012",
               channel_id: "5086df098523e60002000013",
             })
-            .set({ "X-Access-Token": this.token })
-            .end(function(err, res) {
-              if (err) {
-                done(err)
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
               }
               res.body.title.should.equal("Hellow Wrld")
               done()
@@ -324,7 +327,7 @@ describe("articles endpoints", function() {
       )
     })
 
-    it("deletes an article", function(done) {
+    it("deletes an article", done => {
       fabricate(
         "articles",
         [
@@ -335,20 +338,20 @@ describe("articles endpoints", function() {
             partner_channel_id: ObjectId("5086df098523e60002000012"),
           },
         ],
-        (err, articles) => {
+        (err, _articles) => {
           if (err) {
             done(err)
           }
           request
             .del("http://localhost:5000/articles/5086df098523e60002000012")
-            .set({ "X-Access-Token": this.token })
-            .end((err, res) => {
-              if (err) {
-                done(err)
+            .set({ "X-Access-Token": token })
+            .end((error, _res) => {
+              if (error) {
+                done(error)
               }
-              db.articles.count(function(err, count) {
-                if (err) {
-                  done(err)
+              db.articles.count((e, count) => {
+                if (e) {
+                  done(e)
                 }
                 count.should.equal(1)
                 done()

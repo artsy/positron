@@ -1,4 +1,3 @@
-// @ts-check
 import { ObjectId } from "mongojs"
 import { toQuery } from "../../model/retrieve"
 
@@ -9,11 +8,11 @@ describe("Retrieve", () => {
         all_by_author: ObjectId("5086df098523e60002000017"),
         published: true,
       })
-      query["$or"][0].author_id.should.containEql(
+      query.$or[0].author_id.should.containEql(
         ObjectId("5086df098523e60002000017")
       )
-      query["$or"][1].contributing_authors["$elemMatch"].should.be.ok()
-      query["$or"][1].contributing_authors["$elemMatch"].id.should.containEql(
+      query.$or[1].contributing_authors.$elemMatch.should.be.ok()
+      query.$or[1].contributing_authors.$elemMatch.id.should.containEql(
         ObjectId("5086df098523e60002000017")
       )
     })
@@ -33,13 +32,13 @@ describe("Retrieve", () => {
         artist_id: "5086df098523e60002000016",
         published: true,
       })
-      query["$or"][0].primary_featured_artist_ids.should.containEql(
+      query.$or[0].primary_featured_artist_ids.should.containEql(
         ObjectId("5086df098523e60002000016")
       )
-      query["$or"][1].featured_artist_ids.should.containEql(
+      query.$or[1].featured_artist_ids.should.containEql(
         ObjectId("5086df098523e60002000016")
       )
-      query["$or"][2].biography_for_artist_id.should.containEql(
+      query.$or[2].biography_for_artist_id.should.containEql(
         ObjectId("5086df098523e60002000016")
       )
     })
@@ -50,7 +49,7 @@ describe("Retrieve", () => {
         published: true,
       })
       query.hasOwnProperty("thumbnail_title").should.be.true()
-      query.thumbnail_title["$regex"].should.be.ok()
+      query.thumbnail_title.$regex.should.be.ok()
     })
 
     it("ignores q if it is empty", () => {
@@ -66,10 +65,10 @@ describe("Retrieve", () => {
         has_video: true,
         published: true,
       })
-      query["$or"][1]["hero_section.type"].should.be.ok()
-      query["$or"][1]["hero_section.type"].should.equal("video")
-      query["$or"][0].sections["$elemMatch"].should.be.ok()
-      query["$or"][0].sections["$elemMatch"].type.should.equal("video")
+      query.$or[1]["hero_section.type"].should.be.ok()
+      query.$or[1]["hero_section.type"].should.equal("video")
+      query.$or[0].sections.$elemMatch.should.be.ok()
+      query.$or[0].sections.$elemMatch.type.should.equal("video")
     })
 
     it("aggregates the query for has_published_media", () => {
@@ -78,9 +77,9 @@ describe("Retrieve", () => {
         published: true,
         has_published_media: true,
       })
-      query["$or"][0].layout.should.be.ok()
-      query["$or"][0].layout.should.equal("video")
-      query["$or"][0]["media.published"].should.equal(true)
+      query.$or[0].layout.should.be.ok()
+      query.$or[0].layout.should.equal("video")
+      query.$or[0]["media.published"].should.equal(true)
     })
 
     it("finds articles by multiple fair ids", () => {
@@ -88,11 +87,11 @@ describe("Retrieve", () => {
         fair_ids: ["5086df098523e60002000016", "5086df098523e60002000015"],
         published: true,
       })
-      query.fair_ids["$elemMatch"].should.be.ok()
-      query.fair_ids["$elemMatch"]["$in"][0].should.containEql(
+      query.fair_ids.$elemMatch.should.be.ok()
+      query.fair_ids.$elemMatch.$in[0].should.containEql(
         ObjectId("5086df098523e60002000016")
       )
-      query.fair_ids["$elemMatch"]["$in"][1].should.containEql(
+      query.fair_ids.$elemMatch.$in[1].should.containEql(
         ObjectId("5086df098523e60002000015")
       )
     })
@@ -102,24 +101,20 @@ describe("Retrieve", () => {
         ids: ["54276766fd4f50996aeca2b8", "54276766fd4f50996aeca2b7"],
         published: true,
       })
-      query._id["$in"].should.be.ok()
-      query._id["$in"][0].should.containEql(
-        ObjectId("54276766fd4f50996aeca2b8")
-      )
-      query._id["$in"][1].should.containEql(
-        ObjectId("54276766fd4f50996aeca2b7")
-      )
+      query._id.$in.should.be.ok()
+      query._id.$in[0].should.containEql(ObjectId("54276766fd4f50996aeca2b8"))
+      query._id.$in[1].should.containEql(ObjectId("54276766fd4f50996aeca2b7"))
     })
 
     it("finds articles in editorial feed", () => {
       const { query } = toQuery({
         in_editorial_feed: true,
       })
-      query.layout["$in"].should.be.ok()
-      query.layout["$in"][0].should.containEql("feature")
-      query.layout["$in"][1].should.containEql("standard")
-      query.layout["$in"][2].should.containEql("series")
-      query.layout["$in"][3].should.containEql("video")
+      query.layout.$in.should.be.ok()
+      query.layout.$in[0].should.containEql("feature")
+      query.layout.$in[1].should.containEql("standard")
+      query.layout.$in[2].should.containEql("series")
+      query.layout.$in[3].should.containEql("video")
     })
 
     it("finds scheduled articles", () => {

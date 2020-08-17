@@ -1,94 +1,90 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const _ = require("underscore")
-const rewire = require("rewire")
-const { fabricate, empty } = require("../../../../test/helpers/db")
-const Save = rewire("../../model/save")
-const Article = require("../../model/index")
+import moment from "moment"
+import { ObjectId } from "mongojs"
+import rewire from "rewire"
+import sinon from "sinon"
+import { times } from "underscore"
+import * as Article from "../../model"
+const { fabricate, empty } = require("../../../../test/helpers/db.coffee")
+const Save = rewire("../../model/save.coffee")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const sinon = require("sinon")
-const moment = require("moment")
-const { ObjectId } = require("mongojs")
 
-describe("Save", function() {
+describe("Save", () => {
   const sandbox = sinon.sandbox.create()
-
-  before(function(done) {
+  let server
+  let removeStopWords
+  let deleteArticleFromSailthru
+  let indexForSearch
+  // @ts-ignore
+  before(done => {
     app.use("/__gravity", gravity)
-    this.server = app.listen(5000, () => done())
+    server = app.listen(5000, () => done())
 
     const date = new Date("Tue Jan 01 2019 00:00:00")
     sandbox.useFakeTimers(date)
   })
 
-  after(function() {
-    this.server.close()
+  // @ts-ignore
+  after(() => {
+    server.close()
     sandbox.restore()
   })
 
-  beforeEach(function(done) {
-    this.removeStopWords = Save.__get__("removeStopWords")
+  beforeEach(done => {
+    removeStopWords = Save.__get__("removeStopWords")
     Save.__set__("request", {
-      post: (this.post = sinon.stub()).returns({
-        send: (this.send = sinon.stub()).returns({
+      post: sinon.stub().returns({
+        send: sinon.stub().returns({
           end: sinon.stub().yields(),
         }),
       }),
     })
-    Save.__set__(
-      "distributeArticle",
-      (this.distributeArticle = sinon.stub().yields())
-    )
+    Save.__set__("distributeArticle", sinon.stub().yields())
     Save.__set__(
       "deleteArticleFromSailthru",
-      (this.deleteArticleFromSailthru = sinon.stub().yields())
+      (deleteArticleFromSailthru = sinon.stub().yields())
     )
-    Save.__set__("indexForSearch", (this.indexForSearch = sinon.stub()))
+    Save.__set__("indexForSearch", (indexForSearch = sinon.stub()))
 
-    empty(() =>
-      fabricate("articles", _.times(10, () => ({})), () => done())
-    )
+    empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
 
-  describe("#removeStopWords", function() {
-    it("removes stop words from a string", function(done) {
-      this.removeStopWords(
+  describe("#removeStopWords", () => {
+    it("removes stop words from a string", done => {
+      removeStopWords(
         "Why. the Internet Is Obsessed with These Videos of People Making Things"
       ).should.containEql("internet obsessed videos people making things")
-      this.removeStopWords(
+      removeStopWords(
         "Heirs of Major Jewish Art Dealer Sue Bavaria over $20 Million of Nazi-Looted Art"
       ).should.containEql(
         "heirs major jewish art dealer sue bavaria 20 million nazi-looted art"
       )
-      this.removeStopWords(
+      removeStopWords(
         "Helen Marten Wins UK’s Biggest Art Prize—and the 9 Other Biggest News Stories This Week"
       ).should.containEql("helen marten wins uks art prize 9 news stories week")
       done()
     })
 
-    it("if all words are stop words, keep the title", function(done) {
-      this.removeStopWords("I’ll be there").should.containEql("Ill be there")
+    it("if all words are stop words, keep the title", done => {
+      removeStopWords("I’ll be there").should.containEql("Ill be there")
       done()
     })
   })
 
-  describe("#onPublish", function(done) {
+  describe("#onPublish", () => {
     it("generates slugs and published_at if not present", done =>
       Save.onPublish(
         {
           thumbnail_title: "a title",
         },
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
           article.slugs.length.should.equal(1)
           moment(article.published_at)
             .format("MM DD YYYY")
+            // @ts-ignore
             .should.equal(moment().format("MM DD YYYY"))
           done()
         }
@@ -101,17 +97,18 @@ describe("Save", function() {
           scheduled_publish_at: "2017-07-26T17:37:03.065Z",
           published_at: null,
         },
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
+          // @ts-ignore
           ;(article.published_at === null).should.be.true()
           done()
         }
       ))
   })
 
-  describe("#generateSlugs", function() {
+  describe("#generateSlugs", () => {
     it("generates a slug", done =>
       Save.generateSlugs(
         {
@@ -121,7 +118,7 @@ describe("Save", function() {
             name: "Molly",
           },
         },
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -141,7 +138,7 @@ describe("Save", function() {
             },
             published_at: "2017-07-26T17:37:03.065Z",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -165,7 +162,7 @@ describe("Save", function() {
             },
             published_at: "2017-07-26T17:37:03.065Z",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -189,7 +186,7 @@ describe("Save", function() {
             },
             published_at: "2017-07-dsdfdf26T17:37:03.065Zsdfdf",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -211,7 +208,7 @@ describe("Save", function() {
               name: "Molly",
             },
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -239,7 +236,7 @@ describe("Save", function() {
             ],
             published_at: "2017-07-26T17:37:03.065Z",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -266,7 +263,7 @@ describe("Save", function() {
             slugs: ["molly-clockwork-07-26-17"],
             published_at: "2017-07-26T17:37:03.065Z",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -295,7 +292,7 @@ describe("Save", function() {
             ],
             published_at: "2017-07-26T17:37:03.065Z",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -321,7 +318,7 @@ describe("Save", function() {
             },
             published_at: "2017-07-26T17:37:03.065Z",
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -333,7 +330,7 @@ describe("Save", function() {
         slugs: ["molly-clockwork"],
       }))
 
-    it("appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date", function(done) {
+    it("appends unix timestamp for current date to the slug if the slug exists already and it is a draft and there is no publish date", done => {
       // removing date offset to account for different timezones
       const now = new Date()
       const os = now.getTimezoneOffset()
@@ -348,7 +345,7 @@ describe("Save", function() {
               name: "Molly",
             },
           },
-          function(err, article) {
+          (err, article) => {
             if (err) {
               done(err)
             }
@@ -371,7 +368,7 @@ describe("Save", function() {
           },
           layout: "series",
         },
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -381,8 +378,8 @@ describe("Save", function() {
       ))
   })
 
-  describe("#onUnpublish", function() {
-    it("generates slugs and deletes article from sailthru", function(done) {
+  describe("#onUnpublish", () => {
+    it("generates slugs and deletes article from sailthru", done => {
       Save.onUnpublish(
         {
           thumbnail_title: "delete me a title",
@@ -397,7 +394,7 @@ describe("Save", function() {
             done(err)
           }
           article.slugs.length.should.equal(1)
-          this.deleteArticleFromSailthru.args[0][0].should.containEql(
+          deleteArticleFromSailthru.args[0][0].should.containEql(
             "video/artsy-editorial-delete-title"
           )
           done()
@@ -405,7 +402,7 @@ describe("Save", function() {
       )
     })
 
-    it("Regenerates the slug with stop words removed", function(done) {
+    it("Regenerates the slug with stop words removed", done => {
       Save.onUnpublish(
         {
           thumbnail_title:
@@ -421,7 +418,7 @@ describe("Save", function() {
             done(err)
           }
           article.slugs.length.should.equal(1)
-          this.deleteArticleFromSailthru.args[0][0].should.containEql(
+          deleteArticleFromSailthru.args[0][0].should.containEql(
             "article/artsy-editorial-one-new-york-building-changed-way-art-made-seen-sold"
           )
           done()
@@ -430,10 +427,10 @@ describe("Save", function() {
     })
   })
 
-  describe("#sanitizeAndSave", function() {
+  describe("#sanitizeAndSave", () => {
     it("skips sanitizing links that do not have an href", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -452,7 +449,7 @@ describe("Save", function() {
 
     it("can save follow artist links (whitelist data-id)", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -473,7 +470,7 @@ describe("Save", function() {
 
     it("can save layouts on text sections", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -491,13 +488,13 @@ describe("Save", function() {
         ],
       }))
 
-    it("indexes articles that are indexable", function(done) {
+    it("indexes articles that are indexable", done => {
       Save.sanitizeAndSave(() => {
-        Article.find("5086df098523e60002000011", (err, article) => {
+        Article.find("5086df098523e60002000011", (err, _article) => {
           if (err) {
             done(err)
           }
-          this.indexForSearch.callCount.should.eql(1)
+          indexForSearch.callCount.should.eql(1)
           done()
         })
       })(null, {
@@ -506,13 +503,13 @@ describe("Save", function() {
       })
     })
 
-    it("skips indexing articles that are not indexable", function(done) {
-       Save.sanitizeAndSave(() => {
-        Article.find("5086df098523e60002000011", (err, article) => {
+    it("skips indexing articles that are not indexable", done => {
+      Save.sanitizeAndSave(() => {
+        Article.find("5086df098523e60002000011", (err, _article) => {
           if (err) {
             done(err)
           }
-          this.indexForSearch.callCount.should.eql(0)
+          indexForSearch.callCount.should.eql(0)
           done()
         })
       })(null, {
@@ -523,7 +520,7 @@ describe("Save", function() {
 
     it("saves email metadata", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -544,7 +541,7 @@ describe("Save", function() {
 
     it("does not override email metadata", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -567,7 +564,7 @@ describe("Save", function() {
 
     it("saves generated descriptions", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -582,7 +579,7 @@ describe("Save", function() {
 
     it("does not override description", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -597,7 +594,7 @@ describe("Save", function() {
 
     it("Strips linebreaks from titles", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }
@@ -613,7 +610,7 @@ describe("Save", function() {
 
     it("saves media", done =>
       Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", function(err, article) {
+        Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
             done(err)
           }

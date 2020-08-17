@@ -1,23 +1,23 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const _ = require("underscore")
-const moment = require("moment")
-const { db, fabricate, empty } = require("../../../../../test/helpers/db")
+// import rewire from "rewire"
+import moment from "moment"
+import { ObjectId } from "mongojs"
+import sinon from "sinon"
+import { times } from "underscore"
+const {
+  db,
+  fabricate,
+  empty,
+} = require("../../../../../test/helpers/db.coffee")
 const rewire = require("rewire")
 const Article = rewire("../../../model/index.js")
-const { ObjectId } = require("mongojs")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const search = require("../../../../../lib/elasticsearch")
-const sinon = require("sinon")
+const search = require("../../../../../lib/elasticsearch.coffee")
 
-describe("Article Persistence", function() {
+describe("Article Persistence", () => {
   let server
-  before(function(done) {
+  // @ts-ignore
+  before(done => {
     app.use("/__gravity", gravity)
     server = app.listen(5000, () =>
       search.client.indices.create(
@@ -27,7 +27,8 @@ describe("Article Persistence", function() {
     )
   })
 
-  after(function() {
+  // @ts-ignore
+  after(() => {
     server.close()
     search.client.indices.delete({
       index: "articles_" + process.env.NODE_ENV,
@@ -36,11 +37,12 @@ describe("Article Persistence", function() {
 
   beforeEach(done => {
     const deleteArticleFromSailthru = sinon.stub().yields()
-    Article.__set__('deleteArticleFromSailthru', deleteArticleFromSailthru)
-    empty(() => fabricate("articles", _.times(10, () => ({})), () => done()))
+    // removeFromSearch
+    Article.__set__("deleteArticleFromSailthru", deleteArticleFromSailthru)
+    empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
 
-  describe("#save", function() {
+  describe("#save", () => {
     it("saves valid article input data", done =>
       Article.save(
         {
@@ -53,16 +55,16 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
           article.title.should.equal("Top Ten Shows")
           article.channel_id.toString().should.equal("5086df098523e60002002223")
           article.vertical.name.should.eql("Culture")
-          db.articles.count(function(err, count) {
-            if (err) {
-              done(err)
+          db.articles.count((error, count) => {
+            if (error) {
+              done(error)
             }
             count.should.equal(11)
             done()
@@ -79,19 +81,20 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
           article.updated_at.should.be.an.instanceOf(Date)
           moment(article.updated_at)
             .format("YYYY-MM-DD")
+            // @ts-ignore
             .should.equal(moment().format("YYYY-MM-DD"))
           done()
         }
       ))
 
-    it("input updated_at must be a date", function(done) {
+    it("input updated_at must be a date", done => {
       Article.save(
         {
           title: "Top Ten Shows",
@@ -101,7 +104,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        (err, article) =>
+        (err, _article) =>
           err.message.should.containEql(
             '"updated_at" must be a number of milliseconds or valid date string'
           )
@@ -115,12 +118,13 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
           moment(article.updated_at)
             .format("YYYY-MM-DD")
+            // @ts-ignore
             .should.equal(moment().format("YYYY-MM-DD"))
           done()
         }
@@ -136,11 +140,12 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
-          (article._id != null).should.be.ok
+          // @ts-ignore
+          ;(article._id != null).should.be.ok
           done()
         }
       ))
@@ -157,7 +162,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -167,7 +172,7 @@ describe("Article Persistence", function() {
       ))
 
     it("adds a slug based off a user and thumbnail title", done =>
-      fabricate("users", { name: "Molly" }, function(err, user) {
+      fabricate("users", { name: "Molly" }, (err, user) => {
         if (err) {
           done(err)
         }
@@ -181,9 +186,9 @@ describe("Article Persistence", function() {
           },
           "foo",
           {},
-          function(err, article) {
-            if (err) {
-              done(err)
+          (error, article) => {
+            if (error) {
+              done(error)
             }
             article.slugs[0].should.equal("molly-foo-baz")
             done()
@@ -192,7 +197,7 @@ describe("Article Persistence", function() {
       }))
 
     it("saves slug history when publishing", done =>
-      fabricate("users", { name: "Molly" }, function(err, user) {
+      fabricate("users", { name: "Molly" }, (err, user) => {
         if (err) {
           done(err)
         }
@@ -207,13 +212,13 @@ describe("Article Persistence", function() {
           },
           "foo",
           {},
-          (err, article) => {
-            if (err) {
-              done(err)
+          (error, res) => {
+            if (error) {
+              done(error)
             }
             Article.save(
               {
-                id: article._id.toString(),
+                id: res._id.toString(),
                 thumbnail_title: "Foo Bar Baz",
                 author_id: user._id.toString(),
                 published: true,
@@ -224,16 +229,14 @@ describe("Article Persistence", function() {
               },
               "foo",
               {},
-              function(err, article) {
-                if (err) {
-                  done(err)
+              (e, a) => {
+                if (e) {
+                  done(e)
                 }
-                article.slugs
-                  .join("")
-                  .should.equal("molly-foo-bazmolly-foo-bar-baz")
-                Article.find(article.slugs[0], function(err, article) {
-                  if (err) {
-                    done(err)
+                a.slugs.join("").should.equal("molly-foo-bazmolly-foo-bar-baz")
+                Article.find(a.slugs[0], (er, article) => {
+                  if (er) {
+                    done(er)
                   }
                   article.thumbnail_title.should.equal("Foo Bar Baz")
                   done()
@@ -268,14 +271,14 @@ describe("Article Persistence", function() {
             },
             "foo",
             {},
-            function(err, article) {
+            (err, article) => {
               if (err) {
                 done(err)
               }
               article.slugs[0].should.equal("craig-spaeth-heyo-01-01-99")
-              db.articles.count(function(err, count) {
-                if (err) {
-                  done(err)
+              db.articles.count((error, count) => {
+                if (error) {
+                  done(error)
                 }
                 count.should.equal(12)
                 done()
@@ -295,13 +298,14 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
           article.published_at.should.be.an.instanceOf(Date)
           moment(article.published_at)
             .format("YYYY")
+            // @ts-ignore
             .should.equal(moment().format("YYYY"))
           done()
         }
@@ -317,7 +321,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -331,13 +335,14 @@ describe("Article Persistence", function() {
             },
             "foo",
             {},
-            function(err, updatedArticle) {
-              if (err) {
-                done(err)
+            (error, updatedArticle) => {
+              if (error) {
+                done(error)
               }
               updatedArticle.published_at.should.be.an.instanceOf(Date)
               moment(updatedArticle.published_at)
                 .format("YYYY")
+                // @ts-ignore
                 .should.equal(
                   moment()
                     .add(1, "year")
@@ -360,7 +365,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -378,7 +383,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -391,9 +396,9 @@ describe("Article Persistence", function() {
             },
             "foo",
             {},
-            function(err, updatedArticle) {
-              if (err) {
-                done(err)
+            (error, updatedArticle) => {
+              if (error) {
+                done(error)
               }
               updatedArticle.indexable.should.eql(false)
               done()
@@ -413,16 +418,18 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
+          // @ts-ignore
+
           ;(article.fair_ids != null).should.not.be.ok
           done()
         }
       ))
 
-    it("escapes xss", function(done) {
+    it("escapes xss", done => {
       const body =
         '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
       const badBody =
@@ -477,9 +484,9 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
-          if (err) {
-            done(err)
+        (error, article) => {
+          if (error) {
+            done(error)
           }
           article.lead_paragraph.should.equal(
             '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
@@ -515,7 +522,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -542,7 +549,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -582,7 +589,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -596,7 +603,7 @@ describe("Article Persistence", function() {
       ))
 
     it("maintains the original slug when publishing with a new title", done =>
-      fabricate("users", { name: "Molly" }, function(err, user) {
+      fabricate("users", { name: "Molly" }, (err, user) => {
         if (err) {
           done(err)
         }
@@ -611,22 +618,22 @@ describe("Article Persistence", function() {
           },
           "foo",
           {},
-          (err, article) => {
-            if (err) {
-              done(err)
+          (error, a) => {
+            if (error) {
+              done(error)
             }
             Article.save(
               {
-                id: article._id.toString(),
+                id: a._id.toString(),
                 thumbnail_title: "Foo Bar Baz",
                 author_id: user._id.toString(),
                 published: true,
               },
               "foo",
               {},
-              function(err, article) {
-                if (err) {
-                  done(err)
+              (e, article) => {
+                if (e) {
+                  done(e)
                 }
                 article.slugs.join("").should.equal("molly-foo-baz")
                 article.thumbnail_title.should.equal("Foo Bar Baz")
@@ -651,7 +658,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -674,7 +681,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, _article) => {
           if (err) {
             done(err)
           }
@@ -685,9 +692,9 @@ describe("Article Persistence", function() {
                   index: search.index,
                   q: "name:foo",
                 },
-                function(error, response) {
+                (error, response) => {
                   if (error) {
-                    done(err)
+                    done(error)
                   }
                   response.hits.hits[0]._source.name.should.equal("foo article")
                   response.hits.hits[0]._source.visible_to_public.should.equal(
@@ -724,7 +731,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -774,14 +781,15 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
+          const related = article.super_article.related_articles[0]
+          // @ts-ignore
           ;(article.author_id instanceof ObjectId).should.be.true()
-          ;(
-            article.super_article.related_articles[0] instanceof ObjectId
-          ).should.be.true()
+          // @ts-ignore
+          ;(related instanceof ObjectId).should.be.true()
           done()
         }
       ))
@@ -817,7 +825,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -859,7 +867,7 @@ describe("Article Persistence", function() {
             },
             "foo",
             {},
-            function(err, article) {
+            (err, article) => {
               if (err) {
                 done(err)
               }
@@ -903,7 +911,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -934,7 +942,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -953,7 +961,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -969,7 +977,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -986,7 +994,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1003,7 +1011,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1025,7 +1033,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1042,7 +1050,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1066,7 +1074,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1084,7 +1092,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1103,7 +1111,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1122,7 +1130,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1143,7 +1151,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1160,7 +1168,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1177,7 +1185,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1197,7 +1205,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1218,7 +1226,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1236,7 +1244,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1245,14 +1253,7 @@ describe("Article Persistence", function() {
         }
       ))
 
-    xit("deletes article from sailthru if it is being unpublished", function(done) {
-      // TODO: Refactor to remove Rewire
-      const article = {
-        _id: ObjectId("5086df098523e60002000018"),
-        id: "5086df098523e60002000018",
-        author_id: "5086df098523e60002000018",
-        published: false,
-      }
+    xit("deletes article from sailthru if it is being unpublished", done => {
       // Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
       fabricate(
         "articles",
@@ -1263,15 +1264,25 @@ describe("Article Persistence", function() {
           published: true,
         },
         () => {
-          Article.save(article, "foo", {}, (err, article) => {
-            if (err) {
-              done(err)
+          Article.save(
+            {
+              _id: ObjectId("5086df098523e60002000018"),
+              id: "5086df098523e60002000018",
+              author_id: "5086df098523e60002000018",
+              published: false,
+            },
+            "foo",
+            {},
+            (err, article) => {
+              if (err) {
+                done(err)
+              }
+              article.published.should.be.false()
+              this.onUnpublish.callCount.should.equal(1)
+              // Article.__ResetDependency__ 'onUnpublish'
+              done()
             }
-            article.published.should.be.false()
-            this.onUnpublish.callCount.should.equal(1)
-            // Article.__ResetDependency__ 'onUnpublish'
-            done()
-          })
+          )
         }
       )
     })
@@ -1287,7 +1298,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1309,7 +1320,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1331,7 +1342,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1353,7 +1364,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1376,7 +1387,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1399,7 +1410,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1424,7 +1435,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1464,7 +1475,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }
@@ -1497,7 +1508,7 @@ describe("Article Persistence", function() {
         },
         "foo",
         {},
-        function(err, article) {
+        (err, article) => {
           if (err) {
             done(err)
           }

@@ -1,9 +1,9 @@
-import request from "superagent"
 import {
   ArticleSectionsQuery,
-  RelatedArticlesQuery,
   RelatedArticlesCanvasQuery,
+  RelatedArticlesQuery,
 } from "api/apps/graphql/test/queries"
+import request from "superagent"
 const { ObjectId } = require("mongojs")
 const app = require("../../../index.coffee")
 const {
@@ -21,14 +21,18 @@ describe("graphql endpoint", () => {
     })
   })
 
+  afterAll(() => {
+    server.close()
+  })
+
   beforeEach(done => {
     empty(() => {
       fabricate(
         "authors",
         [{ _id: ObjectId("55356a9deca560a0137bb4ae"), name: "Kana" }],
-        (err, res) => {
+        (err, _res) => {
           if (err) {
-            console.warn(err.message)
+            done(err.message)
           }
           fabricate(
             "articles",
@@ -66,10 +70,6 @@ describe("graphql endpoint", () => {
     })
   })
 
-  afterAll(() => {
-    server.close()
-  })
-
   it("can get a list of published articles", done => {
     const query = `
         {
@@ -83,7 +83,7 @@ describe("graphql endpoint", () => {
       .send({ query })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
-          console.warn(err.message)
+          done(err.message)
         }
         expect(articles.length).toBe(3)
         expect(articles[0].title).toEqual("Top Twelve Booths")
@@ -99,7 +99,7 @@ describe("graphql endpoint", () => {
       .send({ query: ArticleSectionsQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
-          console.warn(err.message)
+          done(err.message)
         }
         expect(articles[0].sections[1].type).toEqual("image_collection")
         expect(articles[0].sections[2].type).toEqual("text")
@@ -118,7 +118,7 @@ describe("graphql endpoint", () => {
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
-          console.warn(err.message)
+          done(err.message)
         }
         expect(articles.length).toEqual(3)
         expect(articles[0].relatedArticles[0].title).toEqual(
@@ -135,7 +135,7 @@ describe("graphql endpoint", () => {
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
-          console.warn(err.message)
+          done(err.message)
         }
         expect(articles[0].relatedArticles[0].title).toEqual(
           "Top Eleven Booths"
@@ -153,7 +153,7 @@ describe("graphql endpoint", () => {
       .send({ query: RelatedArticlesCanvasQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
-          console.warn(err.message)
+          done(err.message)
         }
         expect(articles.length).toEqual(3)
         expect(articles[1].relatedArticlesCanvas[0].title).toEqual(

@@ -1,21 +1,20 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit s
- * DS207: Consider shorter variations of null checks
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const _ = require("underscore")
-const moment = require("moment")
-const { db, fabricate, empty } = require("../../../../../test/helpers/db")
-const Article = require("../../../model/index")
-const { ObjectId } = require("mongojs")
+import moment from "moment"
+import { ObjectId } from "mongojs"
+import { pluck, times } from "underscore"
+import * as Article from "../../../model"
+const {
+  db,
+  fabricate,
+  empty,
+} = require("../../../../../test/helpers/db.coffee")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const search = require("../../../../../lib/elasticsearch")
+const search = require("../../../../../lib/elasticsearch.coffee")
 
-describe("Article Retrieval", function() {
+describe("Article Retrieval", () => {
   let server
-  before(function(done) {
+  // @ts-ignore
+  before(done => {
     app.use("/__gravity", gravity)
     server = app.listen(5000, () =>
       search.client.indices.create(
@@ -24,8 +23,8 @@ describe("Article Retrieval", function() {
       )
     )
   })
-
-  after(function() {
+  // @ts-ignore
+  after(() => {
     server.close()
     search.client.indices.delete({
       index: "articles_" + process.env.NODE_ENV,
@@ -33,11 +32,11 @@ describe("Article Retrieval", function() {
   })
 
   beforeEach(done =>
-    empty(() => fabricate("articles", _.times(10, () => ({})), () => done())))
+    empty(() => fabricate("articles", times(10, () => ({})), () => done())))
 
-  describe("#where", function() {
+  describe("#where", () => {
     it("can  all articles along with total and counts", done =>
-      Article.where({ count: true }, function(err, res) {
+      Article.where({ count: true }, (_err, res) => {
         const { total, count, results } = res
         total.should.equal(10)
         count.should.equal(10)
@@ -46,7 +45,7 @@ describe("Article Retrieval", function() {
       }))
 
     it("can  all articles along with total and counts", done =>
-      Article.where({}, function(err, res) {
+      Article.where({}, (_err, res) => {
         const { total, count, results } = res
         if (total != null) {
           total.should.be.false()
@@ -58,7 +57,7 @@ describe("Article Retrieval", function() {
         done()
       }))
 
-    it("can return articles by an author", function(done) {
+    it("can return articles by an author", done => {
       let aid
       fabricate(
         "articles",
@@ -67,42 +66,42 @@ describe("Article Retrieval", function() {
           title: "Hello Wurld",
         },
         () =>
-          Article.where({ author_id: aid.toString(), count: true }, function(
-            err,
-            res
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { author_id: aid.toString(), count: true },
+            (err, res) => {
+              if (err) {
+                done(err)
+              }
+              const { total, count, results } = res
+              total.should.equal(11)
+              count.should.equal(1)
+              results[0].title.should.equal("Hello Wurld")
+              done()
             }
-            const { total, count, results } = res
-            total.should.equal(11)
-            count.should.equal(1)
-            results[0].title.should.equal("Hello Wurld")
-            done()
-          })
+          )
       )
     })
 
     it("can return articles by published", done =>
       fabricate(
         "articles",
-        _.times(3, () => ({
+        times(3, () => ({
           published: false,
           title: "Moo baz",
         })),
         () =>
-          Article.where({ published: false, count: true }, function(
-            err,
-            { total, count, results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { published: false, count: true },
+            (err, { total, count, results }) => {
+              if (err) {
+                done(err)
+              }
+              total.should.equal(13)
+              count.should.equal(3)
+              results[0].title.should.equal("Moo baz")
+              done()
             }
-            total.should.equal(13)
-            count.should.equal(3)
-            results[0].title.should.equal("Moo baz")
-            done()
-          })
+          )
       ))
 
     it("can change skip and limit", done =>
@@ -110,7 +109,7 @@ describe("Article Retrieval", function() {
         "articles",
         [{ title: "Hello Wurld" }, { title: "Foo Baz" }],
         () =>
-          Article.where({ offset: 1, limit: 3 }, function(err, { results }) {
+          Article.where({ offset: 1, limit: 3 }, (err, { results }) => {
             if (err) {
               done(err)
             }
@@ -131,7 +130,7 @@ describe("Article Retrieval", function() {
           },
         ],
         () =>
-          Article.where({}, function(err, { results }) {
+          Article.where({}, (err, { results }) => {
             if (err) {
               done(err)
             }
@@ -159,19 +158,19 @@ describe("Article Retrieval", function() {
           },
         ],
         () =>
-          Article.where({ artist_id: "4dc98d149a96300001003033" }, function(
-            err,
-            { results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { artist_id: "4dc98d149a96300001003033" },
+            (err, { results }) => {
+              if (err) {
+                done(err)
+              }
+              pluck(results, "title")
+                .sort()
+                .join("")
+                .should.equal("BarBazFoo")
+              done()
             }
-            _.pluck(results, "title")
-              .sort()
-              .join("")
-              .should.equal("BarBazFoo")
-            done()
-          })
+          )
       ))
 
     it("can find articles featured to an artwork", done =>
@@ -188,19 +187,19 @@ describe("Article Retrieval", function() {
           },
         ],
         () =>
-          Article.where({ artwork_id: "4dc98d149a96300001003033" }, function(
-            err,
-            { results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { artwork_id: "4dc98d149a96300001003033" },
+            (err, { results }) => {
+              if (err) {
+                done(err)
+              }
+              pluck(results, "title")
+                .sort()
+                .join("")
+                .should.equal("BazFoo")
+              done()
             }
-            _.pluck(results, "title")
-              .sort()
-              .join("")
-              .should.equal("BazFoo")
-            done()
-          })
+          )
       ))
 
     it("can find articles sorted by an attr", done =>
@@ -209,11 +208,11 @@ describe("Article Retrieval", function() {
           "articles",
           [{ title: "C" }, { title: "A" }, { title: "B" }],
           () =>
-            Article.where({ sort: "-title" }, function(err, { results }) {
+            Article.where({ sort: "-title" }, (err, { results }) => {
               if (err) {
                 done(err)
               }
-              _.pluck(results, "title")
+              pluck(results, "title")
                 .sort()
                 .join("")
                 .should.containEql("ABC")
@@ -238,11 +237,11 @@ describe("Article Retrieval", function() {
                 "4dc98d149a96300001003032",
               ],
             },
-            function(err, { results }) {
+            (err, { results }) => {
               if (err) {
                 done(err)
               }
-              _.pluck(results, "title")
+              pluck(results, "title")
                 .sort()
                 .join("")
                 .should.equal("ABC")
@@ -259,22 +258,22 @@ describe("Article Retrieval", function() {
           { title: "A", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
         ],
         () =>
-          Article.where({ fair_id: "4dc98d149a96300001003033" }, function(
-            err,
-            { results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { fair_id: "4dc98d149a96300001003033" },
+            (err, { results }) => {
+              if (err) {
+                done(err)
+              }
+              pluck(results, "title")
+                .sort()
+                .join("")
+                .should.equal("AC")
+              done()
             }
-            _.pluck(results, "title")
-              .sort()
-              .join("")
-              .should.equal("AC")
-            done()
-          })
+          )
       ))
 
-    it("can return articles by a fair programming id", function(done) {
+    it("can return articles by a fair programming id", done => {
       fabricate(
         "articles",
         {
@@ -285,7 +284,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { fair_programming_id: "52617c6c8b3b81f094000013", count: true },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -299,7 +298,7 @@ describe("Article Retrieval", function() {
       )
     })
 
-    it("can return articles by a fair artsy id", function(done) {
+    it("can return articles by a fair artsy id", done => {
       fabricate(
         "articles",
         {
@@ -310,7 +309,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { fair_artsy_id: "53da550a726169083c0a0700", count: true },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -324,7 +323,7 @@ describe("Article Retrieval", function() {
       )
     })
 
-    it("can return articles by a fair about id", function(done) {
+    it("can return articles by a fair about id", done => {
       fabricate(
         "articles",
         {
@@ -335,7 +334,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { fair_about_id: "53da550a726169083c0a0700", count: true },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -358,19 +357,19 @@ describe("Article Retrieval", function() {
           { title: "Baz", partner_ids: [ObjectId("4dc98d149a96300001003031")] },
         ],
         () =>
-          Article.where({ partner_id: "4dc98d149a96300001003033" }, function(
-            err,
-            { results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { partner_id: "4dc98d149a96300001003033" },
+            (err, { results }) => {
+              if (err) {
+                done(err)
+              }
+              pluck(results, "title")
+                .sort()
+                .join("")
+                .should.equal("BarFoo")
+              done()
             }
-            _.pluck(results, "title")
-              .sort()
-              .join("")
-              .should.equal("BarFoo")
-            done()
-          })
+          )
       ))
 
     it("can find articles by query", done =>
@@ -382,7 +381,7 @@ describe("Article Retrieval", function() {
           { thumbnail_title: "Baz" },
         ],
         () =>
-          Article.where({ q: "fo" }, function(err, { results }) {
+          Article.where({ q: "fo" }, (err, { results }) => {
             if (err) {
               done(err)
             }
@@ -410,7 +409,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { all_by_author: "4d8cd73191a5c50ce220002b", count: true },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -444,10 +443,7 @@ describe("Article Retrieval", function() {
           },
         ],
         () =>
-          Article.where({ is_super_article: true, count: true }, function(
-            err,
-            res
-          ) {
+          Article.where({ is_super_article: true, count: true }, (err, res) => {
             if (err) {
               done(err)
             }
@@ -459,7 +455,7 @@ describe("Article Retrieval", function() {
           })
       ))
 
-    it("can find super article by article (opposite of the above test!)", function(done) {
+    it("can find super article by article (opposite of the above test!)", done => {
       const superArticleId = ObjectId("4d7ab73191a5c50ce220001c")
       const childArticleId = ObjectId("4d8cd73191a5c50ce111111a")
       fabricate(
@@ -484,7 +480,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { super_article_for: childArticleId.toString(), count: true },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -524,21 +520,21 @@ describe("Article Retrieval", function() {
           },
         ],
         () =>
-          Article.where({ tags: ["pickle", "muffin"], count: true }, function(
-            err,
-            res
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { tags: ["pickle", "muffin"], count: true },
+            (err, res) => {
+              if (err) {
+                done(err)
+              }
+              const { total, count, results } = res
+              total.should.equal(14)
+              count.should.equal(3)
+              results[0].title.should.equal("Hello Weeeerld - Food")
+              results[1].title.should.equal("Hello Waaarld - Food")
+              results[2].title.should.equal("Hello Wuuuurld - Food")
+              done()
             }
-            const { total, count, results } = res
-            total.should.equal(14)
-            count.should.equal(3)
-            results[0].title.should.equal("Hello Weeeerld - Food")
-            results[1].title.should.equal("Hello Waaarld - Food")
-            results[2].title.should.equal("Hello Wuuuurld - Food")
-            done()
-          })
+          )
       ))
 
     it("can find articles by tracking_tags", done =>
@@ -572,7 +568,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { tracking_tags: ["video", "evergreen"], count: true },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -608,12 +604,11 @@ describe("Article Retrieval", function() {
               biography_for_artist_id: "5086df098523e60002000016",
               count: true,
             },
-            function(err, res) {
-
+            (err, res) => {
               if (err) {
                 done(err)
               }
-              const { total, count, results } = res
+              const { count, results } = res
               count.should.equal(1)
               results[0].title.should.equal("Hello Wurld")
               done()
@@ -638,11 +633,11 @@ describe("Article Retrieval", function() {
               channel_id: "5086df098523e60002000016",
               count: true,
             },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
-              const { total, count, results } = res
+              const { count, results } = res
               count.should.equal(1)
               results[0].title.should.equal("Hello Wurld")
               done()
@@ -667,7 +662,7 @@ describe("Article Retrieval", function() {
               channel_id: "5086df098523e60002000016",
               count: true,
             },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -696,7 +691,7 @@ describe("Article Retrieval", function() {
               count: true,
               published: false,
             },
-            function(err, res) {
+            (err, res) => {
               if (err) {
                 done(err)
               }
@@ -711,45 +706,45 @@ describe("Article Retrieval", function() {
     it("can return articles by indexable", done =>
       fabricate(
         "articles",
-        _.times(3, () => ({
+        times(3, () => ({
           indexable: false,
           title: "Moo baz",
         })),
         () =>
-          Article.where({ indexable: true, count: true }, function(
-            err,
-            { total, count, results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { indexable: true, count: true },
+            (err, { total, count, results }) => {
+              if (err) {
+                done(err)
+              }
+              total.should.equal(13)
+              count.should.equal(10)
+              results[0].title.should.not.equal("Moo baz")
+              done()
             }
-            total.should.equal(13)
-            count.should.equal(10)
-            results[0].title.should.not.equal("Moo baz")
-            done()
-          })
+          )
       ))
 
     it("can return articles by not indexable", done =>
       fabricate(
         "articles",
-        _.times(3, () => ({
+        times(3, () => ({
           indexable: false,
           title: "Moo baz",
         })),
         () =>
-          Article.where({ indexable: false, count: true }, function(
-            err,
-            { total, count, results }
-          ) {
-            if (err) {
-              done(err)
+          Article.where(
+            { indexable: false, count: true },
+            (err, { total, count, results }) => {
+              if (err) {
+                done(err)
+              }
+              total.should.equal(13)
+              count.should.equal(3)
+              results[0].title.should.equal("Moo baz")
+              done()
             }
-            total.should.equal(13)
-            count.should.equal(3)
-            results[0].title.should.equal("Moo baz")
-            done()
-          })
+          )
       ))
 
     it("can omit articles", done =>
@@ -765,7 +760,7 @@ describe("Article Retrieval", function() {
         () =>
           Article.where(
             { omit: ["5086df098523e60002000018"], count: true },
-            function(err, { total, count, results }) {
+            (err, { total, count }) => {
               if (err) {
                 done(err)
               }
@@ -777,10 +772,10 @@ describe("Article Retrieval", function() {
       ))
   })
 
-  describe("#find", function() {
+  describe("#find", () => {
     it("finds an article by an id string", done =>
       fabricate("articles", { _id: ObjectId("5086df098523e60002000018") }, () =>
-        Article.find("5086df098523e60002000018", function(err, article) {
+        Article.find("5086df098523e60002000018", (err, article) => {
           if (err) {
             done(err)
           }
@@ -797,7 +792,7 @@ describe("Article Retrieval", function() {
           slugs: ["foo-bar"],
         },
         () =>
-          Article.find("foo-bar", function(err, article) {
+          Article.find("foo-bar", (err, article) => {
             if (err) {
               done(err)
             }

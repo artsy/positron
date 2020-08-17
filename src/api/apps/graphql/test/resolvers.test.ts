@@ -1,12 +1,13 @@
-import * as resolvers from "../resolvers"
 import {
-  StandardArticle,
   SeriesArticle,
+  StandardArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { ObjectId } from "mongojs"
+import * as resolvers from "../resolvers"
 const { fixtures } = require("api/test/helpers/db.coffee")
 
 jest.mock("api/apps/articles/model/index.js", () => {
+  // @ts-ignore
   const original = jest.requireActual("../../articles/model/index.js")
   return {
     promisedMongoFetch: jest.fn(),
@@ -57,12 +58,12 @@ describe("resolvers", () => {
       count: 1,
       results: [articleFixture],
     }
-    articleModel.mongoFetch.mockImplementation((args, cb) => {
+    articleModel.mongoFetch.mockImplementation((_args, cb) => {
       cb(null, articlesFixture)
     })
     articleModel.promisedMongoFetch.mockResolvedValue(articlesFixture)
     articleModel.promisedMongoFetch.mockClear()
-    articleModel.find.mockImplementation((args, cb) => {
+    articleModel.find.mockImplementation((_args, cb) => {
       cb(null, {
         ...articleFixture,
       })
@@ -100,10 +101,10 @@ describe("resolvers", () => {
   })
 
   describe("article", () => {
-    let args = { id: "123" }
+    const args: any = { id: "123" }
 
     it("rejects with an error when no article is found", async () => {
-      articleModel.find.mockImplementationOnce((args, cb) => {
+      articleModel.find.mockImplementationOnce((_args, cb) => {
         cb(null, null)
       })
       try {
@@ -114,7 +115,7 @@ describe("resolvers", () => {
     })
 
     it("rejects with an error when trying to view an unauthorized draft", async () => {
-      articleModel.find.mockImplementationOnce((args, cb) => {
+      articleModel.find.mockImplementationOnce((_args, cb) => {
         cb(null, {
           published: false,
           ...articleFixture,
@@ -129,7 +130,7 @@ describe("resolvers", () => {
 
     it("can view drafts", async () => {
       args.channel_id = "456"
-      articleModel.find.mockImplementationOnce((args, cb) => {
+      articleModel.find.mockImplementationOnce((_args, cb) => {
         cb(null, {
           published: false,
           ...articleFixture,
@@ -147,7 +148,7 @@ describe("resolvers", () => {
 
   describe("authors", () => {
     beforeEach(() => {
-      authorModel.mongoFetch.mockImplementation((args, cb) => {
+      authorModel.mongoFetch.mockImplementation((_args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().authors] })
       })
     })
@@ -163,7 +164,7 @@ describe("resolvers", () => {
   })
 
   describe("relatedAuthors", () => {
-    let root = { author_ids: [{ id: "123" }] }
+    let root: any = { author_ids: [{ id: "123" }] }
 
     it("can find authors", async () => {
       const results = await resolvers.relatedAuthors(root)
@@ -175,7 +176,7 @@ describe("resolvers", () => {
     })
 
     it("returns null if there are no authors from fetch", async () => {
-      authorModel.mongoFetch.mockImplementationOnce((args, cb) => {
+      authorModel.mongoFetch.mockImplementationOnce((_args, cb) => {
         cb(null, { total: 20, count: 1, results: [] })
       })
       const results = await resolvers.relatedAuthors(root)
@@ -191,7 +192,7 @@ describe("resolvers", () => {
 
   describe("channels", () => {
     it("can find channels", async () => {
-      channelModel.mongoFetch.mockImplementation((args, cb) => {
+      channelModel.mongoFetch.mockImplementation((_args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().channels] })
       })
       const results = await resolvers.channels(articleFixture, {}, req, {})
@@ -203,11 +204,12 @@ describe("resolvers", () => {
 
   describe("articleChannel", () => {
     it("can return article channel", async () => {
-      channelModel.find.mockImplementation((args, cb) => {
+      channelModel.find.mockImplementation((_args, cb) => {
         cb(null, fixtures().channels)
       })
       const results = await resolvers.articleChannel(
         articleFixture,
+        // @ts-ignore
         {},
         req,
         {}
@@ -219,7 +221,7 @@ describe("resolvers", () => {
 
   describe("curations", () => {
     it("can find curations", async () => {
-      curationModel.mongoFetch.mockImplementation((args, cb) => {
+      curationModel.mongoFetch.mockImplementation((_args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().curations] })
       })
       const results = await resolvers.curations({}, {}, req, {})
@@ -257,7 +259,7 @@ describe("resolvers", () => {
 
   describe("tags", () => {
     it("can find tags", async () => {
-      tagModel.mongoFetch.mockImplementation((args, cb) => {
+      tagModel.mongoFetch.mockImplementation((_args, cb) => {
         cb(null, { total: 20, count: 1, results: [fixtures().tags] })
       })
       const results = await resolvers.tags({}, {}, req, {})
@@ -496,6 +498,7 @@ describe("resolvers", () => {
       })
       Object.keys(
         articleModel.promisedMongoFetch.mock.calls[0][0]
+        // @ts-ignore
       ).should.not.containEql("tags")
     })
 

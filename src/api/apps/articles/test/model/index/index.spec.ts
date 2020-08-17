@@ -1,27 +1,23 @@
-/*
- * decaffeinate suggestions:
- * DS102: Remove unnecessary code created because of implicit returns
- * Full docs: https://github.com/decaffeinate/decaffeinate/blob/master/docs/suggestions.md
- */
-const _ = require("underscore")
+import moment from "moment"
+import { ObjectId } from "mongojs"
+import rewire from "rewire"
+import sinon from "sinon"
+import { extend, times } from "underscore"
 const {
   db,
   fabricate,
   empty,
   fixtures,
-} = require("../../../../../test/helpers/db")
+} = require("../../../../../test/helpers/db.coffee")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const rewire = require("rewire")
 const Article = rewire("../../../model/index.js")
-const search = require("../../../../../lib/elasticsearch")
-const { ObjectId } = require("mongojs")
-const moment = require("moment")
-const sinon = require("sinon")
+const search = require("../../../../../lib/elasticsearch.coffee")
 
-describe("Article", function() {
+describe("Article", () => {
   let server
-  before(function(done) {
+  // @ts-ignore
+  before(done => {
     app.use("/__gravity", gravity)
     server = app.listen(5000, () =>
       search.client.indices.create(
@@ -30,8 +26,8 @@ describe("Article", function() {
       )
     )
   })
-
-  after(function() {
+  // @ts-ignore
+  after(() => {
     server.close()
     search.client.indices.delete({
       index: "articles_" + process.env.NODE_ENV,
@@ -40,8 +36,8 @@ describe("Article", function() {
 
   beforeEach(done => {
     const deleteArticleFromSailthru = sinon.stub().yields()
-    Article.__set__('deleteArticleFromSailthru', deleteArticleFromSailthru)
-    empty(() => fabricate("articles", _.times(10, () => ({})), () => done()))
+    Article.__set__("deleteArticleFromSailthru", deleteArticleFromSailthru)
+    empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
 
   describe("#publishScheduledArticles", () => {
@@ -74,7 +70,7 @@ describe("Article", function() {
           ],
         },
         () =>
-          Article.publishScheduledArticles(function(err, results) {
+          Article.publishScheduledArticles((_err, results) => {
             results[0].published.should.be.true()
             results[0].published_at.toString().should.equal(
               moment("2016-01-01")
@@ -87,7 +83,7 @@ describe("Article", function() {
             results[0].sections[1].images[0].url.should.containEql(
               "https://image.png"
             )
-            return done()
+            done()
           })
       )
     })
@@ -107,28 +103,28 @@ describe("Article", function() {
           sections: [],
         },
         () =>
-          Article.unqueue(function(err, results) {
+          Article.unqueue((_err, results) => {
             results[0].weekly_email.should.be.false()
             results[0].daily_email.should.be.false()
-            return done()
+            done()
           })
       )))
 
-  describe("#destroy", function() {
+  describe("#destroy", () => {
     it("removes an article", done =>
       fabricate("articles", { _id: ObjectId("5086df098523e60002000018") }, () =>
-        Article.destroy("5086df098523e60002000018", err =>
-          db.articles.count(function(err, count) {
+        Article.destroy("5086df098523e60002000018", _err =>
+          db.articles.count((_error, count) => {
             count.should.equal(10)
-            return done()
+            done()
           })
         )
       ))
 
     it("returns an error message", done =>
-      Article.destroy("5086df098523e60002000019", function(err) {
+      Article.destroy("5086df098523e60002000019", err => {
         err.message.should.equal("Article not found.")
-        return done()
+        done()
       }))
 
     // it 'removes the article from sailthru', (done) ->
@@ -141,14 +137,14 @@ describe("Article", function() {
     //       @deleteArticleFromSailthru.args[0][0].should.containEql '/video/article-slug'
     //       done()
 
-    return it("removes the article from elasticsearch", done =>
+    it("removes the article from elasticsearch", done =>
       fabricate(
         "articles",
         { _id: ObjectId("5086df098523e60002000019"), title: "quux" },
         () =>
           setTimeout(
             () =>
-              Article.destroy("5086df098523e60002000019", err =>
+              Article.destroy("5086df098523e60002000019", _err =>
                 setTimeout(
                   () =>
                     search.client.search(
@@ -156,9 +152,9 @@ describe("Article", function() {
                         index: search.index,
                         q: "title:quux",
                       },
-                      function(error, response) {
+                      (_error, response) => {
                         response.hits.hits.length.should.equal(0)
-                        return done()
+                        done()
                       }
                     ),
                   1000
@@ -169,53 +165,54 @@ describe("Article", function() {
       ))
   })
 
-  describe("#present", function() {
-    it("adds both _id and id", function() {
+  describe("#present", () => {
+    it("adds both _id and id", () => {
       const result = Article.present(
-        _.extend({}, fixtures().articles, { _id: "foo" })
+        extend({}, fixtures().articles, { _id: "foo" })
       )
       result.id.should.equal("foo")
-      return result._id.should.equal("foo")
+      result._id.should.equal("foo")
     })
 
-    return it("converts dates to ISO strings", function() {
+    it("converts dates to ISO strings", () => {
       const result = Article.present(
-        _.extend({}, fixtures().articles, {
+        extend({}, fixtures().articles, {
           published_at: new Date(),
           scheduled_publish_at: new Date(),
         })
       )
       moment(result.updated_at)
         .toISOString()
+        // @ts-ignore
         .should.equal(result.updated_at)
       moment(result.published_at)
         .toISOString()
+        // @ts-ignore
         .should.equal(result.published_at)
-      return moment(result.scheduled_publish_at)
+      moment(result.scheduled_publish_at)
         .toISOString()
+        // @ts-ignore
         .should.equal(result.scheduled_publish_at)
     })
   })
 
   describe("#presentCollection", () =>
-    it("shows a total/count/results hash for arrays of articles", function() {
+    it("shows a total/count/results hash for arrays of articles", () => {
       const result = Article.presentCollection({
         total: 10,
         count: 1,
-        results: [_.extend({}, fixtures().articles, { _id: "baz" })],
+        results: [extend({}, fixtures().articles, { _id: "baz" })],
       })
-      return result.results[0].id.should.equal("baz")
+      result.results[0].id.should.equal("baz")
     }))
 
-  describe("#getSuperArticleCount", function() {
-    it("returns 0 if the id is invalid", function() {
+  describe("#getSuperArticleCount", () => {
+    it("returns 0 if the id is invalid", () => {
       const id = "123"
-      return Article.getSuperArticleCount(id).then(count =>
-        count.should.equal(0)
-      )
+      Article.getSuperArticleCount(id).then(count => count.should.equal(0))
     })
 
-    return it("returns a count of super articles that have the given id as a related article", () =>
+    it("returns a count of super articles that have the given id as a related article", () =>
       fabricate(
         "articles",
         {
@@ -224,25 +221,23 @@ describe("Article", function() {
             related_articles: [ObjectId("5086df098523e60002000018")],
           },
         },
-        function() {
+        () => {
           const id = "5086df098523e60002000018"
-          return Article.getSuperArticleCount(id).then(count =>
-            count.should.equal(1)
-          )
+          Article.getSuperArticleCount(id).then(count => count.should.equal(1))
         }
       ))
   })
 
-  return describe("#promisedMongoFetch", () =>
+  describe("#promisedMongoFetch", () =>
     it("returns results, counts, and totals", () =>
       fabricate("articles", { _id: ObjectId("5086df098523e60002000018") }, () =>
         Article.promisedMongoFetch({
           count: true,
           ids: [ObjectId("5086df098523e60002000018")],
-        }).then(function({ count, total, results }) {
+        }).then(({ count, total, results }) => {
           count.should.equal(1)
           total.should.equal(11)
-          return results.length.should.equal(1)
+          results.length.should.equal(1)
         })
       )))
 })
