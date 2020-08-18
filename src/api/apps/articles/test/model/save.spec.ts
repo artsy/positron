@@ -447,7 +447,7 @@ describe("Save", () => {
         ],
       }))
 
-    it("repalaces http with https in sanitized links", done =>
+    it("inserts protocol for non artsy links", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
@@ -455,6 +455,48 @@ describe("Save", () => {
           }
           article.sections[0].body.should.containEql(
             '<a href="https://insecure-website.com">link</a>'
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        sections: [
+          {
+            type: "text",
+            body: "<a href='insecure-website.com'>link</a>",
+          },
+        ],
+      }))
+
+    it("repalaces http protocol with https for artsy links", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.sections[0].body.should.containEql(
+            '<a href="https://artsy.net/artist/andy-warhol">link</a>'
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        sections: [
+          {
+            type: "text",
+            body: "<a href='http://artsy.net/artist/andy-warhol'>link</a>",
+          },
+        ],
+      }))
+
+    it("does not change http protocol for non artsy links", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.sections[0].body.should.containEql(
+            '<a href="http://insecure-website.com">link</a>'
           )
           done()
         })
@@ -475,13 +517,14 @@ describe("Save", () => {
             done(err)
           }
           article.lead_paragraph.should.containEql(
-            '<a href="https://insecure-website.com">link</a>'
+            '<a href="https://insecure-website.com">link</a><a href="https://artsy.net/artist/andy-warhol">artsy link</a>'
           )
           done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
-        lead_paragraph: "<a href='http://insecure-website.com'>link</a>",
+        lead_paragraph:
+          '<a href="insecure-website.com">link</a><a href="http://artsy.net/artist/andy-warhol">artsy link</a>',
       }))
 
     it("sanitizes postscript", done =>
@@ -491,13 +534,14 @@ describe("Save", () => {
             done(err)
           }
           article.postscript.should.containEql(
-            '<a href="https://insecure-website.com">link</a>'
+            '<a href="https://insecure-website.com">link</a><a href="https://artsy.net/artist/andy-warhol">artsy link</a>'
           )
           done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
-        postscript: "<a href='http://insecure-website.com'>link</a>",
+        postscript:
+          '<a href="insecure-website.com">link</a><a href="http://artsy.net/artist/andy-warhol">artsy link</a>',
       }))
 
     it("sanitizes news_source", done =>
@@ -507,14 +551,14 @@ describe("Save", () => {
             done(err)
           }
           article.news_source.url.should.containEql(
-            "https://insecure-website.com"
+            "https://artsy.net/artist/andy-warhol"
           )
           done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
         news_source: {
-          url: "http://insecure-website.com",
+          url: "http://artsy.net/artist/andy-warhol",
         },
       }))
 

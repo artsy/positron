@@ -192,11 +192,10 @@ sanitize = (article) ->
 sanitizeLink = (urlString) ->
   return unless urlString
   u = url.parse urlString
+  return urlString if u.protocol is "https:"
+
   if u.protocol
-    if u.protocol is "http:"
-      urlString.replace("http:", "https:")
-    else
-      urlString
+    urlString.replace("http:", "https:") if u.hostname is "artsy.net"
   else
     'https://' + u.href
 
