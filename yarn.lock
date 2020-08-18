@@ -11,6 +11,17 @@
     lodash "4.17.15"
     prettier "1.19.1"
 
+"@artsy/backbone-mixins@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@artsy/backbone-mixins/-/backbone-mixins-2.0.0.tgz#8a7cd00c3f961f10fa457249d7c7db42dda1bdc5"
+  integrity sha512-xiz+s4xSItiHAC3gf50lihCj+vUVIq1hp9ZQyTfQMvv8oYhvFE+OVBqwFeQ8CmhOk2ujtVlkmK5TDwdR8OYhNw==
+  dependencies:
+    ics "^0.4.1"
+    marked "*"
+    moment "^2.11.1"
+    qs "5.2.0"
+    underscore "*"
+
 "@artsy/bucket-assets@1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@artsy/bucket-assets/-/bucket-assets-1.0.3.tgz#0b3139b736b19845fffb741d86926483a900f653"
@@ -2229,17 +2240,6 @@ arrify@^1.0.1:
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
   integrity sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0=
 
-artsy-backbone-mixins@artsy/artsy-backbone-mixins:
-  version "1.0.0"
-  resolved "https://codeload.github.com/artsy/artsy-backbone-mixins/tar.gz/6309f2a4d4e1a1458105d934b1ec89af6bb87e98"
-  dependencies:
-    bluebird-q "^1.0.3"
-    ics "^0.4.1"
-    marked "*"
-    moment "^2.11.1"
-    qs "5.2.0"
-    underscore "*"
-
 artsy-ezel-components@artsy/artsy-ezel-components:
   version "0.0.6"
   resolved "https://codeload.github.com/artsy/artsy-ezel-components/tar.gz/d253989b80fb40fdb9ef7e9826cf04b6db709547"
@@ -2775,7 +2775,7 @@ blob@0.0.5:
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
   integrity sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==
 
-bluebird-q@1.0.3, bluebird-q@^1.0.3:
+bluebird-q@1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/bluebird-q/-/bluebird-q-1.0.3.tgz#0d099248587d04212ca3070c008e4490f2586af2"
   integrity sha1-DQmSSFh9BCEsowcMAI5EkPJYavI=
