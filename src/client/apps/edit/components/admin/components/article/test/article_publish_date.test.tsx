@@ -111,7 +111,7 @@ describe("ArticlePublishDate", () => {
       ).toBe(moment(props.article.scheduled_publish_at).format("HH:mm"))
     })
 
-    it("Can change the time", () => {
+    xit("Can change the time", () => {
       props.article.published = true
       const component = getWrapper().instance() as ArticlePublishDate
       component.time.value = "02:34"
