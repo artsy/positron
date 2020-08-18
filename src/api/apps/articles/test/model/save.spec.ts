@@ -468,7 +468,7 @@ describe("Save", () => {
         ],
       }))
 
-    it("repalaces http protocol with https for artsy links", done =>
+    it("replaces http with https for artsy links", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {
@@ -485,6 +485,27 @@ describe("Save", () => {
           {
             type: "text",
             body: "<a href='http://artsy.net/artist/andy-warhol'>link</a>",
+          },
+        ],
+      }))
+
+    it("removes www from artsy links", done =>
+      Save.sanitizeAndSave(() =>
+        Article.find("5086df098523e60002000011", (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.sections[0].body.should.containEql(
+            '<a href="https://artsy.net/artist/andy-warhol">link</a>'
+          )
+          done()
+        })
+      )(null, {
+        _id: ObjectId("5086df098523e60002000011"),
+        sections: [
+          {
+            type: "text",
+            body: "<a href='http://www.artsy.net/artist/andy-warhol'>link</a>",
           },
         ],
       }))

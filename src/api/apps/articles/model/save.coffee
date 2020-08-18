@@ -192,12 +192,17 @@ sanitize = (article) ->
 sanitizeLink = (urlString) ->
   return unless urlString
   u = url.parse urlString
-  return urlString if u.protocol is "https:"
+
+  if u.hostname is "www.artsy.net"
+    urlString = urlString.replace("www.", "")
+
+  if urlString.includes("artsy.net")
+    urlString = urlString.replace("http:", "https:")
 
   if u.protocol
-    urlString.replace("http:", "https:") if u.hostname is "artsy.net"
+    return urlString
   else
-    'https://' + u.href
+    return 'https://' + u.href
 
 sanitizeHtml = (html) ->
   return xss html unless try $ = cheerio.load html, decodeEntities: false
