@@ -13,6 +13,8 @@ Article = require './index'
 { distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
+{ sanitizeLink } = require "./sanitize.ts"
+
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
@@ -188,21 +190,6 @@ sanitize = (article) ->
     sanitized.media.description = sanitizeHtml media.description if media.description
     sanitized.media.credits = sanitizeHtml media.credits if media.credits
   sanitized
-
-sanitizeLink = (urlString) ->
-  return unless urlString
-  u = url.parse urlString
-
-  if u.hostname is "www.artsy.net"
-    urlString = urlString.replace("www.", "")
-
-  if urlString.includes("artsy.net")
-    urlString = urlString.replace("http:", "https:")
-
-  if u.protocol
-    return urlString
-  else
-    return 'https://' + u.href
 
 sanitizeHtml = (html) ->
   return xss html unless try $ = cheerio.load html, decodeEntities: false
