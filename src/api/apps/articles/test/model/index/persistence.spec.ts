@@ -431,7 +431,7 @@ describe("Article Persistence", () => {
 
     it("escapes xss", done => {
       const body =
-        '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
+        '<h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com/">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com/">Aloha</a></p>'
       const badBody =
         '<script>alert(foo)</script><h2>Hi</h2><h3>Hello</h3><p><b>Hola</b></p><p><i>Guten Tag</i></p><ol><li>Bonjour<br></li><li><a href="http://www.foo.com">Bonjour2</a></li></ol><ul><li>Aloha</li><li>Aloha Again</li></ul><h2><b><i>Good bye</i></b></h2><p><b><i>Adios</i></b></p><h3>Alfiederzen</h3><p><a href="http://foo.com">Aloha</a></p>'
       Article.save(
@@ -504,10 +504,10 @@ describe("Article Persistence", () => {
           article.sections[3].items[0].caption.should.equal(
             '<p>abcd abcd</p>&lt;svg onload="alert(1)"/&gt;'
           )
-          article.sections[4].url.should.equal("http://maps.google.com")
+          article.sections[4].url.should.equal("https://maps.google.com/")
           article.sections[4].height.should.equal("400")
           article.sections[4].mobile_height.should.equal("300")
-          article.sections[5].url.should.equal("http://some-link.com")
+          article.sections[5].url.should.equal("https://some-link.com/")
           done()
         }
       )
@@ -554,10 +554,10 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.sections[0].body.should.equal(
-            '<a href="http://foo.com">Foo</a>'
+            '<a href="https://foo.com/">Foo</a>'
           )
           article.sections[1].body.should.equal(
-            '<a href="http://www.bar.com">Foo</a>'
+            '<a href="https://www.bar.com/">Foo</a>'
           )
           done()
         }
@@ -594,10 +594,10 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.sections[0].body.should.equal(
-            '<a href="http://foo.com">Foo</a>'
+            '<a href="https://foo.com/">Foo</a>'
           )
           article.sections[1].images[0].url.should.equal("http://foo.com")
-          article.sections[2].url.should.equal("http://foo.com/watch")
+          article.sections[2].url.should.equal("https://foo.com/watch")
           done()
         }
       ))
@@ -1513,7 +1513,7 @@ describe("Article Persistence", () => {
             done(err)
           }
           article.news_source.title.should.equal("The New York Times")
-          article.news_source.url.should.equal("https://nytimes.com")
+          article.news_source.url.should.equal("https://nytimes.com/")
           done()
         }
       ))
