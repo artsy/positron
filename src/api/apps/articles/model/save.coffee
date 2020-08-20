@@ -13,8 +13,6 @@ Article = require './index'
 { distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
-{ sanitizeLink } = require "./sanitize.ts"
-
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
@@ -22,11 +20,11 @@ artsyXapp = require('artsy-xapp')
   @generateSlugs article, cb
 
 @onUnpublish = (article, cb) =>
-  @generateSlugs article, (err, article) ->
-    deleteArticleFromSailthru getArticleUrl(article), ->
+  @generateSlugs article, (err, article) =>
+    deleteArticleFromSailthru getArticleUrl(article), =>
       cb null, article
 
-setOnPublishFields = (article) ->
+setOnPublishFields = (article) =>
   article.email_metadata = article.email_metadata or {}
   article.email_metadata.image_url = article.thumbnail_image unless article.email_metadata?.image_url
   if article.contributing_authors?.length > 0
@@ -66,7 +64,7 @@ removeStopWords = (title) ->
   # Moves the slug to the end of the slugs array if it already exists in the array
   if article.slugs && article.slugs.includes(slug)
     article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
-    return cb null, article
+    return cb null, article  
 
   # # Appends published_at to slug if that slug already exists
   db.articles.count { slugs: slug }, (err, count) ->
@@ -87,7 +85,7 @@ removeStopWords = (title) ->
       # If the slug with the appended date already exists in the array it moves it to the end
       if article.slugs && article.slugs.includes(slug)
         article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
-        return cb null, article
+        return cb null, article 
 
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
@@ -137,7 +135,7 @@ removeStopWords = (title) ->
             .get("#{ARTSY_URL}/api/v1/partner/#{partnerId}")
             .set('X-Xapp-Token': token)
             .end callback
-  async.parallel callbacks, (err, results) ->
+  async.parallel callbacks, (err, results) =>
     return cb(err) if err
     keywords = article.tags or []
     keywords = keywords.concat (res.body.name for res in results)
@@ -147,13 +145,13 @@ removeStopWords = (title) ->
     article.keywords = keywords[0..9]
     cb(null, article)
 
-@sanitizeAndSave = (callback) -> (err, article) ->
+@sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
     indexForSearch(article, ->) if article.indexable
-    distributeArticle article, ->
+    distributeArticle article, =>
       db.articles.save sanitize(article), callback
   else
     indexForSearch(article, ->) if article.indexable
@@ -179,10 +177,7 @@ sanitize = (article) ->
     title: sanitizeHtml article.title?.replace /\n/g, ''
     thumbnail_title: sanitizeHtml article.thumbnail_title
     lead_paragraph: sanitizeHtml article.lead_paragraph
-    postscript: sanitizeHtml article.postscript
     sections: sections
-  if article.news_source
-    sanitized.news_source.url = sanitizeLink article.news_source.url
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
   if article.media
@@ -190,6 +185,10 @@ sanitize = (article) ->
     sanitized.media.description = sanitizeHtml media.description if media.description
     sanitized.media.credits = sanitizeHtml media.credits if media.credits
   sanitized
+
+sanitizeLink = (urlString) ->
+  u = url.parse urlString
+  if u.protocol then urlString else 'http://' + u.href
 
 sanitizeHtml = (html) ->
   return xss html unless try $ = cheerio.load html, decodeEntities: false
