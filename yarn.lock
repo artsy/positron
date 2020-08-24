@@ -35,10 +35,10 @@
     superagent "^1.2.0"
     underscore "^1.8.3"
 
-"@artsy/cohesion@1.31.0":
-  version "1.31.0"
-  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.31.0.tgz#481a03d67570344faf54cee7a12f92c9d16e7b62"
-  integrity sha512-kYSGPSAzTegDlGu2Yr7ConSfp7we07d6dhrbV2F/GakXoVUU1Y4Gx+y7RIFIq5giwXSOUDPsoiRX1UkaPPvcCA==
+"@artsy/cohesion@1.31.1":
+  version "1.31.1"
+  resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.31.1.tgz#37164e385981efe1ee43bc6ab3b03cfb6dd5f207"
+  integrity sha512-mVeKtAettwwQS6CwIv4jY+SXqzL4CynHuqR3j7qJuQ0GErI6LWx4BA1l1/edRsvT11W2hkdh45F/cMO6lwTQjg==
 
 "@artsy/detect-responsive-traits@^0.0.5":
   version "0.0.5"
