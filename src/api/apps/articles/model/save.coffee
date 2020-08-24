@@ -180,7 +180,7 @@ sanitize = (article) ->
     lead_paragraph: sanitizeHtml article.lead_paragraph
     postscript: sanitizeHtml article.postscript
     sections: sections
-  if article.news_source
+  if article.news_source?.url
     sanitized.news_source.url = sanitizeLink article.news_source.url
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
