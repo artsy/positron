@@ -13,6 +13,7 @@ Article = require './index'
 { distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
+{ sanitizeLink } = require "./sanitize.js"
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
@@ -64,7 +65,7 @@ removeStopWords = (title) ->
   # Moves the slug to the end of the slugs array if it already exists in the array
   if article.slugs && article.slugs.includes(slug)
     article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
-    return cb null, article  
+    return cb null, article
 
   # # Appends published_at to slug if that slug already exists
   db.articles.count { slugs: slug }, (err, count) ->
@@ -85,7 +86,7 @@ removeStopWords = (title) ->
       # If the slug with the appended date already exists in the array it moves it to the end
       if article.slugs && article.slugs.includes(slug)
         article.slugs.push(article.slugs.splice(article.slugs.indexOf(slug), 1)[0])
-        return cb null, article 
+        return cb null, article
 
     article.slugs = (article.slugs or []).concat slug
     cb(null, article)
@@ -177,7 +178,10 @@ sanitize = (article) ->
     title: sanitizeHtml article.title?.replace /\n/g, ''
     thumbnail_title: sanitizeHtml article.thumbnail_title
     lead_paragraph: sanitizeHtml article.lead_paragraph
+    postscript: sanitizeHtml article.postscript
     sections: sections
+  if article.news_source
+    sanitized.news_source.url = sanitizeLink article.news_source.url
   if article.hero_section?.caption
     sanitized.hero_section.caption = sanitizeHtml article.hero_section.caption
   if article.media
@@ -185,10 +189,6 @@ sanitize = (article) ->
     sanitized.media.description = sanitizeHtml media.description if media.description
     sanitized.media.credits = sanitizeHtml media.credits if media.credits
   sanitized
-
-sanitizeLink = (urlString) ->
-  u = url.parse urlString
-  if u.protocol then urlString else 'http://' + u.href
 
 sanitizeHtml = (html) ->
   return xss html unless try $ = cheerio.load html, decodeEntities: false
