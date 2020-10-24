@@ -161,7 +161,7 @@
     "benv": "3.3.0",
     "chokidar": "1.7.0",
     "coffee-loader": "0.9.0",
-    "css-loader": "3.4.2",
+    "css-loader": "5.0.0",
     "cypress": "4.1.0",
     "enzyme": "3.9.0",
     "enzyme-adapter-react-16": "1.15.1",
