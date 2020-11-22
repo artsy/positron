@@ -1273,7 +1273,7 @@ describe("Article Persistence", () => {
             },
             "foo",
             {},
-            (err, article) => {
+            function(err, article) {
               if (err) {
                 done(err)
               }
