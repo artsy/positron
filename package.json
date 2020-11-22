@@ -152,7 +152,7 @@
     "@types/node": "8.5.2",
     "@types/react": "16.8.4",
     "@types/react-dom": "16.8.2",
-    "@types/styled-components": "4.4.2",
+    "@types/styled-components": "^5.1.4",
     "@types/styled-system": "3.0.9",
     "@types/testing-library__cypress": "5.0.3",
     "babel-eslint": "10.0.3",
