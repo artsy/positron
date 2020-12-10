@@ -18,17 +18,19 @@ RUN apk add --no-cache --quiet \
 COPY package.json yarn.lock ./
 RUN yarn install --frozen-lockfile && yarn cache clean
 
-# Copy application code
-COPY . ./
+# Update file/directory permissions
+RUN chown -R deploy:deploy ./
 
-# Ensure COMMIT_HASH is present
-RUN test -n "$COMMIT_HASH" && \
-  echo $COMMIT_HASH > COMMIT_HASH.txt && \
-  # Update file/directory permissions
-  chown -R deploy:deploy ./
+# Copy application code
+COPY --chown=deploy:deploy . ./
 
 # Switch to less-privileged user
 USER deploy
+
+# Ensure COMMIT_HASH is present
+# Run this step as late as possible b/c it busts docker cache.
+RUN test -n "$COMMIT_HASH" && \
+  echo $COMMIT_HASH > COMMIT_HASH.txt
 
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["yarn", "start"]
