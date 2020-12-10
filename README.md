@@ -41,7 +41,7 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 hokusai staging env get | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
 ```
 
-### Installs (Skip if you use hokusai dev start)
+### Installs (Skip if you use hokusai dev)
 
 - Install [NVM](https://github.com/creationix/nvm)
 - Install Node 12
@@ -79,10 +79,9 @@ brew services start elasticsearch
 
 ### Prepare database
 
-- Create a dummy channel
-  In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
+In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
 
-  If using a local database, use these steps to backfill required data:
+If using a local database, use these steps to create a dummy channel:
 
 1. Create a collection called `channels` in a `positron` db in your mongo database (You can use the mongo shell or a simple UI like Robomongo.)
 2. Add a document with the following fields:
@@ -103,7 +102,7 @@ brew services start elasticsearch
 yarn start
 ```
 
-#### Using Hokusai
+#### Using Hokusai Dev
 
 `COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
 
