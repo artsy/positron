@@ -2,9 +2,7 @@ version: "2"
 services:
   positron:
     command: ["yarn", "test"]
-    extends:
-      file: build.yml
-      service: positron
+{% include 'templates/docker-compose-service.yml.j2' %}
     environment:
       - CI=true
       - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
