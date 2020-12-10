@@ -33,6 +33,7 @@
 ```
 git clone git@github.com:craigspaeth/positron.git && cd positron
 ```
+- Setup [Hokusai](https://github.com/artsy/README/blob/master/playbooks/hokusai.md#quickstart)
 
 - Copy `.env.example` to `.env` in the root of the project and edit all `REPLACE` values with sensitive configuration obtained from `positron-staging`. Use the following command:
 
@@ -96,21 +97,20 @@ brew services start elasticsearch
 
 ### Start the server
 
-- Start the server using yarn
+#### Using Yarn
 
 ```
 yarn start
 ```
 
-- Start the server using Hokusai
+#### Using Hokusai
 
-- Set up [Hokusai](https://github.com/artsy/README/blob/master/playbooks/hokusai.md#quickstart)
-- `COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
+`COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
 
 This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Positron. Changes made to source-code are _not_ automatically reloaded. To shut down, press `ctrl+c` or execute `hokusai dev stop`.
 
 
-- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer.
+Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer.
 
 If you are an Artsy Admin, you should see the default partner gallery channel (David Zwirner). If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
 
