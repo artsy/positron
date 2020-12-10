@@ -80,9 +80,7 @@ brew services start elasticsearch
 
 #### Using staging database
 
-In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
-
-Edit the MONGOHQ_URL in `.env`, or, if you use Hokusai dev, edit the one in `hokusai/development.yml` which takes precedence.
+In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL env to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
 
 #### Using a local database
 
