@@ -116,14 +116,16 @@ If you are an Artsy Admin, you should see the default partner gallery channel (D
 
 ##  Run tests
 
-- Using Yarn
+### Using Yarn
+
 ```
 yarn test
 ```
 
 Make sure you have mongo running in the background or most tests will not work.
 
-- Using Hokusai
+### Using Hokusai
+
 ```
 hokusai test
 ```
