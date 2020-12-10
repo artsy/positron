@@ -82,11 +82,11 @@ brew services start elasticsearch
 
 In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
 
-Edit the MONGOHQ_URL in `.env`, or, if you use Hokusai dev, edit the one in `hokusai/development.yml` which takes precedence over the one in `.env`.
+Edit the MONGOHQ_URL in `.env`, or, if you use Hokusai dev, edit the one in `hokusai/development.yml` which takes precedence.
 
 #### Using a local database
 
-Follow these steps to create a dummy channel:
+With MongoDB running locally, follow these steps to create a dummy channel:
 
 1. Create a collection called `channels` in a `positron` db in your mongo database (You can use the mongo shell or a simple UI like Robomongo.)
 2. Add a document with the following fields:
@@ -99,7 +99,7 @@ Follow these steps to create a dummy channel:
 }
 ```
 
-Please note that if you are using Hokusai dev, you will have to start the stack (including app server) first, edit the database as mentioned in this step, and restart the stack.
+If you are using Hokusai dev, start the stack as mentioned in subsequent section, edit the database as mentioned in this step, then restart the stack.
 
 
 ### Start the server
