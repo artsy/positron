@@ -22,27 +22,12 @@
 
 [![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master) [![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 
-## Set-Up
+## Setup
 
-### Via Hokusai
-
-- Set up [Hokusai](https://github.com/artsy/README/blob/master/playbooks/hokusai.md#quickstart)
-- `git clone git@github.com:<your username>/positron.git && cd positron`
-- `COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
-
-This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Positron. Changes made to source-code are _not_ automatically reloaded. To shut down, press `ctrl+c` or execute `hokusai dev stop`.
-
-### Manually
-
-- Install [NVM](https://github.com/creationix/nvm)
-- Install Node 12
-
-```
-nvm install 12
-nvm alias default 12
-```
+### Preparation
 
 - Fork Positron to your Github account in the Github UI.
+
 - Clone your repo locally (substitute your Github username).
 
 ```
@@ -53,6 +38,16 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 
 ```
 hokusai staging env get | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
+```
+
+### Installs (Skip if you use hokusai dev start)
+
+- Install [NVM](https://github.com/creationix/nvm)
+- Install Node 12
+
+```
+nvm install 12
+nvm alias default 12
 ```
 
 - Install node modules
@@ -80,8 +75,11 @@ brew install elasticsearch
 brew services start elasticsearch
 ```
 
+
+### Prepare database
+
 - Create a dummy channel
-  In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you will likely want to point your MONGOHQ_URL to the staging database. Because staging/production databases are protected on our VPC, it is required that you give user permissions to your AWS account and run the [Tunnelblick VPN](https://tunnelblick.net/) while connecting to the database. See details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
+  In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
 
   If using a local database, use these steps to backfill required data:
 
@@ -96,15 +94,29 @@ brew services start elasticsearch
 }
 ```
 
-- Start the server
+### Start the server
+
+- Start the server using yarn
 
 ```
 yarn start
 ```
 
-- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer. If you are an Artsy Admin pointed to the staging database, you should see the default partner gallery channel (David Zwirner).
+- Start the server using Hokusai
 
-If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
+
+- Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer.
+
+If you are an Artsy Admin, you should see the default partner gallery channel (David Zwirner). If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
+
+### Launch services using Hokusai
+
+# Run the stack using Hokusai Dev.
+
+- Set up [Hokusai](https://github.com/artsy/README/blob/master/playbooks/hokusai.md#quickstart)
+- `COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
+
+This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Positron. Changes made to source-code are _not_ automatically reloaded. To shut down, press `ctrl+c` or execute `hokusai dev stop`.
 
 - Run tests
 
