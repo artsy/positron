@@ -41,7 +41,7 @@ git clone git@github.com:craigspaeth/positron.git && cd positron
 hokusai staging env get | grep -E `cat .env.example | grep REPLACE | cut -f1 -d= | xargs | tr ' ' \|` | sed -e 's/:\ /=/g' | sed -e 's/ //g'
 ```
 
-### Installs (Skip if you use hokusai dev)
+### Installs (skip if you use hokusai dev, please see section below)
 
 - Install [NVM](https://github.com/creationix/nvm)
 - Install Node 12
@@ -76,12 +76,17 @@ brew install elasticsearch
 brew services start elasticsearch
 ```
 
-
 ### Prepare database
+
+#### Using staging database
 
 In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
 
-If using a local database, use these steps to create a dummy channel:
+Edit the MONGOHQ_URL in `.env`, or, if you use Hokusai dev, edit the one in `hokusai/development.yml` which takes precedence over the one in `.env`.
+
+#### Using a local database
+
+Follow these steps to create a dummy channel:
 
 1. Create a collection called `channels` in a `positron` db in your mongo database (You can use the mongo shell or a simple UI like Robomongo.)
 2. Add a document with the following fields:
@@ -93,6 +98,9 @@ If using a local database, use these steps to create a dummy channel:
   user_ids: [ObjectId("<your_user_id>")]
 }
 ```
+
+Please note that if you are using Hokusai dev, you will have to start the stack (including app server) first, edit the database as mentioned in this step, and restart the stack.
+
 
 ### Start the server
 
