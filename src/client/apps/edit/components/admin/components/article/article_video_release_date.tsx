@@ -72,8 +72,6 @@ export class ArticleVideoReleaseDate extends Component<
           <Button
             disabled={!hasChanged && !releaseDate}
             onClick={this.onMediaReleaseChange}
-            width="100%"
-            height="auto"
           >
             Update
           </Button>

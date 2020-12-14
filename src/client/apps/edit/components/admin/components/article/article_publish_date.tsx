@@ -161,8 +161,6 @@ export class ArticlePublishDate extends Component<ArticlePublishDateProps> {
           <Button
             disabled={!hasChanged && !scheduled_publish_at}
             onClick={this.onScheduleChange}
-            width="100%"
-            height="auto"
           >
             {this.getPublishText()}
           </Button>
