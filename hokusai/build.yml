@@ -1,0 +1,5 @@
+---
+version: "2"
+services:
+  positron:
+{% include 'templates/docker-compose-service.yml.j2' %}
