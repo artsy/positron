@@ -1,7 +1,5 @@
+---
 version: "2"
 services:
   positron:
-    build:
-      context: ../
-      args:
-        - COMMIT_HASH
+{% include 'templates/docker-compose-service.yml.j2' %}
