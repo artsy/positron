@@ -1,6 +1,5 @@
 FROM node:12.18-alpine
 
-ARG COMMIT_HASH
 ENV PORT 3005
 EXPOSE 3005
 
@@ -27,6 +26,7 @@ COPY --chown=deploy:deploy . ./
 
 # Ensure COMMIT_HASH is present
 # Run this step as late as possible b/c it busts docker cache.
+ARG COMMIT_HASH
 RUN test -n "$COMMIT_HASH" && \
   echo $COMMIT_HASH > COMMIT_HASH.txt
 
