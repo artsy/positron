@@ -11,6 +11,8 @@ spec:
   selector:
     matchLabels:
       app: positron
+      component: web
+      layer: application
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -87,7 +89,7 @@ metadata:
   namespace: default
 spec:
   scaleTargetRef:
-    apiVersion: extensions/v1beta1
+    apiVersion: apps/v1
     kind: Deployment
     name: positron-web
   minReplicas: 2
@@ -216,18 +218,20 @@ spec:
   type: ClusterIP
 
 ---
-apiVersion: extensions/v1beta1
+apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: positron
   annotations:
     nginx.ingress.kubernetes.io/whitelist-source-range: "{{ cloudflareIpSourceRanges|join(',') }}"
 spec:
+  ingressClassName: nginx
   rules:
     - host: writer.artsy.net
       http:
         paths:
           - path: /
+            pathType: Prefix
             backend:
               serviceName: positron-web-internal
               servicePort: http
