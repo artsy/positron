@@ -20,7 +20,7 @@ interface Props {
   deleteArticleAction: () => void
   edit: Edit
   forceURL: string
-  hasTeamRole: boolean
+  isAdmin: boolean
   publishArticleAction: () => void
   saveArticleAction: () => void
 }
@@ -168,7 +168,7 @@ export class EditHeader extends Component<Props> {
       channel,
       edit,
       forceURL,
-      hasTeamRole,
+      isAdmin,
     } = this.props
 
     const { isDeleting } = edit
@@ -186,7 +186,7 @@ export class EditHeader extends Component<Props> {
           >
             <Tab name="Content" />
             <Tab name="Display" />
-            {hasTeamRole && (<Tab name="Admin" /> as any)}
+            {isAdmin && (<Tab name="Admin" /> as any)}
           </Tabs>
         </TabContainer>
 
@@ -264,7 +264,7 @@ const mapStateToProps = state => ({
   channel: state.app.channel,
   edit: state.edit,
   forceURL: state.app.forceURL,
-  hasTeamRole: state.app.hasTeamRole
+  isAdmin: state.app.isAdmin,
 })
 
 const mapDispatchToProps = {
