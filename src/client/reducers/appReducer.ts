@@ -24,6 +24,7 @@ export interface AppState {
   channel: ChannelState
   forceURL: string
   isAdmin: boolean
+  hasTeamRole: boolean
   isEditorial: boolean
   isPartnerChannel: boolean
   metaphysicsURL: string
@@ -43,6 +44,7 @@ export const getInitialState = () =>
     channel: sd.CURRENT_CHANNEL,
     forceURL: sd.FORCE_URL,
     isAdmin: sd.USER && sd.USER.type === "Admin",
+    hasTeamRole: sd.USER && sd.USER.roles && sd.USER.roles.includes("team"),
     isEditorial: sd.CURRENT_CHANNEL && sd.CURRENT_CHANNEL.type === "editorial",
     isPartnerChannel:
       sd.CURRENT_CHANNEL && sd.CURRENT_CHANNEL.type === "partner",
