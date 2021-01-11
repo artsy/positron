@@ -347,7 +347,7 @@ export const backfill = callback => {
         console.log("---------------------")
         console.log("---------------------")
         console.log(
-          `Backfilling article: ${article.slugs[article.slugs.length - 1]}`
+          `Backfilling article: ${articles.indexOf(article) + 1} of ${articles.length}, ${article.slugs[article.slugs.length - 1]}`
         )
 
         /*
