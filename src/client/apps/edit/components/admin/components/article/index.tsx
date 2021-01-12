@@ -25,6 +25,7 @@ export interface AdminArticleProps {
   article: ArticleData
   apiURL: string
   isEditorial: boolean
+  isAdmin: boolean
   onChangeArticleAction: (key: string, value: any) => void
   user: any
 }
