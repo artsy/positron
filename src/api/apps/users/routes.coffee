@@ -1,5 +1,6 @@
 { present } = User = require './model'
 { API_URL } = process.env
+jwtDecode = require 'jwt-decode'
 
 # GET /api/users/me
 @show = (req, res, next) ->
@@ -16,6 +17,11 @@
   return res.err 401, 'Must be an admin' unless req.user?.type is 'Admin'
   next()
 
+# Require team role middleware
+@teamOnly = (req, res, next) ->
+  return res.err 401, 'Must have team role' unless req.user?.roles?.includes("team")
+  next()
+
 # Set the user from an access token and alias the `me` param
 @setUser = (req, res, next) ->
   return next() unless req.accessToken
@@ -26,6 +32,7 @@
     res.err 404, 'Could not find a user from that access token'  unless user?
     # Alias on the request object
     req.user = user
+    req.user.roles = jwtDecode(req.accessToken).roles
 
     # If `me` is passed as a value for any params, replace it with the
     # current user's id to transparently allow routes like
@@ -41,4 +48,5 @@
   User.refresh req.accessToken, (err, user) ->
     res.err 404, 'Could not find a user from that access token' unless user?
     req.user = user
+    req.user.roles = jwtDecode(req.accessToken).roles
     res.send present user
