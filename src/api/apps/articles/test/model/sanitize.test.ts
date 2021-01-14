@@ -51,4 +51,10 @@ describe("#sanitizeLink", () => {
       "https://www.artsy.net/agotoronto/articles"
     )
   })
+
+  it("does not replace non-artsy urls with the substring '/posts' with '/articles'", () => {
+    expect(sanitizeLink("http://www.notartsy.net/posts")).toBe(
+      "http://www.notartsy.net/posts"
+    )
+  })
 })

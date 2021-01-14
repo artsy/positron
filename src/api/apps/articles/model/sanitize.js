@@ -13,7 +13,6 @@ export const sanitizeLink = urlString => {
   } catch (_e) {
     url = new URL(`https://${urlString}`)
   }
-
   if (url.hostname === "artsy.net") {
     url.hostname = "www.artsy.net"
   }
@@ -23,8 +22,12 @@ export const sanitizeLink = urlString => {
   if (url.href.includes("artsy.net/post/")) {
     url.href = url.href.replace("/post/", "/article/")
   }
-  if (url.href.includes("/posts")) {
-    url.href = url.href.replace("/posts", "/articles")
+  if (url.href.match(/\b(artsy.net\/)\w*\b\/(posts)/gm)) { // e.g: http://artsy.net/agotoronto/posts -> http://artsy.net/agotoronto/articles
+    const regex = /\b(artsy.net\/\w*\b\/)\b(posts)/;
+    const str = url.href;
+    const subst = `$1articles`;
+    const result = str.replace(regex, subst);
+    url.href = result
   }
 
   return url.href

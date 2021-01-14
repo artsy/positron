@@ -341,18 +341,20 @@ export const backfill = callback => {
       articles,
       (article, cb) => {
         console.log("---------------------")
-        console.log("---------------------")
+        console.log("---------------------")  
         console.log("---------------------")
         console.log("---------------------")
         console.log("---------------------")
         console.log("---------------------")
         console.log(
-          `Backfilling article: ${articles.indexOf(article) + 1} of ${articles.length}, ${article.slugs[article.slugs.length - 1]}`
+          `Backfilling article: ${articles.indexOf(article) + 1} of ${articles.length}, ${article.slugs[article.slugs.length - 1]}, published at ${article.published_at}`
         )
+     
 
         /*
         Write backfill logic here. Make sure to callback with cb()
         eg: distributeArticle(article,cb)
+        eg: sanitizeAndSave(cb)(null, article)
       */
       },
       (err, results) => {
