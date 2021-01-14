@@ -5,7 +5,7 @@ import { Channel } from "client/typings"
 import $ from "jquery"
 import { debounce } from "lodash"
 import React, { Component } from "react"
-import { hot } from "react-hot-loader"
+import { hot } from "react-hot-loader/root"
 import { connect } from "react-redux"
 import Waypoint from "react-waypoint"
 import styled from "styled-components"
@@ -177,7 +177,7 @@ const mapDispatchToProps = {
   viewArticlesAction: viewArticles,
 }
 
-export default hot(module)(
+export default hot(
   connect(
     mapStateToProps,
     mapDispatchToProps
