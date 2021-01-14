@@ -15,5 +15,14 @@ module.exports = merge(common, {
     ],
     ...getEntrypoints(),
   },
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx|ts|tsx)$/,
+        use: "react-hot-loader/webpack",
+        include: /node_modules/,
+      },
+    ],
+  },
   plugins: [new webpack.HotModuleReplacementPlugin()],
 })

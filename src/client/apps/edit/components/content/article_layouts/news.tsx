@@ -5,7 +5,7 @@ import { onChangeArticle } from "client/actions/edit/articleActions"
 import { EditSourceControls } from "client/apps/edit/components/content/sections/news/EditSourceControls"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
 import React, { Component } from "react"
-import { hot } from "react-hot-loader"
+import { hot } from "react-hot-loader/root"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import SectionList from "../section_list"
@@ -88,7 +88,7 @@ const mapDispatchToProps = {
   onChangeArticleAction: onChangeArticle,
 }
 
-export default hot(module)(
+export default hot(
   connect(
     mapStateToProps,
     mapDispatchToProps
