@@ -14,6 +14,7 @@ Article = require './index'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
+chalk = require 'chalk'
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
@@ -137,7 +138,17 @@ removeStopWords = (title) ->
             .set('X-Xapp-Token': token)
             .end callback
   async.parallel callbacks, (err, results) =>
-    return cb(err) if err
+    if err
+      console.log chalk.red('[ERROR: articles/model/save @ generateKeywords]'), err.response.error
+
+      # TODO: because there was an error saving keywords (eg artwork was
+      # unpublished, or artist deleted, or hyperlink incorrect), we return
+      # article as is, without updated keywords. It would be better if there
+      # was a way to surface this in the UI, either as an error state or as
+      # a validation.
+
+      return cb(null, article)
+
     keywords = article.tags or []
     keywords = keywords.concat (res.body.name for res in results)
     if article.contributing_authors?.length > 0
