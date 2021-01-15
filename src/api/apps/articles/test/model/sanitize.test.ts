@@ -39,4 +39,22 @@ describe("#sanitizeLink", () => {
       "https://www.artsy.net/artist/andy-warhol"
     )
   })
+
+  it("replaces /post with /article", () => {
+    expect(sanitizeLink("http://artsy.net/post/some-old-editorial")).toBe(
+      "https://www.artsy.net/article/some-old-editorial"
+    )
+  })
+
+  it("replaces /posts with /articles", () => {
+    expect(sanitizeLink("http://artsy.net/agotoronto/posts")).toBe(
+      "https://www.artsy.net/agotoronto/articles"
+    )
+  })
+
+  it("does not replace non-artsy urls with the substring '/posts' with '/articles'", () => {
+    expect(sanitizeLink("http://www.notartsy.net/posts")).toBe(
+      "http://www.notartsy.net/posts"
+    )
+  })
 })

@@ -13,7 +13,7 @@ export const standardizeSpacing = html => {
     .replace(/<p><\/p>/g, "<p><br></p>")
     .replace(/<p> <\/p>/g, "<p><br></p>")
     .replace(/<p><br><\/p><p><br><\/p>/g, "<p><br></p>")
-    .replace(/  /g, " ")
+    .replace(/ {2}/g, " ")
 
   return newHtml
 }

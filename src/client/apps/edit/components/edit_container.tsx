@@ -14,7 +14,7 @@ import {
 } from "client/typings"
 import { once } from "lodash"
 import React, { Component } from "react"
-import { hot } from "react-hot-loader"
+import { hot } from "react-hot-loader/root"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import EditAdmin from "./admin"
@@ -238,7 +238,7 @@ const mapDispatchToProps = {
   toggleSpinnerAction: toggleSpinner,
 }
 
-export default hot(module)(
+export default hot(
   connect(
     mapStateToProps,
     mapDispatchToProps
