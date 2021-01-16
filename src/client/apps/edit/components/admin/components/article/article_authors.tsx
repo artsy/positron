@@ -92,15 +92,16 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
               />
             </Box>
           )}
-          {article.layout !== "news" && isAdmin && (
+          {article.layout !== "news" && (
             <AutocompleteListMetaphysics
               field="contributing_authors"
-              label="Contributing Authors"
+              label="Contributing Authors (admin role required)"
               model="users"
               isDraggable
               onDragEnd={items => {
                 onChangeArticleAction("contributing_authors", items)
               }}
+              disabled={!isAdmin}
             />
           )}
         </Box>
