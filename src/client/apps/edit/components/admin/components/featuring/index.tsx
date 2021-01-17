@@ -3,16 +3,22 @@ import AutocompleteListMetaphysics from "client/components/autocomplete2/list_me
 import React from "react"
 import { FeaturingMentioned } from "./featuring_mentioned"
 
-export const AdminFeaturing = () => {
+interface AdminFeaturingProps {
+  isAdmin: boolean
+}
+
+export const AdminFeaturing = (props: AdminFeaturingProps) => {
+  const { isAdmin } = props
   return (
     <div>
       <Flex flexDirection={["column", "row"]}>
         <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="partner_ids"
-            label="Partners"
+            label="Partners (admin role required)"
             model="partners"
             placeholder="Search by partner name..."
+            disabled={!isAdmin}
           />
         </Box>
 
@@ -30,18 +36,20 @@ export const AdminFeaturing = () => {
         <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="show_ids"
-            label="Shows"
+            label="Shows (admin role required)"
             model="partner_shows"
             placeholder="Search by show name..."
+            disabled={!isAdmin}
           />
         </Box>
 
         <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="auction_ids"
-            label="Auctions"
+            label="Auctions (admin role required)"
             model="sales"
             placeholder="Search by auction name..."
+            disabled={!isAdmin}
           />
         </Box>
       </Flex>
