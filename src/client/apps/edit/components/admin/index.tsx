@@ -74,11 +74,11 @@ export class EditAdmin extends Component<EditAdminProps> {
             <AdminArticle />
           </Box>
 
-          {isAdmin && (
           <Box pt={4}>
-            <AdminFeaturing />
+            <AdminFeaturing
+              isAdmin={isAdmin}
+            />
           </Box>
-          )}
 
           {!isNews && (
             <Box pt={4}>
