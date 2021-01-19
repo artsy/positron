@@ -32,7 +32,7 @@ jwtDecode = require 'jwt-decode'
     res.err 404, 'Could not find a user from that access token'  unless user?
     # Alias on the request object
     req.user = user
-    req.user.roles = jwtDecode(req.accessToken).roles
+    req.user?.roles = jwtDecode(req.accessToken).roles
 
     # If `me` is passed as a value for any params, replace it with the
     # current user's id to transparently allow routes like
@@ -48,5 +48,5 @@ jwtDecode = require 'jwt-decode'
   User.refresh req.accessToken, (err, user) ->
     res.err 404, 'Could not find a user from that access token' unless user?
     req.user = user
-    req.user.roles = jwtDecode(req.accessToken).roles
+    req.user?.roles = jwtDecode(req.accessToken).roles
     res.send present user
