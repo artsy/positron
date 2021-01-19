@@ -7,7 +7,7 @@ interface AdminFeaturingProps {
   isAdmin: boolean
 }
 
-export const AdminFeaturing = (props: AdminFeaturingProps) => {
+export const AdminFeaturing: React.SFC<AdminFeaturingProps> = props => {
   const { isAdmin } = props
   return (
     <div>
