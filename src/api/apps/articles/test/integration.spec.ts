@@ -58,7 +58,7 @@ describe("articles endpoints", () => {
         }
       )))
 
-  describe("as a non-admin", () => {
+  describe("as a non-admin and no team role", () => {
     let normieToken
     beforeEach(done => {
       normieToken =
@@ -88,7 +88,7 @@ describe("articles endpoints", () => {
         .send({ featured: true })
         .end((err, res) => {
           err.status.should.equal(401)
-          res.body.message.should.containEql("must be an admin")
+          res.body.message.should.containEql("must have team role")
           done()
         })
     })

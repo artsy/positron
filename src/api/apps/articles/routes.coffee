@@ -57,6 +57,12 @@ User = require '../users/model.coffee'
     return next err if err
     res.send present req.article
 
+@restrictFeature = (req, res, next) ->
+  if !req.user?.roles?.includes("team") and req.body.featured
+    res.err 401, 'You must have team role to feature an article.'
+  else
+    next()
+
 # Fetch & attach a req.article middleware
 @find = (req, res, next) ->
   Article.find (req.params.id or req.query.article_id), (err, article) ->
