@@ -285,6 +285,8 @@ module.exports = ->
     sd:
       PATH: '/'
       URL: '/'
+      USER:
+        roles: ''
     moment: require 'moment'
     sharify:
       script: -> '<script>var sharify = {}</script>'
