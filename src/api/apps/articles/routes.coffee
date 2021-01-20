@@ -57,10 +57,9 @@ User = require '../users/model.coffee'
     return next err if err
     res.send present req.article
 
-# Don't let non-admins feature
 @restrictFeature = (req, res, next) ->
-  if req.user?.type isnt 'Admin' and req.body.featured
-    res.err 401, 'You must be an admin to feature an article.'
+  if !req.user?.roles?.includes("team") and req.body.featured
+    res.err 401, 'You must have team role to feature an article.'
   else
     next()
 

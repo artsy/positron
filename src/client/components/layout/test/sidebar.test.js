@@ -8,7 +8,7 @@ describe("sidebar template", () => {
     const html = jade.compileFile(
       path.resolve(__dirname, "../templates/sidebar.jade")
     )({
-      sd: { URL: "/" },
+      sd: { URL: "/", USER: { 'roles': '' } },
       user: new User({
         name: "Andy Foobar",
         channel_ids: ["123"],

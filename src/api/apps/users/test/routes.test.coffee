@@ -11,6 +11,9 @@ describe 'routes', ->
     @User = routes.__get__ 'User'
     for method in @methods = ['fromAccessToken']
       sinon.stub @User, method
+
+    routes.__set__ 'jwtDecode', sinon.stub().returns('foo')
+
     @req = { query: {}, body: {}, params: {}, accessToken: 'test-access-token' }
     @res = { send: sinon.stub(), err: sinon.stub() }
     @next = sinon.stub()
