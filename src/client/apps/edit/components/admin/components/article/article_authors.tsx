@@ -51,7 +51,7 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
   }
 
   render() {
-    const { article, apiURL, isEditorial, onChangeArticleAction } = this.props
+    const { article, apiURL, isEditorial, isAdmin, onChangeArticleAction } = this.props
     const name = article.author ? article.author.name : ""
 
     return (
@@ -95,12 +95,13 @@ export class ArticleAuthors extends Component<AdminArticleProps> {
           {article.layout !== "news" && (
             <AutocompleteListMetaphysics
               field="contributing_authors"
-              label="Contributing Authors"
+              label="Contributing Authors (admin role required)"
               model="users"
               isDraggable
               onDragEnd={items => {
                 onChangeArticleAction("contributing_authors", items)
               }}
+              disabled={!isAdmin}
             />
           )}
         </Box>
@@ -114,6 +115,7 @@ const mapStateToProps = state => ({
   article: state.edit.article,
   isEditorial: state.app.isEditorial,
   user: state.app.user,
+  isAdmin: state.app.isAdmin,
 })
 
 const mapDispatchToProps = {

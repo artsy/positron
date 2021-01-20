@@ -15,6 +15,7 @@ interface EditAdminProps {
   isNews: boolean
   isEditorial: boolean
   isPartner: boolean
+  isAdmin: boolean
 }
 
 export class EditAdmin extends Component<EditAdminProps> {
@@ -47,7 +48,7 @@ export class EditAdmin extends Component<EditAdminProps> {
   }
 
   render() {
-    const { isNews, isEditorial, isPartner } = this.props
+    const { isNews, isEditorial, isPartner, isAdmin } = this.props
     const sections = this.getSections()
 
     return (
@@ -74,7 +75,9 @@ export class EditAdmin extends Component<EditAdminProps> {
           </Box>
 
           <Box pt={4}>
-            <AdminFeaturing />
+            <AdminFeaturing
+              isAdmin={isAdmin}
+            />
           </Box>
 
           {!isNews && (
@@ -106,6 +109,7 @@ const mapStateToProps = state => ({
   isNews: state.edit.article.layout === "news",
   isEditorial: state.app.channel.type === "editorial",
   isPartner: state.app.channel.type === "partner",
+  isAdmin: state.app.isAdmin,
 })
 
 export default connect(mapStateToProps)(EditAdmin)

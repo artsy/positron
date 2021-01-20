@@ -228,6 +228,7 @@ export class AutocompleteListMetaphysics extends Component<
       onChangeArticleAction,
       placeholder,
       type,
+      disabled,
     } = this.props
 
     switch (type) {
@@ -249,6 +250,7 @@ export class AutocompleteListMetaphysics extends Component<
             article={this.props.article}
             model={this.props.model}
             field={this.props.field}
+            disabled={disabled}
           />
         )
       }
@@ -265,6 +267,7 @@ export class AutocompleteListMetaphysics extends Component<
             onSelect={results => onChangeArticleAction(field, results)}
             placeholder={placeholder || `Search ${model} by name...`}
             url={`${artsyURL}/api/v1/match/${model}?term=%QUERY`}
+            disabled={disabled}
           />
         )
       }

@@ -8,14 +8,14 @@ routes = require './routes'
 app = module.exports = express()
 app.set 'views', __dirname + '/templates'
 app.set 'view engine', 'jade'
-{ adminOnly } = require '../../lib/middleware.coffee'
+{ teamOnly, adminOnly } = require '../../lib/middleware.coffee'
 
-app.get '/settings', adminOnly, routes.index
-app.get '/settings/curations', adminOnly, routes.curations
-app.get '/settings/curations/:id/edit', adminOnly, routes.editCuration
-app.post '/settings/curations/:id', adminOnly, routes.saveCuration
-app.get '/settings/channels', adminOnly, routes.channels
+app.get '/settings', teamOnly, routes.index
+app.get '/settings/curations', teamOnly, routes.curations
+app.get '/settings/curations/:id/edit', teamOnly, routes.editCuration
+app.post '/settings/curations/:id', teamOnly, routes.saveCuration
+app.get '/settings/channels', teamOnly, routes.channels
 app.get '/settings/channels/:id/edit', adminOnly, routes.editChannel
 app.post '/settings/channels/:id', adminOnly, routes.saveChannel
-app.get '/settings/tags', adminOnly, routes.tags
-app.get '/settings/authors', adminOnly, routes.authors
+app.get '/settings/tags', teamOnly, routes.tags
+app.get '/settings/authors', teamOnly, routes.authors
