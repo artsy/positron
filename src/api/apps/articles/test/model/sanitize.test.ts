@@ -57,4 +57,16 @@ describe("#sanitizeLink", () => {
       "http://www.notartsy.net/posts"
     )
   })
+
+  it("removes capital letters from artsy urls", () => {
+    expect(sanitizeLink("https://artsy.net/DutchPavilion")).toBe(
+      "https://www.artsy.net/dutchpavilion"
+    )
+  })
+
+  it("does not remove capital letters from non-artsy urls", () => {
+    expect(sanitizeLink("https://www.anotherwebsite.net/DutchPavilion")).toBe(
+      "https://www.anotherwebsite.net/DutchPavilion"
+    )
+  })
 })

@@ -29,6 +29,9 @@ export const sanitizeLink = urlString => {
     const result = str.replace(regex, subst);
     url.href = result
   }
+  if (url.hostname.includes("artsy.net")) {
+    url.href = url.href.toLowerCase()
+  }
 
   return url.href
 }
