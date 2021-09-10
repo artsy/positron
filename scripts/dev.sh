@@ -2,4 +2,4 @@
 
 set -e -x
 
-DEBUG=app,client,api node -r dotenv/config --inspect ./src/index.js
+DEBUG=app,client,api node --inspect ./src/index.js
