@@ -3,7 +3,9 @@ services:
   positron:
 {% include 'templates/docker-compose-service.yml.j2' %}
     command: ["yarn", "dev"]
-    env_file: ../.env
+    env_file:
+      - ../.env.shared
+      - ../.env
     depends_on:
       - positron-mongodb
       - positron-elasticsearch
