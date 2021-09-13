@@ -22,7 +22,12 @@ echo "Installing dependencies..."
 yarn install || (npm install --global yarn@latest && yarn install)
 
 echo "Download .env.shared (for common local dev config)..."
-aws s3 cp s3://artsy-citadel/dev/.env.positron .env.shared
+if ! aws s3 cp s3://artsy-citadel/dev/.env.positron .env.shared; then
+  echo "Unable to download shared config from s3. Using .env.oss!"
+  echo "This is expected for open source contributors."
+  echo "If you work at Artsy, please check your s3 access."
+  cp .env.oss .env.shared
+fi
 
 if [ ! -e ".env" ]; then # skip if .env exists
   echo "Initialize .env from from .env.example (for any custom configuration)..."

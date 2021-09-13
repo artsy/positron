@@ -32,3 +32,4 @@ Brewfile.lock.json
 # Do not ignore
 !.env.example
 !.env.test
+!.env.oss
