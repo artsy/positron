@@ -18,7 +18,7 @@
 - **MongoDB:** [Atlas](https://cloud.mongodb.com/v2/5be44a7aff7a254a8327cd3a#clusters)
 - **Github:** [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
 - **CI:** [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
-- **Point Person:** TODO:
+- **Point Person:** N/A
 
 [![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master) [![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 
@@ -30,7 +30,7 @@ Clone the project:
 git clone git@github.com:artsy/positron.git && cd positron
 ```
 
-Run/Read the setup script:
+Run the setup script:
 
 ```
 scripts/setup.sh
@@ -81,11 +81,11 @@ If you are an Artsy Admin, you should see the default partner gallery channel (D
 
 ### Using Yarn
 
+> Mongo must be running in the background for tests to work.
+
 ```
 yarn test
 ```
-
-Make sure you have mongo running in the background or most tests will not work.
 
 ### Using Hokusai
 
@@ -105,10 +105,10 @@ yarn dev
 
 This will start the server on port `3005` with `inspect` option.
 
-- In your Chrome go to: [Chrome Inspect](chrome://inspect)
-- Under Remote Target now you should see `./index.js`, click on `inspect` link below it which will open a Chrome developer tools.
+- In Chrome navigate to: [chrome://inspect](chrome://inspect)
+- Under Remote Target you should see `./index.js`. Clicking on `inspect` link (below "Target") will open Chrome developer tools.
 
-Now anywhere in your server side code you can put `debugger` and you should be able to debug.
+Now anywhere in your server side code you can put `debugger` and you should be able to debug!
 
 ## Running tasks
 
