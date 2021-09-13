@@ -21,11 +21,11 @@
     "production": "sh scripts/production.sh",
     "publish-assets": "sh scripts/publish-assets.sh",
     "start": "sh scripts/start.sh",
-    "task": "node -r coffeescript/register -r @babel/register -r dotenv/config",
+    "task": "node -r coffeescript/register -r @babel/register -r ./src/lib/loadenv",
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
     "type-check": "tsc --pretty --noEmit",
-    "webpack": "node --max_old_space_size=2048 -r dotenv/config -r @babel/register node_modules/.bin/webpack --config ./webpack"
+    "webpack": "node --max_old_space_size=2048 -r ./src/lib/loadenv -r @babel/register node_modules/.bin/webpack --config ./webpack"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0",
