@@ -8,7 +8,7 @@
 
 - **State:** production
 - **Production:** [https://writer.artsy.net/](https://writer.artsy.net/) | [Kubernetes](https://kubernetes.prd.artsy.systems/#!/deployment/default/positron-web?namespace=default)
-- **Staging:** [http://stagingwriter.artsy.net/](http://stagingwriter.artsy.net//) | [Kubernetes](https://kubernetes.stg.artsy.systems/#!/deployment/default/positron-web?namespace=default)
+- **Staging:** [https://stagingwriter.artsy.net/](https://stagingwriter.artsy.net/) | [Kubernetes](https://kubernetes.stg.artsy.systems/#!/deployment/default/positron-web?namespace=default)
 - **Logs:**
   - [Production](https://papertrailapp.com/groups/3675843/events?q=host%3Apositron-web)
   - [Staging](https://papertrailapp.com/groups/3674473/events?q=host%3Apositron-web)
