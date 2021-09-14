@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # This assumes you have general prerequisites installed as by:
 # https://github.com/artsy/potential/blob/master/scripts/setup
@@ -6,8 +6,8 @@
 # Exit if any subcommand fails
 set -e
 
-GREEN='\033[0;32m'
-NO_COLOR='\033[0m'
+GREEN=$(tput setaf 2)
+NO_COLOR=$(tput sgr0)
 
 echo "Installing project dependencies from Brewfile..."
 brew bundle
