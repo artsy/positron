@@ -13,8 +13,7 @@ npm-debug.log
 .DS_Store
 dump.rdb
 .DS_Store
-.env
-.env.ignore
+.env*
 .cache
 
 data
@@ -28,3 +27,9 @@ coverage*
 .nyc_output/
 
 cypress.env.json
+Brewfile.lock.json
+
+# Do not ignore
+!.env.example
+!.env.test
+!.env.oss
