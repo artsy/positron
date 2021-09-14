@@ -7,6 +7,8 @@ services:
       - CI=true
       - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
       - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
+      # SALT is an oss value. The '$' is escaped.
+      - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
     env_file: ../.env.test
     depends_on:
       - positron-mongodb
