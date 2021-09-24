@@ -11,16 +11,14 @@
     lodash "4.17.15"
     prettier "1.19.1"
 
-"@artsy/backbone-mixins@2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@artsy/backbone-mixins/-/backbone-mixins-2.0.0.tgz#8a7cd00c3f961f10fa457249d7c7db42dda1bdc5"
-  integrity sha512-xiz+s4xSItiHAC3gf50lihCj+vUVIq1hp9ZQyTfQMvv8oYhvFE+OVBqwFeQ8CmhOk2ujtVlkmK5TDwdR8OYhNw==
+"@artsy/backbone-mixins@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@artsy/backbone-mixins/-/backbone-mixins-3.0.0.tgz#e1344f66be7292b909758814d9cce171f475a644"
+  integrity sha512-N5su2OkaIHcRjHV1ECsfiqYrLwvdv+XVb6Sqx8XRJFCIzSBlRSTyE43McJJeHyl+fW9kV8YkZyj8YMMXqdDg3g==
   dependencies:
-    ics "^0.4.1"
-    marked "*"
-    moment "^2.11.1"
-    qs "5.2.0"
-    underscore "*"
+    marked "^1.2.8"
+    qs "^6.9.6"
+    underscore "^1.12.1"
 
 "@artsy/bucket-assets@1.0.3":
   version "1.0.3"
@@ -7254,11 +7252,6 @@ iconv-lite@0.4.24, iconv-lite@^0.4.21, iconv-lite@~0.4.13:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-ics@^0.4.1:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/ics/-/ics-0.4.2.tgz#5f122102e1cad8fdfee9cb9fd5511e8df0ca9b42"
-  integrity sha1-XxIhAuHK2P3+6cuf1VEejfDKm0I=
-
 icss-utils@^4.0.0, icss-utils@^4.1.1:
   version "4.1.1"
   resolved "https://registry.yarnpkg.com/icss-utils/-/icss-utils-4.1.1.tgz#21170b53789ee27447c2f47dd683081403f9a467"
@@ -9445,10 +9438,10 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
-marked@*:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/marked/-/marked-0.8.0.tgz#ec5c0c9b93878dc52dd54be8d0e524097bd81a99"
-  integrity sha512-MyUe+T/Pw4TZufHkzAfDj6HarCBWia2y27/bhuYkTaiUnfDYFnCP3KUN+9oM7Wi6JA2rymtVYbQu3spE0GCmxQ==
+marked@^1.2.8:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/marked/-/marked-1.2.9.tgz#53786f8b05d4c01a2a5a76b7d1ec9943d29d72dc"
+  integrity sha512-H8lIX2SvyitGX+TRdtS06m1jHMijKN/XjfH6Ooii9fvxMlh8QdqBfBDkGUpMWH2kQNrtixjzYUa3SH8ROTgRRw==
 
 math-random@^1.0.1:
   version "1.0.4"
@@ -9776,7 +9769,7 @@ moment@2.19.3:
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.19.3.tgz#bdb99d270d6d7fda78cc0fbace855e27fe7da69f"
   integrity sha1-vbmdJw1tf9p4zA+6zoVeJ/59pp8=
 
-moment@2.24.0, moment@^2.11.1:
+moment@2.24.0:
   version "2.24.0"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
   integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
@@ -11283,11 +11276,6 @@ qs@2.3.3:
   resolved "https://registry.yarnpkg.com/qs/-/qs-2.3.3.tgz#e9e85adbe75da0bbe4c8e0476a086290f863b404"
   integrity sha1-6eha2+ddoLvkyOBHaghikPhjtAQ=
 
-qs@5.2.0:
-  version "5.2.0"
-  resolved "https://registry.yarnpkg.com/qs/-/qs-5.2.0.tgz#a9f31142af468cb72b25b30136ba2456834916be"
-  integrity sha1-qfMRQq9GjLcrJbMBNrokVoNJFr4=
-
 qs@6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.4.0.tgz#13e26d28ad6b0ffaa91312cd3bf708ed351e7233"
@@ -11302,6 +11290,13 @@ qs@^6.5.0, qs@^6.5.1, qs@^6.9.1:
   version "6.9.1"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.9.1.tgz#20082c65cb78223635ab1a9eaca8875a29bf8ec9"
   integrity sha512-Cxm7/SS/y/Z3MHWSxXb8lIFqgqBowP5JMlTUFyJN88y0SGQhVmZnqFK/PeuMX9LzUyWsqqhNxIyg0jlzq946yA==
+
+qs@^6.9.6:
+  version "6.10.1"
+  resolved "https://registry.yarnpkg.com/qs/-/qs-6.10.1.tgz#4931482fa8d647a5aab799c5271d2133b981fb6a"
+  integrity sha512-M528Hph6wsSVOBiYUnGf+K/7w0hNshs/duGsNXPUCLH5XAqjEtiPGwNONLV0tBH8NoGb0mvD5JubnUTrujKDTg==
+  dependencies:
+    side-channel "^1.0.4"
 
 qs@~6.2.0:
   version "6.2.3"
@@ -12956,7 +12951,7 @@ side-channel@^1.0.1:
     es-abstract "^1.17.0-next.1"
     object-inspect "^1.7.0"
 
-side-channel@^1.0.2, side-channel@^1.0.3:
+side-channel@^1.0.2, side-channel@^1.0.3, side-channel@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/side-channel/-/side-channel-1.0.4.tgz#efce5c8fdc104ee751b25c58d4290011fa5ea2cf"
   integrity sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==
@@ -14315,15 +14310,20 @@ underscore.string@3.3.5, underscore.string@^3.3.5:
     sprintf-js "^1.0.3"
     util-deprecate "^1.0.2"
 
-underscore@*, underscore@1.10.2, "underscore@>= 1.3.3", underscore@>=1.8.3, underscore@^1.3.1, underscore@^1.8.3:
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.10.2.tgz#73d6aa3668f3188e4adb0f1943bd12cfd7efaaaf"
-  integrity sha512-N4P+Q/BuyuEKFJ43B9gYuOj4TQUHXX+j2FqguVOpjkssLUUrnJofCcBccJSCoeturDoZU6GorDTHSvUDlSQbTg==
-
 underscore@1.1.x:
   version "1.1.7"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.1.7.tgz#40bab84bad19d230096e8d6ef628bff055d83db0"
   integrity sha1-QLq4S60Z0jAJbo1u9ii/8FXYPbA=
+
+underscore@1.10.2, "underscore@>= 1.3.3", underscore@>=1.8.3, underscore@^1.3.1, underscore@^1.8.3:
+  version "1.10.2"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.10.2.tgz#73d6aa3668f3188e4adb0f1943bd12cfd7efaaaf"
+  integrity sha512-N4P+Q/BuyuEKFJ43B9gYuOj4TQUHXX+j2FqguVOpjkssLUUrnJofCcBccJSCoeturDoZU6GorDTHSvUDlSQbTg==
+
+underscore@^1.12.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.13.1.tgz#0c1c6bd2df54b6b69f2314066d65b6cde6fcf9d1"
+  integrity sha512-hzSoAVtJF+3ZtiFX0VgfFPHEDRm7Y/QPjGyNo4TVdnDTdft3tr8hEkD25a1jC+TjTuE7tkHGKkhwCgs9dgBB2g==
 
 unescape@^0.2.0:
   version "0.2.0"
