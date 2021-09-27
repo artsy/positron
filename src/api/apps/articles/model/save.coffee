@@ -161,7 +161,6 @@ removeStopWords = (title) ->
   return callback err if err
   # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
-    console.log('publised ##')
     article = setOnPublishFields article
     indexForSearch(article, ->) if article.indexable
     indexForAlgolia(article, ->) if article.indexable
