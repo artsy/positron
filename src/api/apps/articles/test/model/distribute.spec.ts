@@ -10,7 +10,6 @@ const app = require("express")()
 describe("Save", () => {
   let server
   let sailthru
-  let algoliaSearch
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
@@ -24,10 +23,6 @@ describe("Save", () => {
 
   beforeEach(done => {
     sailthru = Distribute.__get__("sailthru")
-    algoliaSearch = Distribute.__get__("../../../../lib/algoliasearch")
-
-    algoliaSearch.index = sinon.stub().yields()
-    algoliaSearch.index.saveObject = sinon.stub().yields()
     sailthru.apiPost = sinon.stub().yields()
     sailthru.apiDelete = sinon.stub().yields()
     Distribute.__set__("sailthru", sailthru)
@@ -373,11 +368,5 @@ describe("Save", () => {
       const url = Distribute.getArticleUrl(article, article.slugs[0])
       url.should.containEql("article/artsy-editorial-slug-one")
     })
-  })
-
-  describe("#indexArticleInAlgolia", () => {
-    it("saves Algolia index given a published article", () => {})
-
-    it("removes Algolia index given a unpublished article", () => {})
   })
 })

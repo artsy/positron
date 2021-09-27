@@ -135,6 +135,7 @@ moment = require 'moment'
     .catch((error) ->
       console.log('AlgoliaSearchIndexingError: Article ' + article.id + ' : ' + JSON.stringify(error, null, 2)) if error
     )
+    .finally(cb)
   
 
 @removeFromSearch = (id) ->

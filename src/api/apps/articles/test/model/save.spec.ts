@@ -15,6 +15,7 @@ describe("Save", () => {
   let removeStopWords
   let deleteArticleFromSailthru
   let indexForSearch
+  let indexForAlgolia
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
@@ -32,6 +33,7 @@ describe("Save", () => {
 
   beforeEach(done => {
     removeStopWords = Save.__get__("removeStopWords")
+
     Save.__set__("request", {
       post: sinon.stub().returns({
         send: sinon.stub().returns({
@@ -45,6 +47,8 @@ describe("Save", () => {
       (deleteArticleFromSailthru = sinon.stub().yields())
     )
     Save.__set__("indexForSearch", (indexForSearch = sinon.stub()))
+    Save.__set__("indexForAlgolia", (indexForAlgolia = sinon.stub()))
+    // Save.__set__("removeFromAlgolia", removeFromAlgoliaStub)
 
     empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
@@ -435,10 +439,13 @@ describe("Save", () => {
             done(err)
           }
           article.sections[0].body.should.containEql("<a></a>")
+          indexForAlgolia.callCount.should.eql(1)
+          console.log("indexForAlgolia", JSON.stringify(indexForAlgolia))
           done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
+        published: true,
         sections: [
           {
             type: "text",
