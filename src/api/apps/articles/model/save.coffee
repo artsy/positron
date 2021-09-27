@@ -10,7 +10,7 @@ url = require 'url'
 Q = require 'bluebird-q'
 request = require 'superagent'
 Article = require './index'
-{ distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch } = require './distribute'
+{ distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch, indexForAlgolia, removeFromAlgolia } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
@@ -163,10 +163,15 @@ removeStopWords = (title) ->
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
     indexForSearch(article, ->) if article.indexable
+    indexForAlgolia(article, ->) if article.indexable
     distributeArticle article, =>
       db.articles.save sanitize(article), callback
   else
+    # question: how can I know if the article was published before and it's not a fresh new one?
+    # we can try to remove index anyways, will throw an error if doesn't work
+    # UPDATE: from algolia trying to remove unexistent id, doesn't throw errors
     indexForSearch(article, ->) if article.indexable
+    removeFromAlgolia(article.id, ->) if article.indexable
     db.articles.save sanitize(article), callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
