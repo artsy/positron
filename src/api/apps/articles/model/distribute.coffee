@@ -130,7 +130,16 @@ moment = require 'moment'
   tags = article.tags
   tags = tags.concat article.vertical.name if article.vertical
 
-  algoliaSearch.index.saveObject({ name: article.title, objectID: article.id?.toString() })
+  algoliaSearch.index.saveObject({
+    objectID: article.id?.toString()
+    title: article.title
+    description: article.description
+    author: article.author and article.author.name or ''
+    slug: article.slug
+    featured: article.featured
+    tags: tags
+    image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
+  })
     .then()
     .catch((error) ->
       console.log('AlgoliaSearchIndexingError: Article ' + article.id + ' : ' + JSON.stringify(error, null, 2)) if error
