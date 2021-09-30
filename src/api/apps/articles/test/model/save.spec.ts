@@ -440,13 +440,10 @@ describe("Save", () => {
             done(err)
           }
           article.sections[0].body.should.containEql("<a></a>")
-          indexForAlgolia.callCount.should.eql(1)
-          console.log("indexForAlgolia", JSON.stringify(indexForAlgolia))
           done()
         })
       )(null, {
         _id: ObjectId("5086df098523e60002000011"),
-        published: true,
         sections: [
           {
             type: "text",
