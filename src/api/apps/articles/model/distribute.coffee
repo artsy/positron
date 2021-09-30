@@ -12,6 +12,7 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
+algoliaSearch = require '../../../lib/algoliasearch'
 sailthru = require('sailthru-client').createSailthruClient(SAILTHRU_KEY,SAILTHRU_SECRET)
 async = require 'async'
 debug = require('debug') 'api'
@@ -96,6 +97,7 @@ moment = require 'moment'
       section.body
   tags = article.tags
   tags = tags.concat article.vertical.name if article.vertical
+
   search.client.index(
     index: search.index,
     type: 'article',
@@ -119,6 +121,31 @@ moment = require 'moment'
       cb()
   )
 
+@indexForAlgolia = (article, cb) ->
+  if article.sections
+    sections = for section in article.sections
+      section.body
+  tags = article.tags
+  tags = tags.concat article.vertical.name if article.vertical
+
+  algoliaSearch.index.saveObject({
+    objectID: article.id?.toString()
+    title: article.title
+    description: article.description
+    author: article.author and article.author.name or ''
+    slug: article.slug
+    featured: article.featured
+    tags: tags
+    image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
+    href: "/article/#{article.slug}"
+  })
+    .then()
+    .catch((error) ->
+      console.log('AlgoliaSearchIndexingError: Article ' + article.id + ' : ' + JSON.stringify(error, null, 2)) if error
+    )
+    .finally(cb)
+  
+
 @removeFromSearch = (id) ->
   search.client.delete(
     index: search.index
@@ -127,6 +154,13 @@ moment = require 'moment'
   , (error, response) ->
     console.log(error) if error
   )
+
+@removeFromAlgolia = (id) ->
+  algoliaSearch.index.deleteObject(id)
+    .then()
+    .catch((error) ->
+      console.log('AlgoliaSearchIndexingDeletingError: Article ' + id + ' : ' + JSON.stringify(error, null, 2)) if error
+    )
 
 stripHtmlTags = (str) ->
   if (str == null)
