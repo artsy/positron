@@ -97,8 +97,6 @@ moment = require 'moment'
       section.body
   tags = article.tags
   tags = tags.concat article.vertical.name if article.vertical
-  
-  #612fd7f526b2a7001fd62cb7
 
   search.client.index(
     index: search.index,
@@ -139,6 +137,7 @@ moment = require 'moment'
     featured: article.featured
     tags: tags
     image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
+    href: "/article/#{article.slug}"
   })
     .then()
     .catch((error) ->

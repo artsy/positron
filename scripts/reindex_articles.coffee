@@ -24,13 +24,13 @@ db.articles.find({}).toArray (err, articles) ->
   )
 
 indexWorker = (article, cb) ->
-  console.log('indexing', article._id)
+  console.log('indexing ', article._id)
   articlePresent = Article.present(article) 
   indexForSearch articlePresent, () =>
-    console.log('indexed on ElasticSearch', article.id or article._id)
+    console.log('indexed on Elasticsearch ', article.id or article._id)
     if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable
       indexForAlgolia articlePresent, () =>
-        console.log('indexed on Algolia', article.id or article._id)
+        console.log('indexed on Algolia ', article.id or article._id)
         cb()
     else
       cb()
