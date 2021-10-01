@@ -1,7 +1,7 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
-{ indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
+{ indexForSearch, indexForAlgolia } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
 search = require '../src/api/lib/elasticsearch'
 async = require 'async'
@@ -20,11 +20,17 @@ db.articles.find({}).toArray (err, articles) ->
   console.log(err) if err
   console.log(articles.length)
   async.mapSeries(articles, indexWorker, (err, results) =>
-    console.log('Completed indexing ' + results.length + 'articles.')
+    console.log('Completed indexing ' + results.length + ' articles.')
   )
 
 indexWorker = (article, cb) ->
-  console.log('indexing ' + article._id)
-  indexForSearch Article.present(article), () =>
-    console.log('indexed ' + article.id or article._id)
-    cb()
+  console.log('indexing ', article._id)
+  articlePresent = Article.present(article) 
+  indexForSearch articlePresent, () =>
+    console.log('indexed on Elasticsearch ', article.id or article._id)
+    if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable
+      indexForAlgolia articlePresent, () =>
+        console.log('indexed on Algolia ', article.id or article._id)
+        cb()
+    else
+      cb()
