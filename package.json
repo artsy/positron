@@ -13,7 +13,7 @@
     "jest": "sh scripts/jest.sh",
     "lint": "eslint src --cache --cache-location '.cache/eslint/' --ext ts,tsx,js,jsx ",
     "mocha": "sh scripts/mocha.sh",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && scripts/detect-secrets.sh",
     "prepush": "yarn run type-check",
     "prettier-project": "yarn run prettier-write 'src/**/*.{ts,tsx,js,jsx}'",
     "prettier-write": "yarn run prettier --write",
