@@ -6,6 +6,15 @@ orbs:
   yarn: artsy/yarn@5.1.3
   horizon: artsy/release@0.0.1
 
+jobs:
+  detect-secrets:
+    docker:
+      - image: lirantal/detect-secrets
+    working_directory: /usr/src/app
+    steps:
+      - checkout
+      - run: detect-secrets-hook --baseline .secrets.baseline $(git ls-files)
+
 not_staging_or_release: &not_staging_or_release
   filters:
     branches:
@@ -25,9 +34,20 @@ only_release: &only_release
     branches:
       only: release
 
+only_dev: &only_dev
+  filters:
+    branches:
+      ignore:
+        - master
+        - staging
+        - release
+
 workflows:
   build-deploy:
     jobs:
+      - detect-secrets:
+          <<: *only_dev
+
       - yarn/type-check:
           <<: *not_staging_or_release
 
