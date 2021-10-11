@@ -61,6 +61,7 @@ workflows:
                 command: docker cp hokusai_positron_1:/app/coverage ./
                 when: always
             - codecov/upload:
+                validate: false
                 file: ./coverage/lcov.info
             - run:
                 name: Copy mocha coverage artifacts
