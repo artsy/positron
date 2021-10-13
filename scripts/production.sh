@@ -11,4 +11,4 @@ fi
 export COMMIT_HASH=`cat COMMIT_HASH.txt`
 export ASSET_MANIFEST=$(curl --silent $CDN_URL/manifest-$COMMIT_HASH.json)
 
-node ./src --colors
+node ./src/index.js --colors
