@@ -122,9 +122,6 @@ moment = require 'moment'
   )
 
 @indexForAlgolia = (article, cb) ->
-  if article.sections
-    sections = for section in article.sections
-      section.body
   tags = article.tags
   tags = tags.concat article.vertical.name if article.vertical
 

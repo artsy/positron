@@ -28,7 +28,7 @@ indexWorker = (article, cb) ->
   articlePresent = Article.present(article) 
   indexForSearch articlePresent, () =>
     console.log('indexed on Elasticsearch ', article.id or article._id)
-    if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable
+    if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable and articlePresent.visible_to_public
       indexForAlgolia articlePresent, () =>
         console.log('indexed on Algolia ', article.id or article._id)
         cb()

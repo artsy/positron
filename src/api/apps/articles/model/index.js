@@ -293,6 +293,10 @@ export const present = article => {
   const updated_at = article.updated_at
     ? moment(article.updated_at).toISOString()
     : null
+  const visible_to_public =
+    article.published &&
+    article?.sections?.length > 0 &&
+    article.channel_id?.toString() === process.env.EDITORIAL_CHANNEL
   return _.extend(article, {
     id,
     _id: id,
@@ -301,6 +305,7 @@ export const present = article => {
     published_at,
     scheduled_publish_at,
     updated_at,
+    visible_to_public,
   })
 }
 
@@ -341,15 +346,18 @@ export const backfill = callback => {
       articles,
       (article, cb) => {
         console.log("---------------------")
-        console.log("---------------------")  
+        console.log("---------------------")
         console.log("---------------------")
         console.log("---------------------")
         console.log("---------------------")
         console.log("---------------------")
         console.log(
-          `Backfilling article: ${articles.indexOf(article) + 1} of ${articles.length}, ${article.slugs[article.slugs.length - 1]}, published at ${article.published_at}`
+          `Backfilling article: ${articles.indexOf(article) + 1} of ${
+            articles.length
+          }, ${article.slugs[article.slugs.length - 1]}, published at ${
+            article.published_at
+          }`
         )
-     
 
         /*
         Write backfill logic here. Make sure to callback with cb()
