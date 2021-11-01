@@ -3,8 +3,10 @@ mongojs = require 'mongojs'
 path = require 'path'
 { indexForSearch, indexForAlgolia } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
+ArticleModel = require '../src/api/models/article.coffee'
 search = require '../src/api/lib/elasticsearch'
 async = require 'async'
+{ cloneDeep } = require 'lodash'
 
 # Setup environment variables
 env = require 'node-env-file'
@@ -28,7 +30,8 @@ indexWorker = (article, cb) ->
   articlePresent = Article.present(article) 
   indexForSearch articlePresent, () =>
     console.log('indexed on Elasticsearch ', article.id or article._id)
-    if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable and articlePresent.visible_to_public
+    isArticleVisibleToPublic = new ArticleModel(cloneDeep article).isVisibleToPublic()
+    if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable and isArticleVisibleToPublic
       indexForAlgolia articlePresent, () =>
         console.log('indexed on Algolia ', article.id or article._id)
         cb()

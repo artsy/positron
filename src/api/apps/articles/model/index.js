@@ -293,10 +293,6 @@ export const present = article => {
   const updated_at = article.updated_at
     ? moment(article.updated_at).toISOString()
     : null
-  const visible_to_public =
-    article.published &&
-    article?.sections?.length > 0 &&
-    article.channel_id?.toString() === process.env.EDITORIAL_CHANNEL
   return _.extend(article, {
     id,
     _id: id,
@@ -305,7 +301,6 @@ export const present = article => {
     published_at,
     scheduled_publish_at,
     updated_at,
-    visible_to_public,
   })
 }
 

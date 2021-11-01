@@ -97,7 +97,6 @@ moment = require 'moment'
       section.body
   tags = article.tags
   tags = tags.concat article.vertical.name if article.vertical
-
   search.client.index(
     index: search.index,
     type: 'article',
@@ -109,7 +108,7 @@ moment = require 'moment'
       published: article.published
       published_at: article.published_at
       scheduled_publish_at: article.scheduled_publish_at
-      visible_to_public: article.published and sections?.length > 0 and article.channel_id?.toString() is EDITORIAL_CHANNEL
+      visible_to_public: new Article(cloneDeep article).isVisibleToPublic()
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: tags
