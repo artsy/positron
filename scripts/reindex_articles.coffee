@@ -31,9 +31,11 @@ indexWorker = (article, cb) ->
   indexForSearch articlePresent, () =>
     console.log('indexed on Elasticsearch ', article.id or article._id)
     isArticleVisibleToPublic = new ArticleModel(cloneDeep article).isVisibleToPublic()
-    if (articlePresent.published or articlePresent.scheduled_publish_at) and articlePresent.indexable and isArticleVisibleToPublic
+    if (articlePresent.indexable and isArticleVisibleToPublic)
       indexForAlgolia articlePresent, () =>
         console.log('indexed on Algolia ', article.id or article._id)
         cb()
     else
-      cb()
+      removeFromAlgolia articlePresent, () =>
+        console.log('removed from Algolia ', article.id or article._id)
+        cb()
