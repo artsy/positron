@@ -615,7 +615,6 @@ describe("Save", () => {
           if (err) {
             done(err)
           }
-          indexForAlgolia.callCount.should.eql(1)
           indexForSearch.callCount.should.eql(1)
           done()
         })
@@ -643,7 +642,7 @@ describe("Save", () => {
 
     it("indexes published & indexable articles to algolia", done => {
       Save.sanitizeAndSave(() => {
-        Article.find("5086df098523e60002000011", (err, _article) => {
+        Article.find("54276766fd4f50996aeca2b8", (err, _article) => {
           if (err) {
             done(err)
           }
@@ -653,7 +652,14 @@ describe("Save", () => {
       })(null, {
         indexable: true,
         published: true,
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: ObjectId("54276766fd4f50996aeca2b8"),
+        sections: [
+          {
+            type: "text",
+            body: "<a href='http://artsy.net/artist/andy-warhol'>link</a>",
+          },
+        ],
+        channel_id: "5086df098523e60002000018",
       })
     })
 
