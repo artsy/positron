@@ -151,11 +151,11 @@ moment = require 'moment'
     console.log(error) if error
   )
 
-@removeFromAlgolia = (id) ->
-  algoliaSearch.index.deleteObject(id)
+@removeFromAlgolia = (article) ->
+  algoliaSearch.index.deleteObject(article.id)
     .then()
     .catch((error) ->
-      console.log('AlgoliaSearchIndexingDeletingError: Article ' + id + ' : ' + JSON.stringify(error, null, 2)) if error
+      console.log('AlgoliaSearchIndexingDeletingError: Article ' + article.id + ' : ' + JSON.stringify(error, null, 2)) if error
     )
 
 stripHtmlTags = (str) ->

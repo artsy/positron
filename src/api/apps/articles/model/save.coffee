@@ -175,7 +175,7 @@ removeStopWords = (title) ->
   if (isArticleVisibleToPublic and article.indexable)
     indexForAlgolia(article, ->)
   else
-    removeFromAlgolia(article.id, ->)
+    removeFromAlgolia(article, ->)
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->

@@ -1,7 +1,7 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
-{ indexForSearch, indexForAlgolia } = Save = require '../src/api/apps/articles/model/distribute'
+{ indexForSearch, indexForAlgolia, removeFromAlgolia } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
 ArticleModel = require '../src/api/models/article.coffee'
 search = require '../src/api/lib/elasticsearch'
@@ -36,6 +36,4 @@ indexWorker = (article, cb) ->
         console.log('indexed on Algolia ', article.id or article._id)
         cb()
     else
-      removeFromAlgolia articlePresent, () =>
-        console.log('removed from Algolia ', article.id or article._id)
-        cb()
+      cb()
