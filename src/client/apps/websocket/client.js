@@ -4,7 +4,10 @@ import { messageTypes } from "./messageTypes"
 let socket
 
 const init = (store, rootURL) => {
-  socket = io(rootURL)
+  socket = io(rootURL, {
+    reconnection: true,
+  })
+
   // add listeners to socket messages so we can re-dispatch them as actions
   Object.keys(messageTypes).forEach(key =>
     socket.on(key, data => {
