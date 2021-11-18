@@ -106,14 +106,14 @@
     "@algolia/logger-common" "4.10.5"
     "@algolia/requester-common" "4.10.5"
 
-"@artsy/antigravity@0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@artsy/antigravity/-/antigravity-0.2.0.tgz#4876bd5bee1a95247916441b4c4830ad00979aa1"
-  integrity sha512-QfgQSFQAVHdIvKsgeDDw8AB7lpF4n0wVwtV813Etd0uarFsPXhYPgp1bb8eGFjj9rSKnWukD+GZjEIUatixM+w==
+"@artsy/antigravity@0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@artsy/antigravity/-/antigravity-0.3.0.tgz#76b649dbf62995eb709e9b5d085c22b0d802c0b8"
+  integrity sha512-1/LPoMZiKW0YpSnFDcvyrx6iC8VxwYz0JauV/yf8fzyOCw08EQkL5Q+90YUZGU3BYSRHPXRDTCo2tMJ4iH9uYg==
   dependencies:
-    express "4.17.1"
-    lodash "4.17.15"
-    prettier "1.19.1"
+    express "^4.17.1"
+    lodash "^4.17.21"
+    prettier "^1.19.1"
 
 "@artsy/backbone-mixins@3.0.0":
   version "3.0.0"
@@ -147,10 +147,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.0.5.tgz#abf85959f8567816babec6f582b744f58c98b726"
   integrity sha512-axgW5YuqSpPzHb27yo2jmPHz/N9eN2hh2E+Mub5BKuu/jHZI+iDTdw0OZ3I+z7Z9WKBh+FPVx4gpza5w7slJNA==
 
-"@artsy/express-reloadable@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@artsy/express-reloadable/-/express-reloadable-1.5.0.tgz#f1affb10ce7cd95230033d5b8b651fe91737516d"
-  integrity sha512-tYSbAfswKuIVjtnCNq/HuLOFeDsLz1UVFI0MSUMKBAK1XKoRZKfxblY9V3v3gvpN/MtHnDxrPl6OCCSB3GbuXg==
+"@artsy/express-reloadable@1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@artsy/express-reloadable/-/express-reloadable-1.6.0.tgz#5660febfa07d4c7ea5a838878ae61b906fd10c0d"
+  integrity sha512-UVUn6s1D38mO1s711JPkvG1uy0fkVy504TpLnl745hbF2TtACv/I52hwFv1xISGdyz8rvQreYYHcXjkZvzmsnw==
   dependencies:
     chalk "^2.3.1"
     chokidar "^3.0.0"
@@ -5955,7 +5955,7 @@ express@4.15.2:
     utils-merge "1.0.0"
     vary "~1.1.0"
 
-express@4.17.1:
+express@^4.17.1:
   version "4.17.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.17.1.tgz#4491fc38605cf51f8629d39c2b5d026f98a4c134"
   integrity sha512-mHJ9O79RqluphRrcw2X/GTh3k9tVv8YcoyY4Kkh4WDMUYKRZUq0h1o0w2rrrxBqM7VoeUVqgb27xlEMXTnYt4g==
@@ -9394,7 +9394,7 @@ lodash@4.17.15:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
   integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
 
-lodash@4.17.21, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.6.1:
+lodash@4.17.21, lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.2.0, lodash@^4.2.1, lodash@^4.6.1:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
@@ -10965,6 +10965,11 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+picocolors@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-0.2.1.tgz#570670f793646851d1ba135996962abad587859f"
+  integrity sha512-cMlDqaLEqfSaW8Z7N5Jw+lyIW869EzT73/F5lhtY9cLGoVxSXznfgfXMO0Z5K0o0Q2TkTXq+0KFsdnSe3jDViA==
+
 picomatch@^2.0.4, picomatch@^2.0.5, picomatch@^2.0.7:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.2.1.tgz#21bac888b6ed8601f831ce7816e335bc779f0a4a"
@@ -11115,13 +11120,12 @@ postcss-value-parser@^4.0.0, postcss-value-parser@^4.0.2:
   integrity sha512-N7h4pG+Nnu5BEIzyeaaIYWs0LI5XC40OrRh5L60z0QjFsqGWcHcbkBvpe1WYpcIS9yQ8sOi/vIPt1ejQCrMVrg==
 
 postcss@^7.0.14, postcss@^7.0.16, postcss@^7.0.23, postcss@^7.0.5, postcss@^7.0.6:
-  version "7.0.27"
-  resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.27.tgz#cc67cdc6b0daa375105b7c424a85567345fc54d9"
-  integrity sha512-WuQETPMcW9Uf1/22HWUWP9lgsIC+KEHg2kozMflKjbeUtw9ujvFX6QmIfozaErDkmLWS9WEnEdEe6Uo9/BNTdQ==
+  version "7.0.39"
+  resolved "https://registry.yarnpkg.com/postcss/-/postcss-7.0.39.tgz#9624375d965630e2e1f2c02a935c82a59cb48309"
+  integrity sha512-yioayjNbHn6z1/Bywyb2Y4s3yvDAeXGOyxqD+LnVOinq6Mdmd++SW2wUNVzavyyHxd6+DxzWGIuosg6P1Rj8uA==
   dependencies:
-    chalk "^2.4.2"
+    picocolors "^0.2.1"
     source-map "^0.6.1"
-    supports-color "^6.1.0"
 
 prelude-ls@^1.2.1:
   version "1.2.1"
@@ -11150,7 +11154,7 @@ prettier@1.14.3:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.14.3.tgz#90238dd4c0684b7edce5f83b0fb7328e48bd0895"
   integrity sha512-qZDVnCrnpsRJJq5nSsiHCE3BYMED2OtsI+cmzIzF1QIfqm5ALf8tEJcO27zV1gKNKRPdhjO0dNWnrzssDQ1tFg==
 
-prettier@1.19.1, prettier@^1.14.3:
+prettier@^1.14.3, prettier@^1.19.1:
   version "1.19.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.19.1.tgz#f7d7f5ff8a9cd872a7be4ca142095956a60797cb"
   integrity sha512-s7PoyDv/II1ObgQunCbB9PdLmUcBZcnWOcxDh7O0N/UwDEsHyqkW+Qh28jW+mVuCdx7gLB0BotYI1Y6uI9iyew==
