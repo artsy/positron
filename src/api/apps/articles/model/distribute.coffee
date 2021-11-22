@@ -126,7 +126,7 @@ moment = require 'moment'
 
   algoliaSearch.index.saveObject({
     objectID: article.id?.toString()
-    title: article.title
+    name: article.title
     description: article.description
     author: article.author and article.author.name or ''
     slug: article.slug
