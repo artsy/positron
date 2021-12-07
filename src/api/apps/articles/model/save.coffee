@@ -11,7 +11,7 @@ Q = require 'bluebird-q'
 request = require 'superagent'
 Article = require './index'
 ArticleModel = require './../../../../api/models/article.coffee'
-{ distributeArticle, deleteArticleFromSailthru, getArticleUrl, indexForSearch, indexForAlgolia, removeFromAlgolia } = require './distribute'
+{ distributeArticle, getArticleUrl, indexForSearch, indexForAlgolia, removeFromAlgolia } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
@@ -25,7 +25,7 @@ chalk = require 'chalk'
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
-    deleteArticleFromSailthru getArticleUrl(article), =>
+    getArticleUrl(article) =>
       cb null, article
 
 setOnPublishFields = (article) =>
@@ -161,7 +161,6 @@ removeStopWords = (title) ->
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
-  # Send new content call to Sailthru on any published article save
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
     indexForSearch(article, ->) if article.indexable
