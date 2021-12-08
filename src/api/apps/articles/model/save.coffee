@@ -25,8 +25,7 @@ chalk = require 'chalk'
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
-    getArticleUrl(article) =>
-      cb null, article
+    cb null, article
 
 setOnPublishFields = (article) =>
   article.email_metadata = article.email_metadata or {}
