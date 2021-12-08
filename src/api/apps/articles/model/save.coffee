@@ -11,7 +11,7 @@ Q = require 'bluebird-q'
 request = require 'superagent'
 Article = require './index'
 ArticleModel = require './../../../../api/models/article.coffee'
-{ distributeArticle, getArticleUrl, indexForSearch, indexForAlgolia, removeFromAlgolia } = require './distribute'
+{ getArticleUrl, indexForSearch, indexForAlgolia, removeFromAlgolia } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
@@ -164,8 +164,6 @@ removeStopWords = (title) ->
   if article.published or article.scheduled_publish_at
     article = setOnPublishFields article
     indexForSearch(article, ->) if article.indexable
-    distributeArticle article, =>
-      db.articles.save sanitize(article), callback
   else
     indexForSearch(article, ->) if article.indexable
     db.articles.save sanitize(article), callback

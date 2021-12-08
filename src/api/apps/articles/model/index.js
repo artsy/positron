@@ -343,7 +343,6 @@ export const backfill = callback => {
 
         /*
         Write backfill logic here. Make sure to callback with cb()
-        eg: distributeArticle(article,cb)
         eg: sanitizeAndSave(cb)(null, article)
       */
       },

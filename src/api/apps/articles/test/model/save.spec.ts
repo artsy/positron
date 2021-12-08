@@ -41,7 +41,6 @@ describe("Save", () => {
         }),
       }),
     })
-    Save.__set__("distributeArticle", sinon.stub().yields())
     Save.__set__("indexForSearch", (indexForSearch = sinon.stub()))
     Save.__set__("indexForAlgolia", (indexForAlgolia = sinon.stub()))
     Save.__set__("removeFromAlgolia", (removeFromAlgolia = sinon.stub()))
