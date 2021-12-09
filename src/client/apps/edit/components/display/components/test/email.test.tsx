@@ -151,16 +151,4 @@ describe("DisplayEmail", () => {
       "New Author"
     )
   })
-
-  it("Can change the send to sailthru checkbox", () => {
-    const component = getWrapper()
-
-    const input = component.find(Checkbox).at(0)
-    input.simulate("click")
-
-    expect(props.onChangeArticleAction.mock.calls[0][0]).toBe("send_body")
-    expect(props.onChangeArticleAction.mock.calls[0][1]).toBe(
-      !props.article.send_body
-    )
-  })
 })

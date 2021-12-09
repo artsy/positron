@@ -3,8 +3,8 @@
 When an editor publishes content in Writer, it gets distributed across the web. In this doc, we break down the distribution of this content.
 
 ### Table of contents
+
 - [Artsy.net](#artsy.net)
-- [Email](#email-(sailthru))
 - [Google AMP](#google-amp)
 - [Google News (sitemaps)](#google-news)
 - [RSS](#rss)
@@ -18,10 +18,12 @@ Because we have multiple channels, each piece of content on the site gets treate
 
 In [Force](https://github.com/artsy/force), we've separated the main article body rendering to a [component](https://github.com/artsy/force/tree/3ab04ecb16ac07137f8793d2344b2a74e41d323a/src/desktop/components/article). This helps us embed articles anywhere on the site, like on a [fair article](https://www.artsy.net/the-armory-show-2017/info/about-the-fair) or artist bio.
 
->##### Aside on Channels
+> ##### Aside on Channels
+>
 > We typically think of Channels as groups of people. A [Channel](https://github.com/artsy/positron/blob/master/api/apps/channels/model.coffee) contains some metadata and an array of Users. Users can be in multiple Channels. Depending on which Channel you're writing articles in, you'll see different layout options and administrative settings. A long time ago, we only had Users and our entire Artsy Editorial staff had to use a single login.
 
 Bored? Here are some great Artsy Editorial (Channel) articles:
+
 - [Are Video Games Art?](https://www.artsy.net/article/artsy-editorial-are-video-games-art)
 - [What Happens If You Break an Artwork?](https://www.artsy.net/article/artsy-editorial-break-artwork)
 - [GIPHY Is Helping Get Artists’ Works Viewed 100 Million Times](https://www.artsy.net/article/artsy-editorial-giphy-artists-works-viewed-100-million-times)
@@ -32,23 +34,6 @@ Articles are responsive, so they look good on all devices
 ![responsive-article](http://files.artsy.net/images/screen-shot-2017-05-25-at-13624-pm.png)
 Image from [ami.responsivedesign.is](http://ami.responsivedesign.is/)
 
-## Email (Sailthru)
-
-Email has evolved into a complex system and huge traffic driver for Editorial, but the implementation on the content distribution side is pretty simple. Similar to FBIA, we push content changes to Sailthru, our ESP/marketing tool. We use Sailthru's [`content`](https://getstarted.sailthru.com/developers/api/content/) endpoint to do this. We take advantage of an optional field called `vars` that lets us post any custom fields we want on the content, like `html` or `credit_line`. We take advantage of this a lot.
-
-For example, with `html`, we can pass an HTML-d version of the article as a string and actually generate the email based on the content of this field. We use this primarily in our weekly news roundup email. The entire body of the email is based on the HTML of [this article](https://www.artsy.net/article/artsy-editorial-panama-papers-expose-art-world-and-the-9-other-biggest-news-stories-this-week). This is how it looks:
-
-![news-email](http://files.artsy.net/images/screen-shot-2017-05-25-at-60235-pm.png)
-
-> ##### History aside on email
-> A hundred years ago, we handwrote every single email. Assets would be passed around like hot cakes, copy was reviewed by everyone in Editorial,  and it took _hours_ to send one mass email to our users. Our Associate Director of Marketing (CRM), Sara Perle, tells me: "Due to Sailthru integration, editorial production and QA has gone from 4+ hours across 3 teams once a week to 1-5 minutes or less between 2 people 7 times a week."
-
-#### Queue
-
-After we simplified the process of pulling content into an email, scheduling content came next. We have two kinds of Editorial emails: daily and weekly. We take advantage of the custom fields again here (`daily_email` and `weekly_email`), to be able to let Sailthru and its data feeds know which pieces of content should appear in the next email. We wipe the queue every day at 11AM EST.
-
-![queue](http://files.artsy.net/images/screen-shot-2017-05-25-at-63052-pm.png)
-
 ## Google AMP
 
 We've been tackling [speed issues](http://artsy.github.io/blog/2016/11/02/improving-page-speed-with-graphql/) for a while on Publishing, and once we heard about [Google AMP](https://www.ampproject.org/) and its straightforward implementation, we were on board.
@@ -56,6 +41,7 @@ We've been tackling [speed issues](http://artsy.github.io/blog/2016/11/02/improv
 By adhering to the AMP Project rules and using `<html ⚡>` on the page, we get \<1 second load times from Google Search. These pages can be found by adding `/amp` to the end of an article.
 
 Bored? Here are the same Artsy Editorial articles in AMP:
+
 - [Are Video Games Art?](https://www.artsy.net/article/artsy-editorial-are-video-games-art/amp)
 - [What Happens If You Break an Artwork?](https://www.artsy.net/article/artsy-editorial-break-artwork/amp)
 - [GIPHY Is Helping Get Artists’ Works Viewed 100 Million Times](https://www.artsy.net/article/artsy-editorial-giphy-artists-works-viewed-100-million-times/amp)
@@ -76,6 +62,7 @@ Changes to the sitemap itself are made in Cinder via the [ArticleSitemapJob](htt
 If additional fields are added to the article sitemap, we must also fetch the new field from Positron via [Fulcrum's positron-tables.yml](https://github.com/artsy/fulcrum/blob/master/config/positron-tables.yml).
 
 After the above changes, the following steps are required for production:
+
 - Deploy cinder via Jenkins (this job also deploys Fulcrum automatically)
 - If the schema has changed, update it in Hive (can be done via CLI or [UI here](http://spark.artsy.net:8888/beeswax))
 - Run [Oozie import job](http://spark.artsy.net:8888/oozie/editor/workflow/edit/?workflow=31) to pull new data
@@ -84,8 +71,8 @@ After the above changes, the following steps are required for production:
 
 In addition to Google Search, [a different version of sitemap](https://www.artsy.net/sitemap-news.xml) is generated to distribute editorial content to Google News, which is a distinct service from Search. News sitemaps must satisfy certain requirements, most notably:
 
- * Include URLs for articles published in the last 2 days
- * Update your News sitemap with fresh articles as they're published.
+- Include URLs for articles published in the last 2 days
+- Update your News sitemap with fresh articles as they're published.
 
 Because of these requirements, unlike the rest of the sitemaps, we generate our [news sitemap dynamically in Force](https://github.com/artsy/force/blob/0ea515a8af942b6513a02d0d952f176340f9539e/src/desktop/apps/sitemaps/routes.coffee#L16-L29). The guideline for creating a news sitemap can be found at [Google's Publisher Center Help](https://support.google.com/news/publisher-center/answer/74288?hl=en).
 
@@ -108,7 +95,7 @@ Now that we've dispersed all of our content, how do we know it's working?
 - **[Parsel.y](http://parse.ly)**: good for real-time stats on article performance
 - **[Google Analytics](https://analytics.google.com)**: for more granular work and reports
 - **[Looker](https://artsy.looker.com)**: combines multiple data sources, great for drilling, making inferences
-- **[Segment.io](https://segment.io)**: this is not a dashboard, but an event bus that passes analytics events from Force, Sailthru, GA, and others to Redshift, our data warehouse. Looker then pulls data from Redshift.
+- **[Segment.io](https://segment.io)**: this is not a dashboard, but an event bus that passes analytics events from Force, GA, and others to Redshift, our data warehouse. Looker then pulls data from Redshift.
 
 Our Editorial Team uses [Airtable](https://airtable.com) to organize and plan stories. We run a [data transfer script](https://github.com/artsy/positron/blob/master/scripts/ga_airtable_transfer.js) every hour on the half hour. The script simply takes article analytics from GA and saves them into a table in Airtable.
 
@@ -129,7 +116,3 @@ The official response from Parsely: "AMP only recently started supporting engage
 **What kind of data do we capture for FBIA?**
 
 We track pageviews and bounce rate. The bounce rate tracks 15 seconds and 30 seconds.
-
-**In what ways does Sailthru collect data on site?**
-
-We track pageviews in Sailthru with their script called Horizon. It lets us gather interest data (based on tags) about a user regardless of if they came to Artsy via email.

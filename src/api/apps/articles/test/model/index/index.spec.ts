@@ -1,7 +1,6 @@
 import moment from "moment"
 import { ObjectId } from "mongojs"
 import rewire from "rewire"
-import sinon from "sinon"
 import { extend, times } from "underscore"
 const {
   db,
@@ -35,8 +34,6 @@ describe("Article", () => {
   })
 
   beforeEach(done => {
-    const deleteArticleFromSailthru = sinon.stub().yields()
-    Article.__set__("deleteArticleFromSailthru", deleteArticleFromSailthru)
     empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
 
@@ -126,16 +123,6 @@ describe("Article", () => {
         err.message.should.equal("Article not found.")
         done()
       }))
-
-    // it 'removes the article from sailthru', (done) ->
-    //   fabricate 'articles', {
-    //     _id: ObjectId('5086df098523e60002000018')
-    //     layout: 'video'
-    //     slugs: ['article-slug']
-    //   }, =>
-    //     Article.destroy '5086df098523e60002000018', (err) =>
-    //       @deleteArticleFromSailthru.args[0][0].should.containEql '/video/article-slug'
-    //       done()
 
     it("removes the article from elasticsearch", done =>
       fabricate(
