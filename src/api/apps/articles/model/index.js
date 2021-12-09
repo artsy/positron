@@ -250,7 +250,13 @@ export const destroy = (id, callback) => {
       return callback(new Error("Article not found."))
     }
 
-    const url = getArticleUrl(article)
+    db.articles.remove({ _id: ObjectId(id) }, (err, res) => {
+      if (err) {
+        return callback(err)
+      }
+      removeFromSearch(id.toString())
+      return callback(null)
+    })
   })
 }
 
