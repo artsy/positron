@@ -5,7 +5,6 @@ When an editor publishes content in Writer, it gets distributed across the web. 
 ### Table of contents
 
 - [Artsy.net](#artsy.net)
-- [Email](<#email-(sailthru)>)
 - [Google AMP](#google-amp)
 - [Google News (sitemaps)](#google-news)
 - [RSS](#rss)
@@ -34,16 +33,6 @@ Articles are responsive, so they look good on all devices
 
 ![responsive-article](http://files.artsy.net/images/screen-shot-2017-05-25-at-13624-pm.png)
 Image from [ami.responsivedesign.is](http://ami.responsivedesign.is/)
-
-> ##### History aside on email
->
-> A hundred years ago, we handwrote every single email. Assets would be passed around like hot cakes, copy was reviewed by everyone in Editorial, and it took _hours_ to send one mass email to our users. Our Associate Director of Marketing (CRM), Sara Perle, tells me: "Due to Sailthru integration, editorial production and QA has gone from 4+ hours across 3 teams once a week to 1-5 minutes or less between 2 people 7 times a week."
-
-#### Queue
-
-After we simplified the process of pulling content into an email, scheduling content came next. We have two kinds of Editorial emails: daily and weekly. We take advantage of the custom fields again here (`daily_email` and `weekly_email`), to be able to let Sailthru and its data feeds know which pieces of content should appear in the next email. We wipe the queue every day at 11AM EST.
-
-![queue](http://files.artsy.net/images/screen-shot-2017-05-25-at-63052-pm.png)
 
 ## Google AMP
 
@@ -106,7 +95,7 @@ Now that we've dispersed all of our content, how do we know it's working?
 - **[Parsel.y](http://parse.ly)**: good for real-time stats on article performance
 - **[Google Analytics](https://analytics.google.com)**: for more granular work and reports
 - **[Looker](https://artsy.looker.com)**: combines multiple data sources, great for drilling, making inferences
-- **[Segment.io](https://segment.io)**: this is not a dashboard, but an event bus that passes analytics events from Force, Sailthru, GA, and others to Redshift, our data warehouse. Looker then pulls data from Redshift.
+- **[Segment.io](https://segment.io)**: this is not a dashboard, but an event bus that passes analytics events from Force, GA, and others to Redshift, our data warehouse. Looker then pulls data from Redshift.
 
 Our Editorial Team uses [Airtable](https://airtable.com) to organize and plan stories. We run a [data transfer script](https://github.com/artsy/positron/blob/master/scripts/ga_airtable_transfer.js) every hour on the half hour. The script simply takes article analytics from GA and saves them into a table in Airtable.
 
@@ -127,7 +116,3 @@ The official response from Parsely: "AMP only recently started supporting engage
 **What kind of data do we capture for FBIA?**
 
 We track pageviews and bounce rate. The bounce rate tracks 15 seconds and 30 seconds.
-
-**In what ways does Sailthru collect data on site?**
-
-We track pageviews in Sailthru with their script called Horizon. It lets us gather interest data (based on tags) about a user regardless of if they came to Artsy via email.
