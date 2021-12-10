@@ -20,7 +20,7 @@ In [Force](https://github.com/artsy/force), we've separated the main article bod
 
 > ##### Aside on Channels
 >
-> We typically think of Channels as groups of people. A [Channel](https://github.com/artsy/positron/blob/master/api/apps/channels/model.coffee) contains some metadata and an array of Users. Users can be in multiple Channels. Depending on which Channel you're writing articles in, you'll see different layout options and administrative settings. A long time ago, we only had Users and our entire Artsy Editorial staff had to use a single login.
+> We typically think of Channels as groups of people. A [Channel](https://github.com/artsy/positron/blob/main/api/apps/channels/model.coffee) contains some metadata and an array of Users. Users can be in multiple Channels. Depending on which Channel you're writing articles in, you'll see different layout options and administrative settings. A long time ago, we only had Users and our entire Artsy Editorial staff had to use a single login.
 
 Bored? Here are some great Artsy Editorial (Channel) articles:
 
@@ -47,7 +47,7 @@ Bored? Here are the same Artsy Editorial articles in AMP:
 - [GIPHY Is Helping Get Artists’ Works Viewed 100 Million Times](https://www.artsy.net/article/artsy-editorial-giphy-artists-works-viewed-100-million-times/amp)
 - [What Makes "Bad" Art Good?](https://www.artsy.net/article/artsy-editorial-bad-art-good/amp)
 
-There are many reasons [why](https://medium.com/@cramforce/why-amp-is-fast-7d2ff1f48597) AMP is fast, but the 50KB CSS limit seems to be the hardest to deal with. We created an [AMP-specific stylesheet](https://github.com/artsy/force/blob/master/desktop/apps/article/stylesheets/amp.styl) that is picky about which stylesheets to require. In the cases where we only need one or two CSS rules from a file, we rewrite it instead of requiring the entire file.
+There are many reasons [why](https://medium.com/@cramforce/why-amp-is-fast-7d2ff1f48597) AMP is fast, but the 50KB CSS limit seems to be the hardest to deal with. We created an [AMP-specific stylesheet](https://github.com/artsy/force/blob/main/desktop/apps/article/stylesheets/amp.styl) that is picky about which stylesheets to require. In the cases where we only need one or two CSS rules from a file, we rewrite it instead of requiring the entire file.
 
 ## Google News
 
@@ -57,7 +57,7 @@ We use sitemaps to manage distribution of Artsy's editorial content to Google Se
 
 The [articles sitemap](https://www.artsy.net/sitemap-articles-2018.xml) is generated daily. It is housed by S3, served by Force, and configured via Cinder and Fulcrum, with the help of a few external services.
 
-Changes to the sitemap itself are made in Cinder via the [ArticleSitemapJob](https://github.com/artsy/cinder/blob/master/src/main/scala/net/artsy/jobs/sitemaps/ArticleSitemapJob.scala). A more detailed description of the Artsy's sitemap processes can be found in the [Cinder docs](https://github.com/artsy/cinder/blob/master/doc/sitemaps.md).
+Changes to the sitemap itself are made in Cinder via the [ArticleSitemapJob](https://github.com/artsy/cinder/blob/main/src/main/scala/net/artsy/jobs/sitemaps/ArticleSitemapJob.scala). A more detailed description of the Artsy's sitemap processes can be found in the [Cinder docs](https://github.com/artsy/cinder/blob/main/doc/sitemaps.md).
 
 If additional fields are added to the article sitemap, we must also fetch the new field from Positron via [Fulcrum's positron-tables.yml](https://github.com/artsy/fulcrum/blob/master/config/positron-tables.yml).
 
@@ -78,7 +78,7 @@ Because of these requirements, unlike the rest of the sitemaps, we generate our 
 
 Once crawled, news articles should appear on search results as Top stories (results may vary depending on the query.) They should also appear on [https://news.google.com](https://news.google.com) as well.
 
-![google-news](https://raw.githubusercontent.com/artsy/positron/master/doc/images/google-news.png)
+![google-news](https://raw.githubusercontent.com/artsy/positron/main/doc/images/google-news.png)
 
 Articles can be excluded from this process on a case-by-case basis when the `exclude_google_news` field is marked `true`.
 
@@ -97,7 +97,7 @@ Now that we've dispersed all of our content, how do we know it's working?
 - **[Looker](https://artsy.looker.com)**: combines multiple data sources, great for drilling, making inferences
 - **[Segment.io](https://segment.io)**: this is not a dashboard, but an event bus that passes analytics events from Force, GA, and others to Redshift, our data warehouse. Looker then pulls data from Redshift.
 
-Our Editorial Team uses [Airtable](https://airtable.com) to organize and plan stories. We run a [data transfer script](https://github.com/artsy/positron/blob/master/scripts/ga_airtable_transfer.js) every hour on the half hour. The script simply takes article analytics from GA and saves them into a table in Airtable.
+Our Editorial Team uses [Airtable](https://airtable.com) to organize and plan stories. We run a [data transfer script](https://github.com/artsy/positron/blob/main/scripts/ga_airtable_transfer.js) every hour on the half hour. The script simply takes article analytics from GA and saves them into a table in Airtable.
 
 #### FAQ
 
