@@ -13,7 +13,6 @@ describe("Save", () => {
   const sandbox = sinon.sandbox.create()
   let server
   let removeStopWords
-  let deleteArticleFromSailthru
   let indexForSearch
   let indexForAlgolia
   let removeFromAlgolia
@@ -42,11 +41,6 @@ describe("Save", () => {
         }),
       }),
     })
-    Save.__set__("distributeArticle", sinon.stub().yields())
-    Save.__set__(
-      "deleteArticleFromSailthru",
-      (deleteArticleFromSailthru = sinon.stub().yields())
-    )
     Save.__set__("indexForSearch", (indexForSearch = sinon.stub()))
     Save.__set__("indexForAlgolia", (indexForAlgolia = sinon.stub()))
     Save.__set__("removeFromAlgolia", (removeFromAlgolia = sinon.stub()))
@@ -384,7 +378,7 @@ describe("Save", () => {
   })
 
   describe("#onUnpublish", () => {
-    it("generates slugs and deletes article from sailthru", done => {
+    it("generates slugs", done => {
       Save.onUnpublish(
         {
           thumbnail_title: "delete me a title",
@@ -399,9 +393,6 @@ describe("Save", () => {
             done(err)
           }
           article.slugs.length.should.equal(1)
-          deleteArticleFromSailthru.args[0][0].should.containEql(
-            "video/artsy-editorial-delete-title"
-          )
           done()
         }
       )
@@ -423,9 +414,6 @@ describe("Save", () => {
             done(err)
           }
           article.slugs.length.should.equal(1)
-          deleteArticleFromSailthru.args[0][0].should.containEql(
-            "article/artsy-editorial-one-new-york-building-changed-way-art-made-seen-sold"
-          )
           done()
         }
       )
@@ -568,7 +556,7 @@ describe("Save", () => {
         },
       }))
 
-    it("can save follow artist links (whitelist data-id)", done =>
+    it("can save follow artist links (allowlist data-id)", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {

@@ -1,7 +1,6 @@
 // import rewire from "rewire"
 import moment from "moment"
 import { ObjectId } from "mongojs"
-import sinon from "sinon"
 import { times } from "underscore"
 const {
   db,
@@ -36,9 +35,6 @@ describe("Article Persistence", () => {
   })
 
   beforeEach(done => {
-    const deleteArticleFromSailthru = sinon.stub().yields()
-    // removeFromSearch
-    Article.__set__("deleteArticleFromSailthru", deleteArticleFromSailthru)
     empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
 
@@ -1252,41 +1248,6 @@ describe("Article Persistence", () => {
           done()
         }
       ))
-
-    xit("deletes article from sailthru if it is being unpublished", done => {
-      // Article.__Rewire__ 'onUnpublish', @onUnpublish = sinon.stub().yields(null, article)
-      fabricate(
-        "articles",
-        {
-          _id: ObjectId("5086df098523e60002000018"),
-          id: "5086df098523e60002000018",
-          author_id: ObjectId("5086df098523e60002000018"),
-          published: true,
-        },
-        () => {
-          Article.save(
-            {
-              _id: ObjectId("5086df098523e60002000018"),
-              id: "5086df098523e60002000018",
-              author_id: "5086df098523e60002000018",
-              published: false,
-            },
-            "foo",
-            {},
-            function(err, article) {
-              if (err) {
-                done(err)
-              }
-              article.published.should.be.false()
-              this.onUnpublish.callCount.should.equal(1)
-              // Article.__ResetDependency__ 'onUnpublish'
-              done()
-            }
-          )
-        }
-      )
-    })
-
     it("saves a classic hero_section", done =>
       Article.save(
         {

@@ -1,8 +1,8 @@
 version: 2.1
 
 orbs:
-  codecov: codecov/codecov@1.1.3
-  hokusai: artsy/hokusai@0.7.8
+  codecov: codecov/codecov@1.2.5
+  hokusai: artsy/hokusai@dev:512d4f329b766a5371bb719c356186a3
   yarn: artsy/yarn@6.0.0
   horizon: artsy/release@0.0.1
 
@@ -35,11 +35,11 @@ not_staging_or_release: &not_staging_or_release
         - staging
         - release
 
-only_master: &only_master
+only_main: &only_main
   context: hokusai
   filters:
     branches:
-      only: master
+      only: main
 
 only_release: &only_release
   context: hokusai
@@ -51,7 +51,7 @@ only_dev: &only_dev
   filters:
     branches:
       ignore:
-        - master
+        - main
         - staging
         - release
 
@@ -85,12 +85,12 @@ workflows:
       # Staging
       - hokusai/push:
           name: push-staging-image
-          <<: *only_master
+          <<: *only_main
           requires:
             - test
 
       - hokusai/deploy-staging:
-          <<: *only_master
+          <<: *only_main
           project-name: positron
           requires:
             - push-staging-image

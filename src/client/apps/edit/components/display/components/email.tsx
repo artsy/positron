@@ -82,9 +82,7 @@ export class DisplayEmail extends Component<DisplayProps> {
             onSelect={() =>
               onChangeArticleAction("send_body", !article.send_body)
             }
-          >
-            <FormLabel>Send Article Body To Sailthru</FormLabel>
-          </Checkbox>
+          />
         </Box>
       </div>
     )
