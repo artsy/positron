@@ -556,7 +556,7 @@ describe("Save", () => {
         },
       }))
 
-    it("can save follow artist links (whitelist data-id)", done =>
+    it("can save follow artist links (allowlist data-id)", done =>
       Save.sanitizeAndSave(() =>
         Article.find("5086df098523e60002000011", (err, article) => {
           if (err) {

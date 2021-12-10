@@ -19,7 +19,7 @@ const {
   ARTSY_URL,
   ARTSY_ID,
   ARTSY_SECRET,
-  IP_BLACKLIST = "",
+  IP_DENYLIST = "",
   PORT,
 } = process.env
 
@@ -30,8 +30,8 @@ if (process.env.DATADOG_AGENT_HOSTNAME) {
 // Gzip compression
 app.use(compression())
 
-// Blacklist ips
-app.use(IpFilter([IP_BLACKLIST.split(",")], { log: false, mode: "deny" }))
+// Denylist ips
+app.use(IpFilter([IP_DENYLIST.split(",")], { log: false, mode: "deny" }))
 
 // Get an xapp token
 const xappConfig = {
