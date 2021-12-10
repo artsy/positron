@@ -17,10 +17,10 @@
   - [Staging](https://app.datadoghq.com/apm/service/positron/express.request?end=1545136799180&env=staging&paused=false&start=1545133199180)
 - **MongoDB:** [Atlas](https://cloud.mongodb.com/v2/5be44a7aff7a254a8327cd3a#clusters)
 - **Github:** [https://github.com/artsy/positron/](https://github.com/artsy/positron/)
-- **CI:** [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#master are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
+- **CI:** [CircleCI](https://circleci.com/gh/artsy/positron); merged PRs to artsy/positron#main are automatically deployed to staging. PRs from `staging` to `release` are automatically deployed to production. [Start a deploy...](https://github.com/artsy/positron/compare/release...staging?expand=1)
 - **Point Person:** N/A
 
-[![Build Status](https://circleci.com/gh/artsy/positron/tree/master.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/master) [![codecov](https://codecov.io/gh/artsy/positron/branch/master/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
+[![Build Status](https://circleci.com/gh/artsy/positron/tree/main.svg?style=svg)](https://circleci.com/gh/artsy/positron/tree/main) [![codecov](https://codecov.io/gh/artsy/positron/branch/main/graph/badge.svg)](https://codecov.io/gh/artsy/positron)
 
 ## Setup
 
