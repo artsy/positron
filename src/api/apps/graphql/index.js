@@ -107,7 +107,7 @@ const metaFields = {
 
 const ArticleSchema = object(Article.inputSchema).concat(object(metaFields))
 
-const schema = joiql({
+export const schema = joiql({
   query: {
     articles: array()
       .items(ArticleSchema)
@@ -145,6 +145,8 @@ const schema = joiql({
       }),
   },
 })
+
+module.exports.schema = schema
 
 app.use(
   "/graphql",
