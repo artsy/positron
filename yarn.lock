@@ -8580,10 +8580,10 @@ joi@10.5.2:
     items "2.x.x"
     topo "2.x.x"
 
-joiql@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/joiql/-/joiql-0.1.5.tgz#038a26337b9855c4c118fdb343cc07b34a7c98b6"
-  integrity sha512-tiW7FFtiVUpkirUtiKXVYGuqTNhAdjSLfHfsbt/kvLE18sOfaPL/BSeeu6DLS8sHWKhx1xzjDNAWl4x8IYOCuw==
+joiql@0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/joiql/-/joiql-0.1.4.tgz#305c0a2b7fc7d66da608f2b90c2cad5026fd97de"
+  integrity sha512-FmI39HqzcSqLbwrd1eiK5xtsdwP+0TmAG1Uc7WLEvK02+mvnbxr4RyAHEWUs6x8OwQ/Nkhnuup6cQxYU/aOktg==
   dependencies:
     graphql "^0.7.2"
     lodash "^4.13.1"
