@@ -10,6 +10,7 @@
     "clean": "rm -rf public && mkdir -p public/assets && echo '[Positron] Cleaned build directory'",
     "cypress": "cypress open",
     "dev": "sh scripts/dev.sh",
+    "dump-schema": "yarn task scripts/dump-schema.js",
     "jest": "sh scripts/jest.sh",
     "lint": "eslint src --cache --cache-location '.cache/eslint/' --ext ts,tsx,js,jsx ",
     "mocha": "sh scripts/mocha.sh",
