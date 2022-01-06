@@ -92,6 +92,7 @@ ImageCollectionSection = (->
 
 @inputSchema = (->
   id: @string().objectid()
+  internalID: @string().objectid()
   author_id: @string().objectid()
   author_ids: @array().items(@string().objectid()).default([])
   author: @object().keys
@@ -255,7 +256,7 @@ ImageCollectionSection = (->
 ).call Joi
 
 #
-# Query Schema
+# Query Schema (input arguments)
 #
 @querySchema = (->
   id: @string().objectid()

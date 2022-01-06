@@ -8,6 +8,7 @@
   "scripts": {
     "assets": "sh scripts/assets.sh",
     "clean": "rm -rf public && mkdir -p public/assets && echo '[Positron] Cleaned build directory'",
+    "copy-schema-to-mp": "yarn dump-schema ../metaphysics/src/data/positron.graphql",
     "cypress": "cypress open",
     "dev": "sh scripts/dev.sh",
     "dump-schema": "yarn task scripts/dump-schema.js",

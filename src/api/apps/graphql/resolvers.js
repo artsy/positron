@@ -34,7 +34,16 @@ export const articles = (root, args, req, ast) => {
       if (err) {
         reject(new Error("Articles not found."))
       }
-      resolve(presentCollection(res).results)
+      // Add internalID for relay support
+      res = {
+        results: res.results.map(r => ({
+          ...r,
+          internalID: r._id,
+        })),
+      }
+
+      const results = presentCollection(res).results
+      resolve(results)
     })
   })
 }
@@ -55,6 +64,7 @@ export const article = (root, args, req, ast) => {
             )
           )
         } else {
+          result.internalID = result.id
           resolve(present(result))
         }
       } else {

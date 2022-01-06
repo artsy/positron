@@ -9,7 +9,7 @@ fi
 export $(cat .env | grep NODE_ENV | xargs)
 
 if [ "$NODE_ENV" = "development" ]; then
-  node --max_old_space_size=1024 ./src/index.js
+  node --max_old_space_size=1024 --inspect ./src/index.js
 else
   forever -c 'node --max_old_space_size=1024' ./src/index.js --colors
 fi
