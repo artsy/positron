@@ -112,34 +112,40 @@ export const schema = joiql({
     articles: array()
       .items(ArticleSchema)
       .meta({
+        typeName: "Articles",
         args: Article.querySchema,
         resolve: resolvers.articles,
       }),
     article: ArticleSchema.meta({
+      typeName: "Article",
       args: { id: string() },
       resolve: resolvers.article,
     }),
     authors: array()
       .items(object(Author.schema))
       .meta({
+        typeName: "Authors",
         args: Author.querySchema,
         resolve: resolvers.authors,
       }),
     curations: array()
       .items(object(Curation.schema))
       .meta({
+        typeName: "Curations",
         args: Curation.querySchema,
         resolve: resolvers.curations,
       }),
     channels: array()
       .items(object(Channel.schema))
       .meta({
+        typeName: "Channels",
         args: Channel.querySchema,
         resolve: resolvers.channels,
       }),
     tags: array()
       .items(object(Tag.schema))
       .meta({
+        typeName: "Tags",
         args: Tag.querySchema,
         resolve: resolvers.tags,
       }),
