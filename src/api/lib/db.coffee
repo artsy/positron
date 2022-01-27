@@ -1,9 +1,9 @@
 #
-# Wraps & exports a mongojs instance. Automatically selects collections based
+# Wraps & exports a mongodb instance. Automatically selects collections based
 # on the folder names under /apps. https://github.com/mafintosh/mongojs
 #
 
-mongojs = require 'mongodb'
+mongo = require 'mongodb'
 fs = require 'fs'
 path = require 'path'
 { MONGOHQ_URL } = process.env

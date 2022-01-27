@@ -4,7 +4,7 @@ Positron uses MongoDB + Express to serve a private JSON API which the /client ap
 
 ## Architecture
 
-Positron's API architecture is very thin. Endpoints are split into sub-express apps under /api/apps. These apps represent a resouce and contain routes (like Rails controllers) that do auth/session/routing/etc. for a resource. Apps also contain a model that handles validation/persistence/busines logic/etc. of a resource. Unlike typical ActiveRecord/object-oriented models, these models are just libraries of database transcations that operate on vanilla data objects (using [mongojs](https://github.com/mafintosh/mongojs))—otherwise known as the [Transcation Script pattern](http://martinfowler.com/eaaCatalog/transactionScript.html). As the model logic grows it's encouraged to break apart the library into it's individual parts (e.g. model/domain.coffee, model/validation.coffee, model/persistence.coffee etc.). A root `index.coffee` app glues together the sub apps & api-wide middleware found under `/lib`.
+Positron's API architecture is very thin. Endpoints are split into sub-express apps under /api/apps. These apps represent a resouce and contain routes (like Rails controllers) that do auth/session/routing/etc. for a resource. Apps also contain a model that handles validation/persistence/busines logic/etc. of a resource. Unlike typical ActiveRecord/object-oriented models, these models are just libraries of database transcations that operate on vanilla data objects (using [mongodb](https://github.com/mongodb/node-mongodb-native))—otherwise known as the [Transcation Script pattern](http://martinfowler.com/eaaCatalog/transactionScript.html). As the model logic grows it's encouraged to break apart the library into it's individual parts (e.g. model/domain.coffee, model/validation.coffee, model/persistence.coffee etc.). A root `index.coffee` app glues together the sub apps & api-wide middleware found under `/lib`.
 
 ## Authentication
 
@@ -47,15 +47,15 @@ GET /articles
 - channel_id: Query articles by a channel id
 - partner_channel_id: Query articles by a partner channel id
 
-
 GET /articles/:id
 POST /articles
 PUT /articles/:id
 DELETE /articles/:id
-GET /sync\_to\_post?article_id=
+GET /sync_to_post?article_id=
 
 #### A note on `gravity_id`
-Before articles existed in Positron, they lived in Gravity's API. All articles have now been moved to Positron's database, but there are a number of legacy articles ported from Gravity that do not belong to a channel, and are therefore not editable via Writer, and sometimes not searchable via the `id` param.  If you are looking for a published article that does not return when searching for the `id`, try searching for it using the `gravity_id`.
+
+Before articles existed in Positron, they lived in Gravity's API. All articles have now been moved to Positron's database, but there are a number of legacy articles ported from Gravity that do not belong to a channel, and are therefore not editable via Writer, and sometimes not searchable via the `id` param. If you are looking for a published article that does not return when searching for the `id`, try searching for it using the `gravity_id`.
 
 ### Users
 
