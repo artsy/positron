@@ -2,7 +2,7 @@ _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
 app = require '../../../'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'sections endpoints', ->
 

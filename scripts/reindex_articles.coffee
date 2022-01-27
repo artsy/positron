@@ -1,5 +1,5 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-mongojs = require 'mongojs'
+mongo = require 'mongodb'
 path = require 'path'
 { indexForSearch, indexForAlgolia, removeFromAlgolia } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
@@ -16,24 +16,29 @@ switch process.env.NODE_ENV
   else env path.resolve __dirname, '../.env'
 
 # Connect to database
-db = mongojs(process.env.MONGOHQ_URL, ['articles'])
+MongoClient = mongo.MongoClient
+MongoClient.connect process.env.MONGOHQ_URL, (connerr, db) ->
+  if connerr
+    console.log(connerr)
+  else
+    collection = db.Collection('articles')
+    collection.find({}).toArray (err, articles) ->
+      console.log(err) if err
+      console.log(articles.length)
 
-db.articles.find({}).toArray (err, articles) ->
-  console.log(err) if err
-  console.log(articles.length)
-  async.mapSeries(articles, indexWorker, (err, results) =>
-    console.log('Completed indexing ' + results.length + ' articles.')
-  )
+      async.mapSeries(articles, indexWorker, (err, results) ->
+        console.log('Completed indexing ' + results.length + ' articles.')
+      )
 
-indexWorker = (article, cb) ->
-  console.log('indexing ', article._id)
-  articlePresent = Article.present(article) 
-  indexForSearch articlePresent, () =>
-    console.log('indexed on Elasticsearch ', article.id or article._id)
-    isArticleVisibleToPublic = new ArticleModel(cloneDeep article).isVisibleToPublic()
-    if (articlePresent.indexable and isArticleVisibleToPublic)
-      indexForAlgolia articlePresent, () =>
-        console.log('indexed on Algolia ', article.id or article._id)
-        cb()
-    else
-      cb()
+    indexWorker = (article, cb) ->
+      console.log('indexing ', article._id)
+      articlePresent = Article.present(article)
+      indexForSearch articlePresent, () ->
+        console.log('indexed on Elasticsearch ', article.id or article._id)
+        isArticleVisibleToPublic = new ArticleModel(cloneDeep article).isVisibleToPublic()
+        if (articlePresent.indexable and isArticleVisibleToPublic)
+          indexForAlgolia articlePresent, () ->
+            console.log('indexed on Algolia ', article.id or article._id)
+            cb()
+        else
+          cb()

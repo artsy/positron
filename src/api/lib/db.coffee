@@ -3,7 +3,7 @@
 # on the folder names under /apps. https://github.com/mafintosh/mongojs
 #
 
-mongojs = require 'mongojs'
+mongojs = require 'mongodb'
 fs = require 'fs'
 path = require 'path'
 { MONGOHQ_URL } = process.env

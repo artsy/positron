@@ -2,7 +2,7 @@ _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Channel = require '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'Channel', ->
 
