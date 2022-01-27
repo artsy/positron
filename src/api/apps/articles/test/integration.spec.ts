@@ -1,4 +1,4 @@
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import request from "superagent"
 const {
   db,

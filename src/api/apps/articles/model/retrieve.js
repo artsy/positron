@@ -1,5 +1,5 @@
 import { each, omit } from "lodash"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 
 export const toQuery = input => {
   const { limit, offset, sort, count } = input

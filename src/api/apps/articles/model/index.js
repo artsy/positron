@@ -6,7 +6,7 @@ import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
 import { toQuery } from "./retrieve"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import moment from "moment"
 
 const schema = require("./schema.coffee")

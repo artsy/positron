@@ -10,17 +10,21 @@ path = require 'path'
 debug = require('debug') 'api'
 
 collections = ['articles', 'users', 'sections', 'artists', 'curations', 'channels', 'tags', 'verticals', 'authors', 'sessions']
-db = mongojs MONGOHQ_URL, collections
 
-exit = (msg) -> (err) ->
-  debug msg
-  debug msg, err if msg is 'Mongo Error'
-  process.exit(1)
+MongoClient = mongo.MongoClient
 
-db.on 'close', exit('Mongo Connection Closed')
-db.on 'error', exit('Mongo Error')
+MongoClient.connect MONGOHQ_URL, (err, db) ->
+  exit = (msg) -> (err) ->
+    debug msg
+    debug msg, err if msg is 'Mongo Error'
+    process.exit(1)
+  
+  collections = db.Collections(collections)
 
-db.createCollection('sessions', {})
+  db.on 'close', exit('Mongo Connection Closed')
+  db.on 'error', exit('Mongo Error')
+
+  collections.createCollection('sessions', {})
 
 module.exports = db
 module.exports.collections = collections
