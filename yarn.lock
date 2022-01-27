@@ -3307,7 +3307,7 @@ bser@2.1.1:
   dependencies:
     node-int64 "^0.4.0"
 
-bson@^4.6.1:
+bson@4.6.1, bson@^4.6.1:
   version "4.6.1"
   resolved "https://registry.yarnpkg.com/bson/-/bson-4.6.1.tgz#2b5da517539bb0f7f3ffb54ac70a384ca899641c"
   integrity sha512-I1LQ7Hz5zgwR4QquilLNZwbhPw0Apx7i7X9kGMBTsqPdml/03Q9NBtD9nt/19ahjlphktQImrnderxqpzeVDjw==

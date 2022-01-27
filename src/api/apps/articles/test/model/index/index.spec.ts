@@ -42,8 +42,8 @@ describe("Article", () => {
       fabricate(
         "articles",
         {
-          _id: ObjectId("54276766fd4f50996aeca2b8"),
-          author_id: ObjectId("5086df098523e60002000018"),
+          _id: new ObjectId("54276766fd4f50996aeca2b8"),
+          author_id: new ObjectId("5086df098523e60002000018"),
           published: false,
           scheduled_publish_at: moment("2016-01-01").toDate(),
           author: {
@@ -91,7 +91,7 @@ describe("Article", () => {
       fabricate(
         "articles",
         {
-          _id: ObjectId("54276766fd4f50996aeca2b8"),
+          _id: new ObjectId("54276766fd4f50996aeca2b8"),
           weekly_email: true,
           daily_email: true,
           author: {
@@ -109,13 +109,16 @@ describe("Article", () => {
 
   describe("#destroy", () => {
     it("removes an article", done =>
-      fabricate("articles", { _id: ObjectId("5086df098523e60002000018") }, () =>
-        Article.destroy("5086df098523e60002000018", _err =>
-          db.articles.count((_error, count) => {
-            count.should.equal(10)
-            done()
-          })
-        )
+      fabricate(
+        "articles",
+        { _id: new ObjectId("5086df098523e60002000018") },
+        () =>
+          Article.destroy("5086df098523e60002000018", _err =>
+            db.articles.count((_error, count) => {
+              count.should.equal(10)
+              done()
+            })
+          )
       ))
 
     it("returns an error message", done =>
@@ -127,7 +130,7 @@ describe("Article", () => {
     it("removes the article from elasticsearch", done =>
       fabricate(
         "articles",
-        { _id: ObjectId("5086df098523e60002000019"), title: "quux" },
+        { _id: new ObjectId("5086df098523e60002000019"), title: "quux" },
         () =>
           setTimeout(
             () =>
@@ -203,7 +206,7 @@ describe("Article", () => {
       fabricate(
         "articles",
         {
-          _id: ObjectId("54276766fd4f50996aeca2b8"),
+          _id: new ObjectId("54276766fd4f50996aeca2b8"),
           super_article: {
             related_articles: [ObjectId("5086df098523e60002000018")],
           },
@@ -217,14 +220,17 @@ describe("Article", () => {
 
   describe("#promisedMongoFetch", () =>
     it("returns results, counts, and totals", () =>
-      fabricate("articles", { _id: ObjectId("5086df098523e60002000018") }, () =>
-        Article.promisedMongoFetch({
-          count: true,
-          ids: [ObjectId("5086df098523e60002000018")],
-        }).then(({ count, total, results }) => {
-          count.should.equal(1)
-          total.should.equal(11)
-          results.length.should.equal(1)
-        })
+      fabricate(
+        "articles",
+        { _id: new ObjectId("5086df098523e60002000018") },
+        () =>
+          Article.promisedMongoFetch({
+            count: true,
+            ids: [ObjectId("5086df098523e60002000018")],
+          }).then(({ count, total, results }) => {
+            count.should.equal(1)
+            total.should.equal(11)
+            results.length.should.equal(1)
+          })
       )))
 })

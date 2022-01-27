@@ -5,15 +5,15 @@ describe("Retrieve", () => {
   describe("#toQuery", () => {
     it("aggregates the query for all_by_author", () => {
       const { query } = toQuery({
-        all_by_author: ObjectId("5086df098523e60002000017"),
+        all_by_author: new ObjectId("5086df098523e60002000017"),
         published: true,
       })
       query.$or[0].author_id.should.containEql(
-        ObjectId("5086df098523e60002000017")
+        new ObjectId("5086df098523e60002000017")
       )
       query.$or[1].contributing_authors.$elemMatch.should.be.ok()
       query.$or[1].contributing_authors.$elemMatch.id.should.containEql(
-        ObjectId("5086df098523e60002000017")
+        new ObjectId("5086df098523e60002000017")
       )
     })
 
@@ -23,7 +23,7 @@ describe("Retrieve", () => {
         published: true,
       })
       query["vertical.id"].should.containEql(
-        ObjectId("55356a9deca560a0137bb4a7")
+        new ObjectId("55356a9deca560a0137bb4a7")
       )
     })
 
@@ -33,13 +33,13 @@ describe("Retrieve", () => {
         published: true,
       })
       query.$or[0].primary_featured_artist_ids.should.containEql(
-        ObjectId("5086df098523e60002000016")
+        new ObjectId("5086df098523e60002000016")
       )
       query.$or[1].featured_artist_ids.should.containEql(
-        ObjectId("5086df098523e60002000016")
+        new ObjectId("5086df098523e60002000016")
       )
       query.$or[2].biography_for_artist_id.should.containEql(
-        ObjectId("5086df098523e60002000016")
+        new ObjectId("5086df098523e60002000016")
       )
     })
 
@@ -89,10 +89,10 @@ describe("Retrieve", () => {
       })
       query.fair_ids.$elemMatch.should.be.ok()
       query.fair_ids.$elemMatch.$in[0].should.containEql(
-        ObjectId("5086df098523e60002000016")
+        new ObjectId("5086df098523e60002000016")
       )
       query.fair_ids.$elemMatch.$in[1].should.containEql(
-        ObjectId("5086df098523e60002000015")
+        new ObjectId("5086df098523e60002000015")
       )
     })
 

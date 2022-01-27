@@ -839,9 +839,9 @@ describe("Article Persistence", () => {
       fabricate(
         "articles",
         {
-          _id: ObjectId("5086df098523e60002000018"),
+          _id: new ObjectId("5086df098523e60002000018"),
           id: "5086df098523e60002000018",
-          author_id: ObjectId("5086df098523e60002000018"),
+          author_id: new ObjectId("5086df098523e60002000018"),
           published: false,
           author: {
             name: "Kana Abe",
@@ -856,7 +856,7 @@ describe("Article Persistence", () => {
         () =>
           Article.save(
             {
-              _id: ObjectId("5086df098523e60002000018"),
+              _id: new ObjectId("5086df098523e60002000018"),
               id: "5086df098523e60002000018",
               author_id: "5086df098523e60002000018",
               published: true,

@@ -26,7 +26,7 @@ describe("routes", () => {
       params: {},
       get: {},
       user: extend({}, fixtures().users, {
-        _id: ObjectId("5086df098523e60002000012"),
+        _id: new ObjectId("5086df098523e60002000012"),
       }),
     }
     res = { send: sinon.stub(), err: sinon.stub() }
@@ -95,7 +95,7 @@ describe("routes", () => {
       req.user.type = "User"
       req.article = extend({}, fixtures().articles, {
         published: false,
-        channel_id: ObjectId("4d8cd73191a5c50ce210002a"),
+        channel_id: new ObjectId("4d8cd73191a5c50ce210002a"),
       })
       routes.show(req, res, next)
       res.err.args[0][0].should.equal(404)
@@ -122,7 +122,7 @@ describe("routes", () => {
 
     it("defaults to the logged in user for author_id", () => {
       req.user = extend(fixtures().users, {
-        _id: ObjectId("4d8cd73191a5c50ce210002a"),
+        _id: new ObjectId("4d8cd73191a5c50ce210002a"),
       })
       req.article = fixtures().articles
       routes.create(req, res)
@@ -159,7 +159,7 @@ describe("routes", () => {
       Article.find.args[0][1](
         null,
         extend(fixtures().articles, {
-          author_id: ObjectId("4d8cd73191a5c50ce210002a"),
+          author_id: new ObjectId("4d8cd73191a5c50ce210002a"),
           published: true,
           title: "Andy Foobar and The Gang",
         })
@@ -174,7 +174,7 @@ describe("routes", () => {
       Article.find.args[0][1](
         null,
         extend(fixtures().articles, {
-          author_id: ObjectId("4d8cd73191a5c50ce210002a"),
+          author_id: new ObjectId("4d8cd73191a5c50ce210002a"),
           published: false,
           title: "Andy Foobar and The Gang",
         })
