@@ -61,7 +61,7 @@ With MongoDB running locally, follow these steps to create a dummy channel:
 {
   name: "Test Channel",
   type: "team", // this can be either editorial, team, support, or partner
-  user_ids: [ObjectId("<your_user_id>")]
+  user_ids: [new ObjectId("<your_user_id>")]
 }
 ```
 
