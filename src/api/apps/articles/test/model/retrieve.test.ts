@@ -102,8 +102,12 @@ describe("Retrieve", () => {
         published: true,
       })
       query._id.$in.should.be.ok()
-      query._id.$in[0].should.containEql(ObjectId("54276766fd4f50996aeca2b8"))
-      query._id.$in[1].should.containEql(ObjectId("54276766fd4f50996aeca2b7"))
+      query._id.$in[0].should.containEql(
+        new ObjectId("54276766fd4f50996aeca2b8")
+      )
+      query._id.$in[1].should.containEql(
+        new ObjectId("54276766fd4f50996aeca2b7")
+      )
     })
 
     it("finds articles in editorial feed", () => {
