@@ -2,7 +2,7 @@ import {
   SeriesArticle,
   StandardArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import * as resolvers from "../resolvers"
 const { fixtures } = require("api/test/helpers/db.coffee")
 
@@ -403,8 +403,8 @@ describe("resolvers", () => {
     it("omits related articles and root article from fetch", async () => {
       articleFixture.id = "594a7e2254c37f00177c0ea9"
       articleFixture.related_article_ids = [
-        ObjectId("5c40890f521d075876214805"),
-        ObjectId("5c472ea015f1e22de4eef4b0"),
+        new ObjectId("5c40890f521d075876214805"),
+        new ObjectId("5c472ea015f1e22de4eef4b0"),
       ]
       articleFixture.vertical.id = "54276766fd4f50996aeca2b3"
       articleFixture.channel_id = "f78859586db1ce9913107e1b"
@@ -412,16 +412,22 @@ describe("resolvers", () => {
       const args = articleModel.promisedMongoFetch.mock.calls[0][0]
 
       args.omit.length.should.equal(3)
-      expect(args.omit[0]).toMatchObject(ObjectId("594a7e2254c37f00177c0ea9"))
-      expect(args.omit[1]).toMatchObject(ObjectId("5c40890f521d075876214805"))
-      expect(args.omit[2]).toMatchObject(ObjectId("5c472ea015f1e22de4eef4b0"))
+      expect(args.omit[0]).toMatchObject(
+        new ObjectId("594a7e2254c37f00177c0ea9")
+      )
+      expect(args.omit[1]).toMatchObject(
+        new ObjectId("5c40890f521d075876214805")
+      )
+      expect(args.omit[2]).toMatchObject(
+        new ObjectId("5c472ea015f1e22de4eef4b0")
+      )
     })
 
     it("makes fetch with relatedArticleArgs", async () => {
       articleFixture.id = "594a7e2254c37f00177c0ea9"
       articleFixture.related_article_ids = [
-        ObjectId("5c40890f521d075876214805"),
-        ObjectId("5c472ea015f1e22de4eef4b0"),
+        new ObjectId("5c40890f521d075876214805"),
+        new ObjectId("5c472ea015f1e22de4eef4b0"),
       ]
       articleFixture.channel_id = "f78859586db1ce9913107e1b"
       await resolvers.relatedArticlesCanvas(articleFixture)
@@ -528,23 +534,29 @@ describe("resolvers", () => {
     it("omits related articles and root article from fetch", async () => {
       articleFixture.id = "594a7e2254c37f00177c0ea9"
       articleFixture.related_article_ids = [
-        ObjectId("5c40890f521d075876214805"),
-        ObjectId("5c472ea015f1e22de4eef4b0"),
+        new ObjectId("5c40890f521d075876214805"),
+        new ObjectId("5c472ea015f1e22de4eef4b0"),
       ]
       articleFixture.channel_id = "f78859586db1ce9913107e1b"
       await resolvers.relatedArticlesPanel(articleFixture)
       const args = articleModel.promisedMongoFetch.mock.calls[0][0]
 
       args.omit.length.should.equal(3)
-      expect(args.omit[0]).toMatchObject(ObjectId("594a7e2254c37f00177c0ea9"))
-      expect(args.omit[1]).toMatchObject(ObjectId("5c40890f521d075876214805"))
-      expect(args.omit[2]).toMatchObject(ObjectId("5c472ea015f1e22de4eef4b0"))
+      expect(args.omit[0]).toMatchObject(
+        new ObjectId("594a7e2254c37f00177c0ea9")
+      )
+      expect(args.omit[1]).toMatchObject(
+        new ObjectId("5c40890f521d075876214805")
+      )
+      expect(args.omit[2]).toMatchObject(
+        new ObjectId("5c472ea015f1e22de4eef4b0")
+      )
     })
 
     it("makes fetch with relatedArticleargs", async () => {
       articleFixture.related_article_ids = [
-        ObjectId("5c40890f521d075876214805"),
-        ObjectId("5c472ea015f1e22de4eef4b0"),
+        new ObjectId("5c40890f521d075876214805"),
+        new ObjectId("5c472ea015f1e22de4eef4b0"),
       ]
       articleFixture.channel_id = "f78859586db1ce9913107e1b"
       await resolvers.relatedArticlesCanvas(articleFixture)

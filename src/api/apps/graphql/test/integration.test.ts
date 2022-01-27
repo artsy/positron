@@ -4,7 +4,7 @@ import {
   RelatedArticlesQuery,
 } from "api/apps/graphql/test/queries"
 import request from "superagent"
-const { ObjectId } = require("mongojs")
+const { ObjectId } = require("mongodb")
 const app = require("../../../index.coffee")
 const {
   fabricate,
@@ -29,7 +29,7 @@ describe("graphql endpoint", () => {
     empty(() => {
       fabricate(
         "authors",
-        [{ _id: ObjectId("55356a9deca560a0137bb4ae"), name: "Kana" }],
+        [{ _id: new ObjectId("55356a9deca560a0137bb4ae"), name: "Kana" }],
         (err, _res) => {
           if (err) {
             done(err.message)
@@ -42,23 +42,23 @@ describe("graphql endpoint", () => {
               {
                 title: "Top Eleven Booths",
                 published: true,
-                _id: ObjectId("5c9d3c1aa4ba105ad8336956"),
-                author_ids: [ObjectId("55356a9deca560a0137bb4ae")],
-                channel_id: ObjectId("5aa99c11da4c00d6bc33a816"),
+                _id: new ObjectId("5c9d3c1aa4ba105ad8336956"),
+                author_ids: [new ObjectId("55356a9deca560a0137bb4ae")],
+                channel_id: new ObjectId("5aa99c11da4c00d6bc33a816"),
               },
               {
                 title: "Top Twelve Booths",
-                _id: ObjectId("5f32e33bd273fe3b7f0e3f00"),
+                _id: new ObjectId("5f32e33bd273fe3b7f0e3f00"),
                 published: true,
                 featured: true,
                 vertical: {
                   name: "Culture",
-                  id: ObjectId("55356a9deca560a0137bb4a7"),
+                  id: new ObjectId("55356a9deca560a0137bb4a7"),
                 },
                 layout: "series",
-                channel_id: ObjectId("5aa99c11da4c00d6bc33a816"),
-                author_ids: [ObjectId("55356a9deca560a0137bb4ae")],
-                related_article_ids: [ObjectId("5c9d3c1aa4ba105ad8336956")],
+                channel_id: new ObjectId("5aa99c11da4c00d6bc33a816"),
+                author_ids: [new ObjectId("55356a9deca560a0137bb4ae")],
+                related_article_ids: [new ObjectId("5c9d3c1aa4ba105ad8336956")],
               },
             ],
             () => {
