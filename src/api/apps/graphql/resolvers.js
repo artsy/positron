@@ -11,7 +11,7 @@ const {
   presentCollection,
   find,
 } = require("api/apps/articles/model/index.js")
-const { ObjectId } = require("mongojs")
+const { ObjectId } = require("mongodb")
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -148,7 +148,7 @@ export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
   const relatedArticleArgs = {
     ids: related_article_ids,
-    channel_id: ObjectId(root.channel_id),
+    channel_id: new ObjectId(root.channel_id),
   }
   const unauthorized = !User.hasChannelAccess(req.user, root.channel_id)
   if (unauthorized) {
@@ -183,7 +183,7 @@ export const relatedArticles = (root, args, req) => {
 }
 
 export const relatedArticlesPanel = root => {
-  let omittedIds = [ObjectId(root.id)]
+  let omittedIds = [new ObjectId(root.id)]
   if (root.related_article_ids) {
     omittedIds = omittedIds.concat(root.related_article_ids)
   }
@@ -193,7 +193,7 @@ export const relatedArticlesPanel = root => {
     omit: omittedIds,
     published: true,
     featured: true,
-    channel_id: ObjectId(root.channel_id),
+    channel_id: new ObjectId(root.channel_id),
     tags: tags,
     limit: 3,
     sort: "-published_at",
@@ -236,20 +236,20 @@ export const relatedArticlesPanel = root => {
 }
 
 export const relatedArticlesCanvas = root => {
-  let omittedIds = [ObjectId(root.id)]
+  let omittedIds = [new ObjectId(root.id)]
   if (root.related_article_ids) {
     omittedIds = omittedIds.concat(root.related_article_ids)
   }
 
   const vertical =
-    root.vertical && root.vertical.id ? ObjectId(root.vertical.id) : null
+    root.vertical && root.vertical.id ? new ObjectId(root.vertical.id) : null
 
   const args = {
     omit: omittedIds,
     published: true,
     featured: true,
     in_editorial_feed: true,
-    channel_id: ObjectId(root.channel_id),
+    channel_id: new ObjectId(root.channel_id),
     vertical,
     limit: 4,
     sort: "-published_at",
