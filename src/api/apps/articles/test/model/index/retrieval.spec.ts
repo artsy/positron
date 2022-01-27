@@ -145,16 +145,20 @@ describe("Article Retrieval", () => {
         [
           {
             title: "Foo",
-            featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artist_ids: [new ObjectId("4dc98d149a96300001003033")],
           },
           {
             title: "Bar",
-            primary_featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
+            primary_featured_artist_ids: [
+              new ObjectId("4dc98d149a96300001003033"),
+            ],
           },
           {
             title: "Baz",
-            featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
-            primary_featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artist_ids: [new ObjectId("4dc98d149a96300001003033")],
+            primary_featured_artist_ids: [
+              new ObjectId("4dc98d149a96300001003033"),
+            ],
           },
         ],
         () =>
@@ -179,11 +183,11 @@ describe("Article Retrieval", () => {
         [
           {
             title: "Foo",
-            featured_artwork_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artwork_ids: [new ObjectId("4dc98d149a96300001003033")],
           },
           {
             title: "Baz",
-            featured_artwork_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artwork_ids: [new ObjectId("4dc98d149a96300001003033")],
           },
         ],
         () =>
@@ -225,9 +229,9 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         [
-          { title: "C", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "A", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "B", fair_ids: [ObjectId("4dc98d149a96300001003032")] },
+          { title: "C", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
+          { title: "A", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
+          { title: "B", fair_ids: [new ObjectId("4dc98d149a96300001003032")] },
         ],
         () =>
           Article.where(
@@ -254,8 +258,8 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         [
-          { title: "C", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "A", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
+          { title: "C", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
+          { title: "A", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
         ],
         () =>
           Article.where(
@@ -279,7 +283,7 @@ describe("Article Retrieval", () => {
         {
           author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
           title: "Hello Wurld",
-          fair_programming_ids: [ObjectId("52617c6c8b3b81f094000013")],
+          fair_programming_ids: [new ObjectId("52617c6c8b3b81f094000013")],
         },
         () =>
           Article.where(
@@ -304,7 +308,7 @@ describe("Article Retrieval", () => {
         {
           author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
           title: "Hello Wurld",
-          fair_artsy_ids: [ObjectId("53da550a726169083c0a0700")],
+          fair_artsy_ids: [new ObjectId("53da550a726169083c0a0700")],
         },
         () =>
           Article.where(
@@ -329,7 +333,7 @@ describe("Article Retrieval", () => {
         {
           author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
           title: "Hello Wurld",
-          fair_about_ids: [ObjectId("53da550a726169083c0a0700")],
+          fair_about_ids: [new ObjectId("53da550a726169083c0a0700")],
         },
         () =>
           Article.where(
@@ -352,9 +356,18 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         [
-          { title: "Foo", partner_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "Bar", partner_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "Baz", partner_ids: [ObjectId("4dc98d149a96300001003031")] },
+          {
+            title: "Foo",
+            partner_ids: [new ObjectId("4dc98d149a96300001003033")],
+          },
+          {
+            title: "Bar",
+            partner_ids: [new ObjectId("4dc98d149a96300001003033")],
+          },
+          {
+            title: "Baz",
+            partner_ids: [new ObjectId("4dc98d149a96300001003031")],
+          },
         ],
         () =>
           Article.where(

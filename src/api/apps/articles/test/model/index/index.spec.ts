@@ -208,7 +208,7 @@ describe("Article", () => {
         {
           _id: new ObjectId("54276766fd4f50996aeca2b8"),
           super_article: {
-            related_articles: [ObjectId("5086df098523e60002000018")],
+            related_articles: [new ObjectId("5086df098523e60002000018")],
           },
         },
         () => {
@@ -226,7 +226,7 @@ describe("Article", () => {
         () =>
           Article.promisedMongoFetch({
             count: true,
-            ids: [ObjectId("5086df098523e60002000018")],
+            ids: [new ObjectId("5086df098523e60002000018")],
           }).then(({ count, total, results }) => {
             count.should.equal(1)
             total.should.equal(11)
