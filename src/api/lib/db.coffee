@@ -3,15 +3,13 @@
 # on the folder names under /apps. https://github.com/mafintosh/mongojs
 #
 
-mongo = require 'mongodb'
+MongoClient = require 'mongodb'. MongoClient
 fs = require 'fs'
 path = require 'path'
 { MONGOHQ_URL } = process.env
 debug = require('debug') 'api'
 
 collections = ['articles', 'users', 'sections', 'artists', 'curations', 'channels', 'tags', 'verticals', 'authors', 'sessions']
-
-MongoClient = mongo.MongoClient
 
 MongoClient.connect MONGOHQ_URL, (err, db) ->
   exit = (msg) -> (err) ->

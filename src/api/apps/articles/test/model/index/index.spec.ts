@@ -1,7 +1,7 @@
 import moment from "moment"
-import { ObjectId } from "mongodb"
 import rewire from "rewire"
 import { extend, times } from "underscore"
+import { ObjectId } from "mongodb"
 const {
   db,
   fabricate,
@@ -42,8 +42,8 @@ describe("Article", () => {
       fabricate(
         "articles",
         {
-          _id: new ObjectId("54276766fd4f50996aeca2b8"),
-          author_id: new ObjectId("5086df098523e60002000018"),
+          _id: "54276766fd4f50996aeca2b8",
+          author_id: "5086df098523e60002000018",
           published: false,
           scheduled_publish_at: moment("2016-01-01").toDate(),
           author: {

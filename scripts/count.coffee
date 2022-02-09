@@ -1,11 +1,8 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-mongo = require 'mongodb'
+MongoClient = require 'mongodb'. MongoClient
 path = require 'path'
 Article = require '../src/api/apps/articles/model/index.js'
 env = require 'node-env-file'
-
-# Connect to database
-MongoClient = mongo.MongoClient
 
 MongoClient.connect process.env.MONGOHQ_URL, (connerr, db) ->
   if connerr
