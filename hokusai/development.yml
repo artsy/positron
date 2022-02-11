@@ -29,7 +29,7 @@ services:
       - 9300:9300
       - 9200:9200
   positron-mongodb:
-    image: mongo:4.2
+    image: mongo:4.4
     command: ["--quiet", "--nojournal"]
     ports:
       - 27017:27017
