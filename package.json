@@ -103,7 +103,7 @@
     "lokka-transport-http": "1.6.1",
     "mocha": "3.2.0",
     "moment": "2.19.3",
-    "mongojs": "2.4.0",
+    "mongodb": "2.2.36",
     "nib": "1.1.2",
     "node-env-file": "0.1.8",
     "node-mandrill": "1.0.1",

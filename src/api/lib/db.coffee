@@ -3,7 +3,7 @@
 # on the folder names under /apps. https://github.com/mafintosh/mongojs
 #
 
-mongojs = require 'mongojs'
+mongojs = require 'mongodb'
 fs = require 'fs'
 path = require 'path'
 { MONGOHQ_URL } = process.env
@@ -17,10 +17,10 @@ exit = (msg) -> (err) ->
   debug msg, err if msg is 'Mongo Error'
   process.exit(1)
 
-db.on 'close', exit('Mongo Connection Closed')
-db.on 'error', exit('Mongo Error')
+#db.on 'close', exit('Mongo Connection Closed')
+#db.on 'error', exit('Mongo Error')
 
-db.createCollection('sessions', {})
+#db.createCollection('sessions', (err, res)-> {})
 
 module.exports = db
 module.exports.collections = collections

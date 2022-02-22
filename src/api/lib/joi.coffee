@@ -1,5 +1,5 @@
 Joi = require('joi')
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 customJoi = Joi.extend(
   base: Joi.string()

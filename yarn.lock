@@ -5113,11 +5113,6 @@ duplexify@^3.4.2, duplexify@^3.6.0:
     readable-stream "^2.0.0"
     stream-shift "^1.0.0"
 
-each-series@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/each-series/-/each-series-1.0.0.tgz#f886e6c66dfdb25ef1fe73564146ee5cb478afcb"
-  integrity sha1-+Ibmxm39sl7x/nNWQUbuXLR4r8s=
-
 ecc-jsbn@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.2.tgz#3a83a904e54353287874c564b7549386849a98c9"
@@ -9914,7 +9909,7 @@ mongodb-core@2.1.20:
     bson "~1.0.4"
     require_optional "~1.0.0"
 
-mongodb@^2.0.45:
+mongodb@2.4.0:
   version "2.2.36"
   resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-2.2.36.tgz#1c573680b2849fb0f47acbba3dc5fa228de975f5"
   integrity sha512-P2SBLQ8Z0PVx71ngoXwo12+FiSfbNfGOClAao03/bant5DgLNkOPAck5IaJcEk4gKlQhDEURzfR3xuBG1/B+IA==
@@ -9922,20 +9917,6 @@ mongodb@^2.0.45:
     es6-promise "3.2.1"
     mongodb-core "2.1.20"
     readable-stream "2.2.7"
-
-mongojs@2.4.0:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/mongojs/-/mongojs-2.4.0.tgz#f287fbfd457fedf588b5a9011e68513d9dd32bfb"
-  integrity sha1-8of7/UV/7fWItakBHmhRPZ3TK/s=
-  dependencies:
-    each-series "^1.0.0"
-    mongodb "^2.0.45"
-    once "^1.3.2"
-    parse-mongo-url "^1.1.0"
-    readable-stream "^2.0.2"
-    thunky "^0.1.0"
-    to-mongodb-core "^2.0.0"
-    xtend "^4.0.0"
 
 moo@^0.5.0:
   version "0.5.1"
@@ -10485,7 +10466,7 @@ on-headers@~1.0.0, on-headers@~1.0.1:
   resolved "https://registry.yarnpkg.com/on-headers/-/on-headers-1.0.2.tgz#772b0ae6aaa525c399e489adfad90c403eb3c28f"
   integrity sha512-pZAE+FJLoyITytdqK0U5s+FIpjN0JP3OzFi/u8Rx+EV5/W+JTWGXG8xFzevE7AjBfDqHv/8vL8qQsIhHnqRkrA==
 
-once@^1.3.0, once@^1.3.1, once@^1.3.2, once@^1.4.0:
+once@^1.3.0, once@^1.3.1, once@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
   integrity sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
@@ -10769,11 +10750,6 @@ parse-json@^4.0.0:
   dependencies:
     error-ex "^1.3.1"
     json-parse-better-errors "^1.0.1"
-
-parse-mongo-url@^1.1.0:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/parse-mongo-url/-/parse-mongo-url-1.1.1.tgz#66238df5f8e7c0c8ca4cd970d4ab6a1373eb75b5"
-  integrity sha1-ZiON9fjnwMjKTNlw1KtqE3PrdbU=
 
 parse-passwd@^1.0.0:
   version "1.0.0"
@@ -14014,11 +13990,6 @@ through@~2.3.4:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-thunky@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/thunky/-/thunky-0.1.0.tgz#bf30146824e2b6e67b0f2d7a4ac8beb26908684e"
-  integrity sha1-vzAUaCTituZ7Dy16Ssi+smkIaE4=
-
 time-stamp@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/time-stamp/-/time-stamp-2.2.0.tgz#917e0a66905688790ec7bbbde04046259af83f57"
@@ -14094,11 +14065,6 @@ to-fast-properties@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/to-fast-properties/-/to-fast-properties-2.0.0.tgz#dc5e698cbd079265bc73e0377681a4e4e83f616e"
   integrity sha1-3F5pjL0HkmW8c+A3doGk5Og/YW4=
-
-to-mongodb-core@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/to-mongodb-core/-/to-mongodb-core-2.0.0.tgz#3596ec7613ac9ad3b98a89dcb9aefba569cd27eb"
-  integrity sha1-NZbsdhOsmtO5ioncua77pWnNJ+s=
 
 to-object-path@^0.3.0:
   version "0.3.0"

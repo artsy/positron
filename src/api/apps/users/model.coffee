@@ -9,7 +9,7 @@ db = require '../../lib/db'
 request = require 'superagent'
 async = require 'async'
 bcrypt = require 'bcryptjs'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { ARTSY_URL, SALT, API_URL } = process.env
 jwtDecode = require 'jwt-decode'
 

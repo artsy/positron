@@ -1,5 +1,5 @@
 import moment from "moment"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import rewire from "rewire"
 import sinon from "sinon"
 import { times } from "underscore"

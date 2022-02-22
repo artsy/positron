@@ -1,4 +1,4 @@
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import { toQuery } from "../../model/retrieve"
 
 describe("Retrieve", () => {
