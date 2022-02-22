@@ -20,7 +20,17 @@ fixturize = (collection, data) ->
   data
 
 @empty = (callback) =>
-  @db.getCollectionNames (err, names) =>
-    return callback() if names.length is 0
-    cb = _.after names.length, callback
-    @db.collection(col).drop(cb) for col in names
+  console.log("show db attr", @db.collections)
+  return callback()
+  
+  # for collectionsId, collectionsName of @db.collections
+  #   console.info('show a db func', @db.articles)
+  #   return callback() if @db.collections[collectionsId].length is 0
+  #   cb = _.after @db.collections[collectionsId].length, callback
+  #   console.info('all collections', @db.collections[collectionsId])
+  #   @db.collections[collectionsId].remove(cb)
+      
+  # @db.collections (err, collections) =>
+  #   return callback() if names.length is 0
+  #   cb = _.after names.length, callback
+  #   @db.collection(col).drop(cb) for col in names

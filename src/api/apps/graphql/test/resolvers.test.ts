@@ -2,7 +2,7 @@ import {
   SeriesArticle,
   StandardArticle,
 } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import * as resolvers from "../resolvers"
 const { fixtures } = require("api/test/helpers/db.coffee")
 

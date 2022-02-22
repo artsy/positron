@@ -1,5 +1,5 @@
 import moment from "moment"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import rewire from "rewire"
 import { extend, times } from "underscore"
 const {

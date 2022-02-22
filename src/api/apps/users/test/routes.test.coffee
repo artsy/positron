@@ -3,7 +3,7 @@ _ = require 'underscore'
 sinon = require 'sinon'
 rewire = require 'rewire'
 routes = rewire '../routes'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'routes', ->
 
