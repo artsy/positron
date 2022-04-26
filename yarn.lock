@@ -142,10 +142,10 @@
   resolved "https://registry.yarnpkg.com/@artsy/cohesion/-/cohesion-1.60.0.tgz#854db37b9f8643ed650f3cc9d14234a1b762fcc8"
   integrity sha512-GBfa0/AoiLtG/Mw0VBR0vCiEj1s8+eBMTtKSLQS82iFo41Z84Li8M0YrlHAmXUrK3oBOO/YvhVNFE40avgK8xQ==
 
-"@artsy/detect-responsive-traits@^0.0.5":
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.0.5.tgz#abf85959f8567816babec6f582b744f58c98b726"
-  integrity sha512-axgW5YuqSpPzHb27yo2jmPHz/N9eN2hh2E+Mub5BKuu/jHZI+iDTdw0OZ3I+z7Z9WKBh+FPVx4gpza5w7slJNA==
+"@artsy/detect-responsive-traits@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@artsy/detect-responsive-traits/-/detect-responsive-traits-0.1.0.tgz#f7ae5041893b859ff9f6bc305fd318d2f5132745"
+  integrity sha512-cdHMDcGpYuItSBvelAWEWxWipVGw/8Yzk7YoMvO+qWjZsHJtIF2hACtL5QFQxcf9K3j/eTXNSFlPmfZAe9Byew==
 
 "@artsy/express-reloadable@1.6.0":
   version "1.6.0"
@@ -201,13 +201,13 @@
   resolved "https://registry.yarnpkg.com/@artsy/react-html-parser/-/react-html-parser-3.0.2.tgz#6213d662441acf0bd8c9ee953aa77ac8d9cf1cdd"
   integrity sha512-FXiRSqfSvwpz/QgwaqFvjJsbDmo9qMGpvUp/0p1V6muaJbGnfxkTSxAYWmYlFst6bmjhVxCYKxvgQhEVE03Wfg==
 
-"@artsy/reaction@29.2.1":
-  version "29.2.1"
-  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-29.2.1.tgz#1bb5afc87ad9fb3b6ec6e3be0d7e1f0d6e86e454"
-  integrity sha512-N6TraFamBs+v9zzGwt971kj9da5WuxQzVbpVwBVr+ZorKz2KPgQ6X0pSdlD36azWCFgurpkr+1jA+I7R3UL+9w==
+"@artsy/reaction@29.8.0":
+  version "29.8.0"
+  resolved "https://registry.yarnpkg.com/@artsy/reaction/-/reaction-29.8.0.tgz#c3087f8d27efa4a8ffc1c86b34e738019b468105"
+  integrity sha512-XXwK7OibtrMnJISGBjIP7O1mAM0ZEZYh3jIhf4ykINGapAV27BUWioeXw8DwxZdEqlwe0tGuLLojhnMqXmOF4w==
   dependencies:
     "@artsy/cohesion" "1.60.0"
-    "@artsy/detect-responsive-traits" "^0.0.5"
+    "@artsy/detect-responsive-traits" "^0.1.0"
     "@artsy/fresnel" "^1.0.13"
     "@artsy/react-html-parser" "^3.0.2"
     "@loadable/component" "^5.12.0"
@@ -242,7 +242,7 @@
     react-waypoint "^7.3.3"
     relay-mock-network-layer "^2.0.0"
     relay-runtime "9.1.0"
-    serialize-javascript "^2.1.1"
+    serialize-javascript "^3.1.0"
     sharify "^0.1.6"
     styled-system "^5.1.5"
     superagent "^3.6.3"
@@ -10431,6 +10431,7 @@ oauth-sign@~0.9.0:
 
 "oauth@git://github.com/craigspaeth/node-oauth.git", "oauth@https://github.com/craigspaeth/node-oauth.git":
   version "0.9.13"
+  uid "9bea5033d38df983f7773d265ee4de2a5b0ff25f"
   resolved "https://github.com/craigspaeth/node-oauth.git#9bea5033d38df983f7773d265ee4de2a5b0ff25f"
 
 object-assign@4.x, object-assign@^4, object-assign@^4.0.1, object-assign@^4.1.0, object-assign@^4.1.1:
@@ -11632,7 +11633,7 @@ randomatic@^3.0.0:
     kind-of "^6.0.0"
     math-random "^1.0.1"
 
-randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5:
+randombytes@^2.0.0, randombytes@^2.0.1, randombytes@^2.0.5, randombytes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/randombytes/-/randombytes-2.1.0.tgz#df6f84372f0270dc65cdf6291349ab7a473d4f2a"
   integrity sha512-vYl3iOX+4CKUWuxGi9Ukhie6fsqXqS9FE2Zaic4tNFD2N2QQaXOMFbuKK4QmDHC0JO6B1Zp41J0LpT0oR68amQ==
@@ -13011,10 +13012,17 @@ serialize-javascript@^1.4.0:
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-1.9.1.tgz#cfc200aef77b600c47da9bb8149c943e798c2fdb"
   integrity sha512-0Vb/54WJ6k5v8sSWN09S0ora+Hnr+cX40r9F170nT+mSkaxltoE/7R3OrIdBSUv1OoiobH1QoWQbCnAO+e8J1A==
 
-serialize-javascript@^2.1.1, serialize-javascript@^2.1.2:
+serialize-javascript@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-2.1.2.tgz#ecec53b0e0317bdc95ef76ab7074b7384785fa61"
   integrity sha512-rs9OggEUF0V4jUSecXazOYsLfu7OGK2qIn3c7IPBiffz32XniEp/TX9Xmc9LQfK2nQ2QKHvZ2oygKUGU0lG4jQ==
+
+serialize-javascript@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/serialize-javascript/-/serialize-javascript-3.1.0.tgz#8bf3a9170712664ef2561b44b691eafe399214ea"
+  integrity sha512-JIJT1DGiWmIKhzRsG91aS6Ze4sFUrYbltlkg2onR5OrnNM02Kl/hnY/T4FN2omvyeBbQmMJv+K4cPOpGzOTFBg==
+  dependencies:
+    randombytes "^2.1.0"
 
 serve-static@1.12.1:
   version "1.12.1"
