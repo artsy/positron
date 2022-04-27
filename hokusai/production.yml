@@ -7,6 +7,7 @@ metadata:
     app: positron
     component: web
     layer: application
+    app.kubernetes.io/version: production
 spec:
   selector:
     matchLabels:
@@ -24,63 +25,72 @@ spec:
         app: positron
         component: web
         layer: application
+        app.kubernetes.io/version: production
       name: positron-web
     spec:
       containers:
-        - name: positron-web
-          args: ["yarn", "production"]
-          envFrom:
-            - configMapRef:
-                name: positron-environment
-          env:
-            - name: PORT
-              value: "8080"
-            - name: "DATADOG_AGENT_HOSTNAME"
-              valueFrom:
-                fieldRef:
-                  fieldPath: spec.nodeName
-            - name: NODE_OPTIONS
-              value: "--max_old_space_size=256"
-          image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
-          imagePullPolicy: Always
-          ports:
-            - name: positron-http
-              containerPort: 8080
-          resources:
-            requests:
-              cpu: 200m
-              memory: 256Mi
-            limits:
-              memory: 512Mi
-          readinessProbe:
-            httpGet:
-              port: positron-http
-              path: /api/health
-              httpHeaders:
-                - name: X-FORWARDED-PROTO
-                  value: https
-            initialDelaySeconds: 10
-            periodSeconds: 10
-            timeoutSeconds: 5
-          lifecycle:
-            preStop:
-              exec:
-                command: ["sh", "-c", "sleep 5"]
+      - name: positron-web
+        args:
+        - yarn
+        - production
+        envFrom:
+        - configMapRef:
+            name: positron-environment
+        env:
+        - name: PORT
+          value: '8080'
+        - name: DATADOG_AGENT_HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
+        - name: NODE_OPTIONS
+          value: --max_old_space_size=256
+        - name: DD_VERSION
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['app.kubernetes.io/version']
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
+        imagePullPolicy: Always
+        ports:
+        - name: positron-http
+          containerPort: 8080
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+        readinessProbe:
+          httpGet:
+            port: positron-http
+            path: /api/health
+            httpHeaders:
+            - name: X-FORWARDED-PROTO
+              value: https
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+        lifecycle:
+          preStop:
+            exec:
+              command:
+              - sh
+              - -c
+              - sleep 5
       dnsPolicy: ClusterFirst
       dnsConfig:
         options:
-          - name: ndots
-            value: "1"
+        - name: ndots
+          value: '1'
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-              - matchExpressions:
-                  - key: tier
-                    operator: In
-                    values:
-                      - foreground
-
+            - matchExpressions:
+              - key: tier
+                operator: In
+                values:
+                - foreground
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -95,14 +105,13 @@ spec:
   minReplicas: 2
   maxReplicas: 6
   targetCPUUtilizationPercentage: 70
-
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: positron-scheduled-posts-cron
 spec:
-  schedule: "*/10 * * * *"
+  schedule: '*/10 * * * *'
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -110,34 +119,36 @@ spec:
       template:
         metadata:
           annotations:
-            "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
+            cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
         spec:
           containers:
-            - name: positron-scheduled-posts-cron
-              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
-              command: ["yarn", "task", "scripts/scheduled_posts.js"]
-              imagePullPolicy: Always
-              envFrom:
-                - configMapRef:
-                    name: positron-environment
+          - name: positron-scheduled-posts-cron
+            image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
+            command:
+            - yarn
+            - task
+            - scripts/scheduled_posts.js
+            imagePullPolicy: Always
+            envFrom:
+            - configMapRef:
+                name: positron-environment
           restartPolicy: Never
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
-                  - matchExpressions:
-                      - key: tier
-                        operator: In
-                        values:
-                          - background
-
+                - matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                    - background
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: positron-unqueue-cron
 spec:
-  schedule: "0 15 * * *"
+  schedule: 0 15 * * *
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -145,34 +156,36 @@ spec:
       template:
         metadata:
           annotations:
-            "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
+            cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
         spec:
           containers:
-            - name: positron-unqueue-cron
-              image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
-              command: ["yarn", "task", "scripts/unqueue.js"]
-              imagePullPolicy: Always
-              envFrom:
-                - configMapRef:
-                    name: positron-environment
+          - name: positron-unqueue-cron
+            image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
+            command:
+            - yarn
+            - task
+            - scripts/unqueue.js
+            imagePullPolicy: Always
+            envFrom:
+            - configMapRef:
+                name: positron-environment
           restartPolicy: Never
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
-                  - matchExpressions:
-                      - key: tier
-                        operator: In
-                        values:
-                          - background
-
+                - matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                    - background
 ---
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
   name: positron-data-export
 spec:
-  schedule: "0 3 * * *"
+  schedule: 0 3 * * *
   concurrencyPolicy: Forbid
   jobTemplate:
     spec:
@@ -180,30 +193,32 @@ spec:
       template:
         metadata:
           annotations:
-            "cluster-autoscaler.kubernetes.io/safe-to-evict": "false"
+            cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
         spec:
           containers:
-            - name: positron-data-export-cron
-              image: artsy/mongo-data-sync
-              imagePullPolicy: Always
-              env:
-                - name: APP_NAME
-                  value: "positron"
-              envFrom:
-                - configMapRef:
-                    name: positron-environment
-              args: ["sh", "./export-db.sh", "production"]
+          - name: positron-data-export-cron
+            image: artsy/mongo-data-sync
+            imagePullPolicy: Always
+            env:
+            - name: APP_NAME
+              value: positron
+            envFrom:
+            - configMapRef:
+                name: positron-environment
+            args:
+            - sh
+            - ./export-db.sh
+            - production
           restartPolicy: Never
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 nodeSelectorTerms:
-                  - matchExpressions:
-                      - key: tier
-                        operator: In
-                        values:
-                          - background
-
+                - matchExpressions:
+                  - key: tier
+                    operator: In
+                    values:
+                    - background
 ---
 apiVersion: v1
 kind: Service
@@ -216,31 +231,30 @@ metadata:
   namespace: default
 spec:
   ports:
-    - port: 8080
-      protocol: TCP
-      name: http
-      targetPort: positron-http
+  - port: 8080
+    protocol: TCP
+    name: http
+    targetPort: positron-http
   selector:
     app: positron
     layer: application
     component: web
   type: ClusterIP
-
 ---
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: positron
   annotations:
-    nginx.ingress.kubernetes.io/whitelist-source-range: "{{ externalIngressAllowSourceIP|join(',') }}"
+    nginx.ingress.kubernetes.io/whitelist-source-range: {{ externalIngressAllowSourceIP|join(',') }}
 spec:
   ingressClassName: nginx
   rules:
-    - host: writer.artsy.net
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              serviceName: positron-web-internal
-              servicePort: http
+  - host: writer.artsy.net
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          serviceName: positron-web-internal
+          servicePort: http

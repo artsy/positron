@@ -2,9 +2,9 @@ version: 2.1
 
 orbs:
   codecov: codecov/codecov@1.2.5
-  hokusai: artsy/hokusai@0.10.0
+  hokusai: artsy/hokusai@volatile
   yarn: artsy/yarn@6.1.0
-  horizon: artsy/release@0.0.1
+  horizon: artsy/release@volatile
 
 jobs:
   detect-secrets:
