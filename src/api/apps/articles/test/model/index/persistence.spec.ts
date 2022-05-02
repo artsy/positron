@@ -699,7 +699,7 @@ describe("Article Persistence", () => {
                   done()
                 }
               ),
-            1000
+            2000
           )
         }
       ))
