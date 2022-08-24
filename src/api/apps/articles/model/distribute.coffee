@@ -39,7 +39,7 @@ moment = require 'moment'
   tags = tags.concat article.vertical.name if article.vertical
   search.client.index(
     index: search.index,
-    type: 'article',
+    type: '_doc',
     id: article.id?.toString(),
     body:
       slug: article.slug
@@ -55,6 +55,7 @@ moment = require 'moment'
       body: sections and stripHtmlTags(sections.join(' ')) or ''
       image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
       search_boost: new Article(cloneDeep article).searchBoost()
+      type: 'article'
     , (error, response) ->
       console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
       cb()
