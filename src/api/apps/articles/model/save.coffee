@@ -1,6 +1,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
+ampq = require '../../../lib/amqp'
 stopWords = require '../../../lib/stopwords'
 async = require 'async'
 moment = require 'moment'
@@ -22,10 +23,12 @@ chalk = require 'chalk'
   unless article.published_at or article.scheduled_publish_at
     article.published_at = new Date
   @generateSlugs article, cb
+  @enqueuePublishEvent article
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
     cb null, article
+  @enqueueUnublishEvent article
 
 setOnPublishFields = (article) =>
   article.email_metadata = article.email_metadata or {}
@@ -222,3 +225,9 @@ sanitizeHtml = (html) ->
   _.map article.sections, (section) ->
     condensedHTML = condensedHTML.concat section.body if section.type is 'text'
   condensedHTML
+
+@enqueuePublishEvent = (article) ->
+  amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: featured_artist_ids, slug: article.slug })
+
+@enqueueUnublishEvent = (article) ->
+  amqp.publish("editorial", "article.unpublished", { id: article.id })
