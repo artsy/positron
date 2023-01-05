@@ -18,7 +18,6 @@ artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
 chalk = require 'chalk'
 { cloneDeep } = require 'lodash'
-{ ObjectId } = require "mongojs"
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
@@ -29,7 +28,6 @@ chalk = require 'chalk'
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
-    @enqueueUnublishEvent article
     cb null, article
 
 setOnPublishFields = (article) =>
@@ -230,6 +228,3 @@ sanitizeHtml = (html) ->
 
 @enqueuePublishEvent = (article) ->
   amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: article.featured_artist_ids, slug: (article.slugs || [])[0] })
-
-@enqueueUnublishEvent = (article) ->
-  amqp.publish("editorial", "article.unpublished", { id: article.id })
