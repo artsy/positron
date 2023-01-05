@@ -1,7 +1,7 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
-ampq = require '../../../lib/amqp'
+{ amqp } = require '../../../lib/amqp'
 stopWords = require '../../../lib/stopwords'
 async = require 'async'
 moment = require 'moment'
@@ -18,17 +18,19 @@ artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
 chalk = require 'chalk'
 { cloneDeep } = require 'lodash'
+{ ObjectId } = require "mongojs"
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
     article.published_at = new Date
-  @generateSlugs article, cb
-  @enqueuePublishEvent article
+  @generateSlugs article, (err, article) =>
+    @enqueuePublishEvent article
+    cb null, article
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
+    @enqueueUnublishEvent article
     cb null, article
-  @enqueueUnublishEvent article
 
 setOnPublishFields = (article) =>
   article.email_metadata = article.email_metadata or {}
@@ -227,7 +229,7 @@ sanitizeHtml = (html) ->
   condensedHTML
 
 @enqueuePublishEvent = (article) ->
-  amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: featured_artist_ids, slug: article.slug })
+  amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: article.featured_artist_ids, slug: (article.slugs || [])[0] })
 
 @enqueueUnublishEvent = (article) ->
   amqp.publish("editorial", "article.unpublished", { id: article.id })

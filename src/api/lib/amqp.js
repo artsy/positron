@@ -3,7 +3,7 @@ const { RABBIT_URL } = process.env
 const amqplib = require("amqplib/callback_api")
 
 const amqp = {}
-amqp.publish = (queue, routingKey, message) => {
+amqp.publish = (exchange, routingKey, message) => {
   amqplib.connect(
     RABBIT_URL,
     (err, conn) => {
@@ -12,8 +12,8 @@ amqp.publish = (queue, routingKey, message) => {
       conn.createChannel((err, ch1) => {
         if (err) throw err
 
-        ch1.assertQueue(queue)
-        ch1.publish(queue, routingKey, Buffer.from(JSON.stringify(message)))
+        ch1.assertExchange(exchange)
+        ch1.publish(exchange, routingKey, Buffer.from(JSON.stringify(message)))
       })
     }
   )

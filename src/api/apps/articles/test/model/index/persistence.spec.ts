@@ -12,8 +12,11 @@ const Article = rewire("../../../model/index.js")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const search = require("../../../../../lib/elasticsearch.coffee")
+const { amqp } = require("../../../../../lib/amqp")
+import sinon from "sinon"
 
 describe("Article Persistence", () => {
+  const sandbox = sinon.sandbox.create()
   let server
   // @ts-ignore
   before(done => {
@@ -28,6 +31,7 @@ describe("Article Persistence", () => {
 
   // @ts-ignore
   after(() => {
+    sandbox.restore()
     server.close()
     search.client.indices.delete({
       index: "articles_" + process.env.NODE_ENV,
@@ -282,6 +286,38 @@ describe("Article Persistence", () => {
             }
           )
       ))
+
+    it("sends RabbitMQ event when publishing", done => {
+      const stub = sinon.stub(amqp, "publish")
+      Article.save(
+        {
+          title: "Top Ten Shows",
+          thumbnail_title: "Ten Shows",
+          author_id: "5086df098523e60002000018",
+          published: true,
+          id: "5086df098523e60002002222",
+          featured_artist_ids: ["52868347b202a37bb000072a"],
+        },
+        "foo",
+        {},
+        (err, _) => {
+          if (err) {
+            done(err)
+          }
+
+          stub
+            .withArgs("editorial", "article.published", {
+              id: ObjectId("5086df098523e60002002222"),
+              title: "Top Ten Shows",
+              featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
+              slug: "undefined-ten-shows",
+            })
+            .callCount.should.eql(1)
+
+          done()
+        }
+      )
+    })
 
     it("saves published_at when the article is published", done =>
       Article.save(
