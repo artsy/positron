@@ -18,13 +18,17 @@ artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
 chalk = require 'chalk'
 { cloneDeep } = require 'lodash'
+Channel = require '../../channels/model'
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
     article.published_at = new Date
+  self = @
   @generateSlugs article, (err, article) =>
-    @enqueuePublishEvent article
-    cb null, article
+    Channel.find article.channel_id, (err, channel) ->
+      if !err && channel && channel.type == 'editorial'
+        self.enqueuePublishEvent article
+      cb null, article
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
@@ -227,4 +231,5 @@ sanitizeHtml = (html) ->
   condensedHTML
 
 @enqueuePublishEvent = (article) ->
-  amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: article.featured_artist_ids, slug: (article.slugs || [])[0] })
+  slug = if article.slugs then article.slugs[article.slugs.length - 1] else ''
+  amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: article.primary_featured_artist_ids, slug: slug })
