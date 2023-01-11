@@ -4,7 +4,6 @@ rewire = require 'rewire'
 Channel = rewire '../../models/channel.coffee'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
-request = require 'superagent'
 { fabricate } = require '@artsy/antigravity'
 
 describe "Channel", ->
@@ -145,9 +144,10 @@ describe "Channel", ->
   describe '#fetchChannelOrPartner' , ->
 
     it 'returns an error if it cannot find either' , (done) ->
-      request.get = sinon.stub().returns
-        set: sinon.stub().returns
-          end: (cb) -> cb( null , {} )
+      request =
+        get: sinon.stub().returns
+          set: sinon.stub().returns
+            end: (cb) -> cb( null , {} )
       Channel.__set__ 'request', request
 
       @channel = new Channel fixtures().channels
