@@ -14,6 +14,7 @@ const app = require("express")()
 const search = require("../../../../../lib/elasticsearch.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 import sinon from "sinon"
+const Channel = require("../../../../channels/model.coffee")
 
 describe("Article Persistence", () => {
   const sandbox = sinon.sandbox.create()
@@ -289,34 +290,38 @@ describe("Article Persistence", () => {
 
     it("sends RabbitMQ event when publishing", done => {
       const stub = sinon.stub(amqp, "publish")
-      Article.save(
-        {
-          title: "Top Ten Shows",
-          thumbnail_title: "Ten Shows",
-          author_id: "5086df098523e60002000018",
-          published: true,
-          id: "5086df098523e60002002222",
-          featured_artist_ids: ["52868347b202a37bb000072a"],
-        },
-        "foo",
-        {},
-        (err, _) => {
-          if (err) {
-            done(err)
+
+      Channel.save({ name: "Channel", type: "editorial" }, (err, channel) => {
+        Article.save(
+          {
+            title: "Top Ten Shows",
+            thumbnail_title: "Ten Shows",
+            author_id: "5086df098523e60002000018",
+            published: true,
+            id: "5086df098523e60002002222",
+            primary_featured_artist_ids: ["52868347b202a37bb000072a"],
+            channel_id: channel.id,
+          },
+          "foo",
+          {},
+          (err, _) => {
+            if (err) {
+              done(err)
+            }
+
+            stub
+              .withArgs("editorial", "article.published", {
+                id: ObjectId("5086df098523e60002002222"),
+                title: "Top Ten Shows",
+                featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
+                slug: "undefined-ten-shows",
+              })
+              .callCount.should.eql(1)
+
+            done()
           }
-
-          stub
-            .withArgs("editorial", "article.published", {
-              id: ObjectId("5086df098523e60002002222"),
-              title: "Top Ten Shows",
-              featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
-              slug: "undefined-ten-shows",
-            })
-            .callCount.should.eql(1)
-
-          done()
-        }
-      )
+        )
+      })
     })
 
     it("saves published_at when the article is published", done =>
