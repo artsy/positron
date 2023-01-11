@@ -12,14 +12,20 @@ import { ArticlePublishDate } from "../article_publish_date"
 import { AdminArticle } from "../index"
 require("typeahead.js")
 
-jest.mock("superagent", () => {
-  return {
-    get: jest.fn().mockReturnThis(),
-    set: jest.fn().mockReturnThis(),
-    query: jest.fn().mockReturnValue({
-      end: jest.fn(),
-    }),
-  }
+beforeAll(() => {
+  jest.mock("superagent", () => {
+    return {
+      get: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      query: jest.fn().mockReturnValue({
+        end: jest.fn(),
+      }),
+    }
+  })
+})
+
+afterAll(() => {
+  jest.clearAllMocks()
 })
 
 describe("AdminArticle", () => {

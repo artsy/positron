@@ -10,16 +10,23 @@ import { ArticlesListEmpty } from "../articles_list_empty"
 import { ArticlesListHeader } from "../articles_list_header"
 require("typeahead.js")
 
-jest.mock("lodash/debounce", () => jest.fn(e => e))
-jest.mock("superagent", () => {
-  return {
-    post: jest.fn().mockReturnThis(),
-    set: jest.fn().mockReturnThis(),
-    send: jest.fn().mockReturnValue({
-      end: jest.fn(),
-    }),
-  }
+beforeAll(() => {
+  jest.mock("lodash/debounce", () => jest.fn(e => e))
+  jest.mock("superagent", () => {
+    return {
+      post: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      send: jest.fn().mockReturnValue({
+        end: jest.fn(),
+      }),
+    }
+  })
 })
+
+afterAll(() => {
+  jest.clearAllMocks()
+})
+
 const requestMock = require("superagent")
 
 describe("ArticleList", () => {

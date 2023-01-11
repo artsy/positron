@@ -12,20 +12,26 @@ import React from "react"
 import { EditSeries } from "../series"
 require("typeahead.js")
 
-jest.mock("sharify", () => ({
-  data: {
-    USER: { access_token: "123" },
-  },
-}))
+beforeAll(() => {
+  jest.mock("sharify", () => ({
+    data: {
+      USER: { access_token: "123" },
+    },
+  }))
 
-jest.mock("superagent", () => {
-  return {
-    get: jest.fn().mockReturnThis(),
-    set: jest.fn().mockReturnThis(),
-    query: jest.fn().mockReturnValue({
-      end: jest.fn(),
-    }),
-  }
+  jest.mock("superagent", () => {
+    return {
+      get: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      query: jest.fn().mockReturnValue({
+        end: jest.fn(),
+      }),
+    }
+  })
+})
+
+afterAll(() => {
+  jest.clearAllMocks()
 })
 
 describe("EditSeries", () => {

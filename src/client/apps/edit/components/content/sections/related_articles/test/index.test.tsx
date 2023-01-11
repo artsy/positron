@@ -13,13 +13,20 @@ import { RelatedArticlesInput } from "../components/related_articles_input"
 import { RelatedArticles } from "../index"
 require("typeahead.js")
 
-jest.mock("superagent", () => {
-  return {
-    get: jest.fn().mockReturnThis(),
-    set: jest.fn().mockReturnThis(),
-    query: jest.fn().mockReturnThis(),
-    end: jest.fn(),
-  }
+beforeAll(() => {
+  jest.mock("superagent", () => {
+    return {
+      get: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      query: jest.fn().mockReturnThis(),
+      end: jest.fn(),
+    }
+  })
+})
+
+
+afterAll(() => {
+  jest.clearAllMocks()
 })
 
 describe("RelatedArticles", () => {

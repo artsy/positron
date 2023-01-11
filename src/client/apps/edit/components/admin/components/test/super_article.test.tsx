@@ -7,13 +7,20 @@ import { AdminSuperArticle } from "../super_article"
 const ImageUpload = require("../image_upload.coffee")
 require("typeahead.js")
 
-jest.mock("superagent", () => {
-  return {
-    get: jest.fn().mockReturnThis(),
-    set: jest.fn().mockReturnThis(),
-    query: jest.fn().mockReturnThis(),
-    end: jest.fn(),
-  }
+
+beforeAll(() => {
+  jest.mock("superagent", () => {
+    return {
+      get: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      query: jest.fn().mockReturnThis(),
+      end: jest.fn(),
+    }
+  })
+})
+
+afterAll(() => {
+  jest.clearAllMocks()
 })
 
 describe("AdminSuperArticle", () => {

@@ -11,14 +11,20 @@ import request from "superagent"
 import { ArticleAuthors } from "../article_authors"
 require("typeahead.js")
 
-jest.mock("superagent", () => {
-  return {
-    get: jest.fn().mockReturnThis(),
-    set: jest.fn().mockReturnThis(),
-    query: jest.fn().mockReturnValue({
-      end: jest.fn(),
-    }),
-  }
+beforeAll(() => {
+  jest.mock("superagent", () => {
+    return {
+      get: jest.fn().mockReturnThis(),
+      set: jest.fn().mockReturnThis(),
+      query: jest.fn().mockReturnValue({
+        end: jest.fn(),
+      }),
+    }
+  })
+})
+
+afterAll(() => {
+  jest.clearAllMocks()
 })
 
 describe("ArticleAuthors", () => {
