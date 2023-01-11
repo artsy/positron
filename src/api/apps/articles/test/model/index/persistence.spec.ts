@@ -291,7 +291,7 @@ describe("Article Persistence", () => {
     it("sends RabbitMQ event when publishing", done => {
       const stub = sinon.stub(amqp, "publish")
 
-      Channel.save({ name: "Channel", type: "editorial" }, (err, channel) => {
+      Channel.save({ name: "Channel", type: "editorial" }, (_, channel) => {
         Article.save(
           {
             title: "Top Ten Shows",
