@@ -366,6 +366,37 @@ describe("Article Persistence", () => {
       })
     })
 
+    it("doesn't send RabbitMQ event when article doesn't have primary_featured_artist_ids", done => {
+      Channel.save({ name: "Channel", type: "editorial" }, (err, channel) => {
+        if (err) {
+          done(err)
+        }
+
+        Article.save(
+          {
+            title: "Top Ten Shows",
+            thumbnail_title: "Ten Shows",
+            author_id: "5086df098523e60002000018",
+            published: true,
+            id: "5086df098523e60002002222",
+            primary_featured_artist_ids: [],
+            channel_id: channel.id,
+          },
+          "foo",
+          {},
+          (err, _) => {
+            if (err) {
+              done(err)
+            }
+
+            publishStub.callCount.should.eql(0)
+
+            done()
+          }
+        )
+      })
+    })
+
     it("saves published_at when the article is published", done =>
       Article.save(
         {
