@@ -3,7 +3,6 @@ Backbone = require 'backbone'
 sinon = require 'sinon'
 fixtures = require '../../../test/helpers/fixtures'
 rewire = require 'rewire'
-request = require 'superagent'
 async = require 'async'
 User = rewire '../../models/user'
 Article = require '../../models/article.coffee'
@@ -192,9 +191,10 @@ describe "User", ->
         partners.length.should.equal 0
 
     it 'fetches the partners that a user has permission to', ->
-      request.get = sinon.stub().returns
-        set: sinon.stub().returns
-          end: (cb) -> cb( null, body: [ fabricate 'partner' ] )
+      request =
+        get: sinon.stub().returns
+          set: sinon.stub().returns
+            end: (cb) -> cb( null, body: [ fabricate 'partner' ] )
 
       User.__set__ 'request', request
       @user = new User _.extend fixtures().users,
