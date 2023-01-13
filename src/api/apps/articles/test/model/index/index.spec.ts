@@ -2,6 +2,7 @@ import moment from "moment"
 import { ObjectId } from "mongojs"
 import rewire from "rewire"
 import { extend, times } from "underscore"
+import sinon from "sinon"
 const {
   db,
   fabricate,
@@ -12,9 +13,15 @@ const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const Article = rewire("../../../model/index.js")
 const search = require("../../../../../lib/elasticsearch.coffee")
+const { amqp } = require("../../../../../lib/amqp")
+
+process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS = "true"
 
 describe("Article", () => {
   let server
+  let publishStub
+  let sandbox
+
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
@@ -34,7 +41,13 @@ describe("Article", () => {
   })
 
   beforeEach(done => {
+    sandbox = sinon.createSandbox()
+    publishStub = sandbox.stub(amqp, "publish")
     empty(() => fabricate("articles", times(10, () => ({})), () => done()))
+  })
+
+  afterEach(() => {
+    sandbox.restore()
   })
 
   describe("#publishScheduledArticles", () => {
@@ -44,6 +57,7 @@ describe("Article", () => {
         {
           _id: ObjectId("54276766fd4f50996aeca2b8"),
           author_id: ObjectId("5086df098523e60002000018"),
+          channel_id: "5086df098523e60002000018",
           published: false,
           scheduled_publish_at: moment("2016-01-01").toDate(),
           author: {
@@ -80,6 +94,8 @@ describe("Article", () => {
             results[0].sections[1].images[0].url.should.containEql(
               "https://image.png"
             )
+            publishStub.callCount.should.eql(1)
+
             done()
           })
       )
@@ -92,6 +108,7 @@ describe("Article", () => {
         "articles",
         {
           _id: ObjectId("54276766fd4f50996aeca2b8"),
+          channel_id: "5086df098523e60002000018",
           weekly_email: true,
           daily_email: true,
           author: {
@@ -103,6 +120,8 @@ describe("Article", () => {
           Article.unqueue((_err, results) => {
             results[0].weekly_email.should.be.false()
             results[0].daily_email.should.be.false()
+
+            publishStub.callCount.should.eql(1)
             done()
           })
       )))

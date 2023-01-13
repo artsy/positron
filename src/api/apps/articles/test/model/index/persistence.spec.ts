@@ -298,41 +298,35 @@ describe("Article Persistence", () => {
       ))
 
     it("sends RabbitMQ event when publishing", done => {
-      Channel.save({ name: "Channel", type: "editorial" }, (err, channel) => {
-        if (err) {
-          done(err)
-        }
-
-        Article.save(
-          {
-            title: "Top Ten Shows",
-            thumbnail_title: "Ten Shows",
-            author_id: "5086df098523e60002000018",
-            published: true,
-            id: "5086df098523e60002002222",
-            primary_featured_artist_ids: ["52868347b202a37bb000072a"],
-            channel_id: channel.id,
-          },
-          "foo",
-          {},
-          (err, _) => {
-            if (err) {
-              done(err)
-            }
-
-            publishStub
-              .withArgs("editorial", "article.published", {
-                id: ObjectId("5086df098523e60002002222"),
-                title: "Top Ten Shows",
-                featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
-                slug: "undefined-ten-shows",
-              })
-              .callCount.should.eql(1)
-
-            done()
+      Article.save(
+        {
+          title: "Top Ten Shows",
+          thumbnail_title: "Ten Shows",
+          author_id: "5086df098523e60002000018",
+          published: true,
+          id: "5086df098523e60002002222",
+          primary_featured_artist_ids: ["52868347b202a37bb000072a"],
+          channel_id: "5086df098523e60002000018",
+        },
+        "foo",
+        {},
+        (err, _) => {
+          if (err) {
+            done(err)
           }
-        )
-      })
+
+          publishStub
+            .withArgs("editorial", "article.published", {
+              id: ObjectId("5086df098523e60002002222"),
+              title: "Top Ten Shows",
+              featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
+              href: "/article/undefined-ten-shows",
+            })
+            .callCount.should.eql(1)
+
+          done()
+        }
+      )
     })
 
     it("doesn't send RabbitMQ event when publishing not editorial article", done => {
@@ -367,34 +361,28 @@ describe("Article Persistence", () => {
     })
 
     it("doesn't send RabbitMQ event when article doesn't have primary_featured_artist_ids", done => {
-      Channel.save({ name: "Channel", type: "editorial" }, (err, channel) => {
-        if (err) {
-          done(err)
-        }
-
-        Article.save(
-          {
-            title: "Top Ten Shows",
-            thumbnail_title: "Ten Shows",
-            author_id: "5086df098523e60002000018",
-            published: true,
-            id: "5086df098523e60002002222",
-            primary_featured_artist_ids: [],
-            channel_id: channel.id,
-          },
-          "foo",
-          {},
-          (err, _) => {
-            if (err) {
-              done(err)
-            }
-
-            publishStub.callCount.should.eql(0)
-
-            done()
+      Article.save(
+        {
+          title: "Top Ten Shows",
+          thumbnail_title: "Ten Shows",
+          author_id: "5086df098523e60002000018",
+          published: true,
+          id: "5086df098523e60002002222",
+          primary_featured_artist_ids: [],
+          channel_id: "5086df098523e60002000018",
+        },
+        "foo",
+        {},
+        (err, _) => {
+          if (err) {
+            done(err)
           }
-        )
-      })
+
+          publishStub.callCount.should.eql(0)
+
+          done()
+        }
+      )
     })
 
     it("saves published_at when the article is published", done =>

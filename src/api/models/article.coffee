@@ -5,6 +5,7 @@ Backbone = require 'backbone'
 moment = require 'moment'
 cheerio = require 'cheerio'
 Authors = require '../apps/authors/model'
+{ amqp } = require '../lib/amqp'
 
 module.exports = class Article extends Backbone.Model
 
@@ -65,3 +66,18 @@ module.exports = class Article extends Backbone.Model
         cb [@get('author')?.name]
       else
         cb []
+
+  dispatchPublishEvent: ->
+    return unless process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS == 'true'
+    return unless @shouldEmitPublishEvent()
+
+    payload =
+      id: @get('id')
+      featured_artist_ids: @get('primary_featured_artist_ids')
+      href: @href()
+      title: @get('title')
+
+    amqp.publish("editorial", "article.published", payload)
+
+  shouldEmitPublishEvent: ->
+    return @isEditorial() && @get('primary_featured_artist_ids')?.length

@@ -23,16 +23,7 @@ Channel = require '../../channels/model'
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
     article.published_at = new Date
-
-  self = @
-  @generateSlugs article, (err, article) =>
-    if process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS == 'true'
-      Channel.find article.channel_id, (_, channel) ->
-        if !err && self.shouldEmitMessage(article, channel)
-          self.enqueuePublishEvent article
-        cb null, article
-    else
-      cb null, article
+  @generateSlugs article, cb
 
 @onUnpublish = (article, cb) =>
   @generateSlugs article, (err, article) =>
@@ -233,15 +224,4 @@ sanitizeHtml = (html) ->
   _.map article.sections, (section) ->
     condensedHTML = condensedHTML.concat section.body if section.type is 'text'
   condensedHTML
-
-@enqueuePublishEvent = (article) ->
-  # using the last slug from slugs array
-  slug = if article.slugs then article.slugs[article.slugs.length - 1] else ''
-  amqp.publish("editorial", "article.published", { id: article.id, title: article.title, featured_artist_ids: article.primary_featured_artist_ids, slug: slug })
-
-@shouldEmitMessage = (article, channel) =>
-  return false unless channel
-  return false unless article.primary_featured_artist_ids
-
-  return channel.type == 'editorial' && article.primary_featured_artist_ids.length > 0
 
