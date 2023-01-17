@@ -369,7 +369,7 @@ const postPublishCallback = callback => {
         return callback(err)
       }
 
-      model = new Article(cloneDeep(article))
+      const model = new Article(cloneDeep(article))
       model.dispatchPublishEvent()
       callback(null, article)
     })
