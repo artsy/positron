@@ -20,6 +20,7 @@ const {
   onUnpublish,
 } = require("./save.coffee")
 const { removeFromSearch, getArticleUrl } = require("./distribute.coffee")
+const Article = require("./../../../../api/models/article.coffee")
 
 //
 // Retrieval
@@ -163,8 +164,9 @@ export const save = (input, accessToken, options, callback) => {
         const unPublishing = article.published && !modifiedArticle.published
         const hasSlugs =
           modifiedArticle.slugs && modifiedArticle.slugs.length > 0
+
         if (publishing) {
-          return onPublish(modifiedArticle, sanitizeAndSave(callback))
+          return onPublish(modifiedArticle, postPublishCallback(callback))
         } else if (unPublishing) {
           return onUnpublish(modifiedArticle, sanitizeAndSave(callback))
         } else if (!publishing && !hasSlugs) {
@@ -195,7 +197,7 @@ export const publishScheduledArticles = callback => {
             published_at: moment(article.scheduled_publish_at).toDate(),
             scheduled_publish_at: null,
           })
-          return onPublish(article, sanitizeAndSave(cb))
+          return onPublish(article, postPublishCallback(cb))
         },
         (err, results) => {
           if (err) {
@@ -225,7 +227,7 @@ export const unqueue = callback => {
             weekly_email: false,
             daily_email: false,
           })
-          return onPublish(article, sanitizeAndSave(cb))
+          return onPublish(article, postPublishCallback(cb))
         },
         (err, results) => {
           if (err) {
@@ -358,4 +360,19 @@ export const backfill = callback => {
       }
     )
   })
+}
+
+const postPublishCallback = callback => {
+  return (err, article) => {
+    const cb = sanitizeAndSave((err, article) => {
+      if (err) {
+        return callback(err)
+      }
+
+      model = new Article(cloneDeep(article))
+      model.dispatchPublishEvent()
+      callback(null, article)
+    })
+    cb(err, article)
+  }
 }

@@ -12,9 +12,17 @@ const Article = rewire("../../../model/index.js")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const search = require("../../../../../lib/elasticsearch.coffee")
+const { amqp } = require("../../../../../lib/amqp")
+import sinon from "sinon"
+const Channel = require("../../../../channels/model.coffee")
+
+process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS = "true"
 
 describe("Article Persistence", () => {
   let server
+  let sandbox
+  let publishStub
+
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
@@ -35,7 +43,13 @@ describe("Article Persistence", () => {
   })
 
   beforeEach(done => {
+    sandbox = sinon.createSandbox()
+    publishStub = sandbox.stub(amqp, "publish")
     empty(() => fabricate("articles", times(10, () => ({})), () => done()))
+  })
+
+  afterEach(() => {
+    sandbox.restore()
   })
 
   describe("#save", () => {
@@ -282,6 +296,94 @@ describe("Article Persistence", () => {
             }
           )
       ))
+
+    it("sends RabbitMQ event when publishing", done => {
+      Article.save(
+        {
+          title: "Top Ten Shows",
+          thumbnail_title: "Ten Shows",
+          author_id: "5086df098523e60002000018",
+          published: true,
+          id: "5086df098523e60002002222",
+          primary_featured_artist_ids: ["52868347b202a37bb000072a"],
+          channel_id: "5086df098523e60002000018",
+        },
+        "foo",
+        {},
+        (err, _) => {
+          if (err) {
+            done(err)
+          }
+
+          publishStub
+            .withArgs("editorial", "article.published", {
+              id: ObjectId("5086df098523e60002002222"),
+              title: "Top Ten Shows",
+              featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
+              href: "/article/undefined-ten-shows",
+            })
+            .callCount.should.eql(1)
+
+          done()
+        }
+      )
+    })
+
+    it("doesn't send RabbitMQ event when publishing not editorial article", done => {
+      Channel.save({ name: "Channel", type: "team" }, (err, channel) => {
+        if (err) {
+          done(err)
+        }
+
+        Article.save(
+          {
+            title: "Top Ten Shows",
+            thumbnail_title: "Ten Shows",
+            author_id: "5086df098523e60002000018",
+            published: true,
+            id: "5086df098523e60002002222",
+            primary_featured_artist_ids: ["52868347b202a37bb000072a"],
+            channel_id: channel.id,
+          },
+          "foo",
+          {},
+          (err, _) => {
+            if (err) {
+              done(err)
+            }
+
+            publishStub.callCount.should.eql(0)
+
+            done()
+          }
+        )
+      })
+    })
+
+    it("doesn't send RabbitMQ event when article doesn't have primary_featured_artist_ids", done => {
+      Article.save(
+        {
+          title: "Top Ten Shows",
+          thumbnail_title: "Ten Shows",
+          author_id: "5086df098523e60002000018",
+          published: true,
+          id: "5086df098523e60002002222",
+          primary_featured_artist_ids: [],
+          channel_id: "5086df098523e60002000018",
+        },
+        "foo",
+        {},
+        (err, _) => {
+          if (err) {
+            done(err)
+          }
+
+          publishStub.callCount.should.eql(0)
+
+          done()
+        }
+      )
+    })
 
     it("saves published_at when the article is published", done =>
       Article.save(

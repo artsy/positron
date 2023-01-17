@@ -222,3 +222,4 @@ sanitizeHtml = (html) ->
   _.map article.sections, (section) ->
     condensedHTML = condensedHTML.concat section.body if section.type is 'text'
   condensedHTML
+
