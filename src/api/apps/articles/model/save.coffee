@@ -1,7 +1,6 @@
 _ = require 'underscore'
 _s = require 'underscore.string'
 db = require '../../../lib/db'
-{ amqp } = require '../../../lib/amqp'
 stopWords = require '../../../lib/stopwords'
 async = require 'async'
 moment = require 'moment'
@@ -18,7 +17,6 @@ artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
 chalk = require 'chalk'
 { cloneDeep } = require 'lodash'
-Channel = require '../../channels/model'
 
 @onPublish = (article, cb) =>
   unless article.published_at or article.scheduled_publish_at
