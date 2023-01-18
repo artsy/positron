@@ -42,7 +42,7 @@
     "@artsy/express-reloadable": "1.6.0",
     "@artsy/gemup": "0.1.0",
     "@artsy/multienv": "^1.2.0",
-    "@artsy/palette": "10.1.0",
+    "@artsy/palette": "28.1.1",
     "@artsy/reaction": "29.8.0",
     "@babel/cli": "7.0.0",
     "@babel/core": "7.0.0",
