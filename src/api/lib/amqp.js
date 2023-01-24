@@ -4,6 +4,8 @@ const amqplib = require("amqplib/callback_api")
 
 const amqp = {}
 amqp.publish = (exchange, routingKey, message) => {
+  console.log("[amqp.publish]", exchange, routingKey, message)
+
   amqplib.connect(
     RABBITMQ_URL,
     (err, conn) => {
