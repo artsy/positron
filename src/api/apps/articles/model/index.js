@@ -158,18 +158,20 @@ export const save = (input, accessToken, options, callback) => {
         }
 
         // Handle publishing, unpublishing, published, draft
-        const publishing =
-          (modifiedArticle.published && !article.published) ||
-          (modifiedArticle.scheduled_publish_at && !article.published)
+        const publishing = modifiedArticle.published && !article.published
+        const scheduledPublishing =
+          modifiedArticle.scheduled_publish_at && !article.published
         const unPublishing = article.published && !modifiedArticle.published
         const hasSlugs =
           modifiedArticle.slugs && modifiedArticle.slugs.length > 0
 
         if (publishing) {
           return onPublish(modifiedArticle, postPublishCallback(callback))
+        } else if (scheduledPublishing) {
+          return onPublish(modifiedArticle, sanitizeAndSave(callback))
         } else if (unPublishing) {
           return onUnpublish(modifiedArticle, sanitizeAndSave(callback))
-        } else if (!publishing && !hasSlugs) {
+        } else if (!(publishing || scheduledPublishing) && !hasSlugs) {
           return generateSlugs(modifiedArticle, sanitizeAndSave(callback))
         } else {
           return sanitizeAndSave(callback)(null, modifiedArticle)
@@ -227,7 +229,7 @@ export const unqueue = callback => {
             weekly_email: false,
             daily_email: false,
           })
-          return onPublish(article, postPublishCallback(cb))
+          return onPublish(article, sanitizeAndSave(cb))
         },
         (err, results) => {
           if (err) {
