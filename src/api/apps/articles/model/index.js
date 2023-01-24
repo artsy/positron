@@ -20,6 +20,7 @@ const {
   onUnpublish,
 } = require("./save.coffee")
 const { removeFromSearch, getArticleUrl } = require("./distribute.coffee")
+const Article = require("./../../../../api/models/article.coffee")
 
 //
 // Retrieval
@@ -157,17 +158,20 @@ export const save = (input, accessToken, options, callback) => {
         }
 
         // Handle publishing, unpublishing, published, draft
-        const publishing =
-          (modifiedArticle.published && !article.published) ||
-          (modifiedArticle.scheduled_publish_at && !article.published)
+        const publishing = modifiedArticle.published && !article.published
+        const scheduledPublishing =
+          modifiedArticle.scheduled_publish_at && !article.published
         const unPublishing = article.published && !modifiedArticle.published
         const hasSlugs =
           modifiedArticle.slugs && modifiedArticle.slugs.length > 0
+
         if (publishing) {
+          return onPublish(modifiedArticle, postPublishCallback(callback))
+        } else if (scheduledPublishing) {
           return onPublish(modifiedArticle, sanitizeAndSave(callback))
         } else if (unPublishing) {
           return onUnpublish(modifiedArticle, sanitizeAndSave(callback))
-        } else if (!publishing && !hasSlugs) {
+        } else if (!(publishing || scheduledPublishing) && !hasSlugs) {
           return generateSlugs(modifiedArticle, sanitizeAndSave(callback))
         } else {
           return sanitizeAndSave(callback)(null, modifiedArticle)
@@ -195,7 +199,7 @@ export const publishScheduledArticles = callback => {
             published_at: moment(article.scheduled_publish_at).toDate(),
             scheduled_publish_at: null,
           })
-          return onPublish(article, sanitizeAndSave(cb))
+          return onPublish(article, postPublishCallback(cb))
         },
         (err, results) => {
           if (err) {
@@ -358,4 +362,19 @@ export const backfill = callback => {
       }
     )
   })
+}
+
+const postPublishCallback = callback => {
+  return (err, article) => {
+    const cb = sanitizeAndSave((err, article) => {
+      if (err) {
+        return callback(err)
+      }
+
+      const model = new Article(cloneDeep(article))
+      model.dispatchPublishEvent()
+      callback(null, article)
+    })
+    cb(err, article)
+  }
 }

@@ -56,6 +56,7 @@
     "@babel/runtime": "7.0.0",
     "airtable": "0.4.5",
     "algoliasearch": "^4.10.5",
+    "amqplib": "^0.10.3",
     "artsy-ezel-components": "artsy/artsy-ezel-components",
     "artsy-morgan": "artsy/artsy-morgan",
     "artsy-xapp": "1.0.4",
