@@ -68,6 +68,7 @@ module.exports = class Article extends Backbone.Model
         cb []
 
   dispatchPublishEvent: ->
+    console.log("[dispatchPublishEvent] process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS:", process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS)
     return unless process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS == 'true'
     return unless @shouldEmitPublishEvent()
 
@@ -80,4 +81,5 @@ module.exports = class Article extends Backbone.Model
     amqp.publish("editorial", "article.published", payload)
 
   shouldEmitPublishEvent: ->
+    console.log("[shouldEmitPublishEvent] isEditorial:", @isEditorial(), ', primary_featured_artist_ids:', @get('primary_featured_artist_ids'))
     return @isEditorial() && @get('primary_featured_artist_ids')?.length
