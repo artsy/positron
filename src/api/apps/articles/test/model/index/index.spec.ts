@@ -121,7 +121,6 @@ describe("Article", () => {
             results[0].weekly_email.should.be.false()
             results[0].daily_email.should.be.false()
 
-            publishStub.callCount.should.eql(1)
             done()
           })
       )))

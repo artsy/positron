@@ -329,6 +329,31 @@ describe("Article Persistence", () => {
       )
     })
 
+    it("doesn't send RabbitMQ event when scheduling publishing", done => {
+      Article.save(
+        {
+          title: "Top Ten Shows",
+          thumbnail_title: "Ten Shows",
+          author_id: "5086df098523e60002000018",
+          scheduled_publish_at: moment("2040-01-01").toDate(),
+          id: "5086df098523e60002002222",
+          primary_featured_artist_ids: ["52868347b202a37bb000072a"],
+          channel_id: "5086df098523e60002000018",
+        },
+        "foo",
+        {},
+        (err, _) => {
+          if (err) {
+            done(err)
+          }
+
+          publishStub.callCount.should.eql(0)
+
+          done()
+        }
+      )
+    })
+
     it("doesn't send RabbitMQ event when publishing not editorial article", done => {
       Channel.save({ name: "Channel", type: "team" }, (err, channel) => {
         if (err) {
