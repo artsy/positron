@@ -18,13 +18,30 @@ forceSSL = require 'express-force-ssl'
 session = require 'cookie-session'
 setupEnv = require './env'
 setupAuth = require './auth'
-logger = require 'artsy-morgan'
 RavenServer = require 'raven'
 { locals, helpers, ua, sameOrigin } = require '../middleware'
 { requireChannel, requireLogin } = require './authorization'
 { parse } = require 'url'
 { defaultSession } = require './session'
 { NODE_ENV, SESSION_SECRET, SENTRY_PRIVATE_DSN } = process.env
+pino = require('pino')
+logger = require('pino-http')({
+  base: {
+    pid: undefined
+  }
+
+  redact: {
+    paths: ['req.headers["x-access-token"]', 'req.headers.cookie']
+    remove: true
+  }
+
+  formatters: {
+    level: (label, number) ->
+      return { level: label }
+  }
+
+  timestamp: pino.stdTimeFunctions.isoTime
+})
 
 module.exports = (app) ->
 
@@ -49,7 +66,7 @@ module.exports = (app) ->
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
   app.use defaultSession
-  app.use logger
+  app.use(logger)
 
   app.use bucketAssets()
   setupAuth app
