@@ -10,24 +10,7 @@ debug = require('debug') 'api'
 cors = require 'cors'
 RavenServer = require 'raven'
 http = require('http')
-pino = require('pino')
-logger = require('pino-http')({
-  base: {
-    pid: undefined
-  }
-
-  redact: {
-    paths: ['req.headers["x-access-token"]', 'req.headers.cookie']
-    remove: true
-  }
-
-  formatters: {
-    level: (label, number) ->
-      return { level: label }
-  }
-
-  timestamp: pino.stdTimeFunctions.isoTime
-})
+{ httpLogger } = require '../lib/logger'
 
 app = module.exports = express()
 
@@ -41,7 +24,7 @@ app.use cors()
 app.use helpers
 app.use bodyParser.json limit:'5mb', extended: true
 app.use bodyParser.urlencoded limit:'5mb', extended: true
-app.use(logger)
+app.use(httpLogger)
 
 # Apps
 app.use '/__gravity', require('@artsy/antigravity').server if NODE_ENV is 'test'

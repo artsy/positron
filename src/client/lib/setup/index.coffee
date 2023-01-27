@@ -24,24 +24,7 @@ RavenServer = require 'raven'
 { parse } = require 'url'
 { defaultSession } = require './session'
 { NODE_ENV, SESSION_SECRET, SENTRY_PRIVATE_DSN } = process.env
-pino = require('pino')
-logger = require('pino-http')({
-  base: {
-    pid: undefined
-  }
-
-  redact: {
-    paths: ['req.headers["x-access-token"]', 'req.headers.cookie']
-    remove: true
-  }
-
-  formatters: {
-    level: (label, number) ->
-      return { level: label }
-  }
-
-  timestamp: pino.stdTimeFunctions.isoTime
-})
+{ httpLogger } = require '../../../lib/logger'
 
 module.exports = (app) ->
 
@@ -66,7 +49,7 @@ module.exports = (app) ->
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
   app.use defaultSession
-  app.use(logger)
+  app.use(httpLogger)
 
   app.use bucketAssets()
   setupAuth app
