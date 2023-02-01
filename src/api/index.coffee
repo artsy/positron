@@ -24,7 +24,7 @@ app.use cors()
 app.use helpers
 app.use bodyParser.json limit:'5mb', extended: true
 app.use bodyParser.urlencoded limit:'5mb', extended: true
-app.use(httpLogger)
+app.use httpLogger
 
 # Apps
 app.use '/__gravity', require('@artsy/antigravity').server if NODE_ENV is 'test'

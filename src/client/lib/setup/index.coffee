@@ -49,7 +49,7 @@ module.exports = (app) ->
   app.use bodyParser.json limit:'5mb', extended: true
   app.use bodyParser.urlencoded limit:'5mb', extended: true
   app.use defaultSession
-  app.use(httpLogger)
+  app.use httpLogger
 
   app.use bucketAssets()
   setupAuth app
