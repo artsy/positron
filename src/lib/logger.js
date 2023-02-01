@@ -1,5 +1,5 @@
 const httpLogger = require("pino-http")({
-  // overwrite the req and res obejct specifying properties to keep
+  // modify standard serialized properties of req and res, log only listed props
   serializers: {
     req(req) {
       return {
@@ -18,12 +18,6 @@ const httpLogger = require("pino-http")({
       return {
         statusCode: res.statusCode,
       }
-    },
-  },
-
-  formatters: {
-    level(label, number) {
-      return { level: label }
     },
   },
 })
