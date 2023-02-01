@@ -1,6 +1,5 @@
 express = require 'express'
 bodyParser = require 'body-parser'
-logger = require 'artsy-morgan'
 { helpers, notFound, errorHandler } = require './lib/middleware'
 { NODE_ENV,
   ARTSY_URL,
@@ -11,6 +10,7 @@ debug = require('debug') 'api'
 cors = require 'cors'
 RavenServer = require 'raven'
 http = require('http')
+{ httpLogger } = require '../lib/logger'
 
 app = module.exports = express()
 
@@ -24,7 +24,7 @@ app.use cors()
 app.use helpers
 app.use bodyParser.json limit:'5mb', extended: true
 app.use bodyParser.urlencoded limit:'5mb', extended: true
-app.use logger
+app.use httpLogger
 
 # Apps
 app.use '/__gravity', require('@artsy/antigravity').server if NODE_ENV is 'test'
