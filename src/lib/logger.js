@@ -31,6 +31,10 @@ const httpLogger = require("pino-http")({
       return { level: label }
     },
   },
+
+  customReceivedMessage: function(req, res) {
+    return "request received"
+  },
 })
 
 module.exports = {
