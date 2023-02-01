@@ -48,7 +48,7 @@ describe 'development environment', ->
     setup @app
 
   it 'mounts logger middleware', ->
-    @app.use.args[5][0].name.should.equal 'logger'
+    Object.keys(@app.use.args[5][0])[0].should.equal 'logger'
 
 describe 'production environment', ->
 
@@ -65,7 +65,7 @@ describe 'production environment', ->
     setup @app
 
   it 'mounts logger middleware', ->
-    @app.use.args[6][0].name.should.equal 'logger'
+    Object.keys(@app.use.args[6][0])[0].should.equal 'logger'
 
   it 'sets SSL options', ->
     @app.set.args[3][0].should.equal 'forceSSLOptions'
