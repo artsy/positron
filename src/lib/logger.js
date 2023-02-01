@@ -10,13 +10,13 @@ const httpLogger = require("pino-http")({
   serializers: {
     req(req) {
       return {
-        useragent: req.headers["user-agent"],
-        sourceIP: req.remoteAddress,
+        method: req.method,
+        url: req.url,
         hostname: req.headers.host,
-        port: req.headers.remotePort,
-        requestURI: req.url,
-        requestMethod: req.method,
+        useragent: req.headers["user-agent"],
         accept: req.headers.accept,
+        remoteAddress: req.remoteAddress,
+        port: req.remotePort,
       }
     },
     res(res) {
@@ -30,10 +30,6 @@ const httpLogger = require("pino-http")({
     level(label, number) {
       return { level: label }
     },
-  },
-
-  customReceivedMessage: function(req, res) {
-    return "request received"
   },
 })
 
