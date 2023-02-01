@@ -1,4 +1,3 @@
-import pino from "pino"
 const httpLogger = require("pino-http")({
   // overwrite the req and res obejct specifying properties to keep
   serializers: {
