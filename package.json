@@ -84,7 +84,7 @@
     "draft-convert": "2.0.0",
     "draft-js": "0.10.4",
     "elasticsearch": "11.0.1",
-    "express": "4.15.2",
+    "express": "4.17.3",
     "express-force-ssl": "0.3.2",
     "express-graphql": "0.5.4",
     "express-ipfilter": "0.2.3",
