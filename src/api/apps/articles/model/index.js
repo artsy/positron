@@ -8,17 +8,17 @@ import { cloneDeep } from "lodash"
 import { toQuery } from "./retrieve"
 import { ObjectId } from "mongojs"
 import moment from "moment"
-
-const schema = require("./schema.coffee")
-const Joi = require("../../../lib/joi.coffee")
-const db = require("../../../lib/db.coffee")
-const {
+import {
   onPublish,
   generateSlugs,
   generateKeywords,
   sanitizeAndSave,
   onUnpublish,
-} = require("./save.coffee")
+} from "./save.coffee"
+
+const schema = require("./schema.coffee")
+const Joi = require("../../../lib/joi.coffee")
+const db = require("../../../lib/db.coffee")
 const { removeFromSearch, getArticleUrl } = require("./distribute.coffee")
 const Article = require("./../../../../api/models/article.coffee")
 
