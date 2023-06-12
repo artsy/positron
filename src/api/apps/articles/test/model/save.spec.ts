@@ -14,8 +14,6 @@ describe("Save", () => {
   let server
   let removeStopWords
   let indexForSearch
-  let indexForAlgolia
-  let removeFromAlgolia
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
@@ -42,8 +40,6 @@ describe("Save", () => {
       }),
     })
     Save.__set__("indexForSearch", (indexForSearch = sinon.stub()))
-    Save.__set__("indexForAlgolia", (indexForAlgolia = sinon.stub()))
-    Save.__set__("removeFromAlgolia", (removeFromAlgolia = sinon.stub()))
 
     empty(() => fabricate("articles", times(10, () => ({})), () => done()))
   })
@@ -624,46 +620,6 @@ describe("Save", () => {
         })
       })(null, {
         indexable: false,
-        _id: ObjectId("5086df098523e60002000011"),
-      })
-    })
-
-    it("indexes published & indexable articles to algolia", done => {
-      Save.sanitizeAndSave(() => {
-        Article.find("54276766fd4f50996aeca2b8", (err, _article) => {
-          if (err) {
-            done(err)
-          }
-          indexForAlgolia.callCount.should.eql(1)
-          done()
-        })
-      })(null, {
-        indexable: true,
-        published: true,
-        _id: ObjectId("54276766fd4f50996aeca2b8"),
-        sections: [
-          {
-            type: "text",
-            body: "<a href='http://artsy.net/artist/andy-warhol'>link</a>",
-          },
-        ],
-        channel_id: "5086df098523e60002000018",
-      })
-    })
-
-    it("skips indexing unpublished articles to algolia", done => {
-      Save.sanitizeAndSave(() => {
-        Article.find("5086df098523e60002000011", (err, _article) => {
-          if (err) {
-            done(err)
-          }
-          indexForAlgolia.callCount.should.eql(0)
-          removeFromAlgolia.callCount.should.eql(1)
-          done()
-        })
-      })(null, {
-        indexable: true,
-        published: false,
         _id: ObjectId("5086df098523e60002000011"),
       })
     })
