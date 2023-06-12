@@ -11,7 +11,7 @@ Q = require 'bluebird-q'
 request = require 'superagent'
 Article = require './index'
 ArticleModel = require './../../../../api/models/article.coffee'
-{ getArticleUrl, indexForSearch, indexForAlgolia, removeFromAlgolia } = require './distribute'
+{ getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
 { sanitizeLink } = require "./sanitize.js"
@@ -167,12 +167,6 @@ removeStopWords = (title) ->
   else
     indexForSearch(article, ->) if article.indexable
     db.articles.save sanitize(article), callback
-
-  isArticleVisibleToPublic = new ArticleModel(cloneDeep article).isVisibleToPublic()
-  if (isArticleVisibleToPublic and article.indexable)
-    indexForAlgolia(article, ->)
-  else
-    removeFromAlgolia(article, ->)
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->

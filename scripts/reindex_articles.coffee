@@ -1,7 +1,7 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
-{ indexForSearch, indexForAlgolia, removeFromAlgolia } = Save = require '../src/api/apps/articles/model/distribute'
+{ indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
 ArticleModel = require '../src/api/models/article.coffee'
 search = require '../src/api/lib/elasticsearch'
@@ -30,10 +30,4 @@ indexWorker = (article, cb) ->
   articlePresent = Article.present(article) 
   indexForSearch articlePresent, () =>
     console.log('indexed on Elasticsearch ', article.id or article._id)
-    isArticleVisibleToPublic = new ArticleModel(cloneDeep article).isVisibleToPublic()
-    if (articlePresent.indexable and isArticleVisibleToPublic)
-      indexForAlgolia articlePresent, () =>
-        console.log('indexed on Algolia ', article.id or article._id)
-        cb()
-    else
-      cb()
+    cb()
