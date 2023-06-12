@@ -1,7 +1,7 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
 mongojs = require 'mongojs'
 path = require 'path'
-{ indexForSearch  } = Save = require '../src/api/apps/articles/model/distribute'
+{ indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
 ArticleModel = require '../src/api/models/article.coffee'
 search = require '../src/api/lib/elasticsearch'
