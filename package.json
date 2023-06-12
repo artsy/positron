@@ -39,7 +39,7 @@
   "dependencies": {
     "@artsy/backbone-mixins": "3.0.0",
     "@artsy/bucket-assets": "1.0.3",
-    "@artsy/express-reloadable": "1.6.0",
+    "@artsy/express-reloadable": "1.7.0",
     "@artsy/gemup": "0.1.0",
     "@artsy/multienv": "^1.2.0",
     "@artsy/palette": "10.1.0",
