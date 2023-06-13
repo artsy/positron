@@ -10,7 +10,6 @@
 _ = require 'underscore'
 Backbone = require 'backbone'
 search = require '../../../lib/elasticsearch'
-algoliaSearch = require '../../../lib/algoliasearch'
 async = require 'async'
 debug = require('debug') 'api'
 request = require 'superagent'
@@ -61,28 +60,6 @@ moment = require 'moment'
       cb()
   )
 
-@indexForAlgolia = (article, cb) ->
-  tags = article.tags
-  tags = tags.concat article.vertical.name if article.vertical
-
-  algoliaSearch.index.saveObject({
-    objectID: article.id?.toString()
-    name: article.title
-    description: article.description
-    author: article.author and article.author.name or ''
-    slug: article.slug
-    featured: article.featured
-    tags: tags
-    image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
-    href: "/article/#{article.slug}"
-  })
-    .then()
-    .catch((error) ->
-      console.log('AlgoliaSearchIndexingError: Article ' + article.id + ' : ' + JSON.stringify(error, null, 2)) if error
-    )
-    .finally(cb)
-  
-
 @removeFromSearch = (id) ->
   search.client.delete(
     index: search.index
@@ -91,13 +68,6 @@ moment = require 'moment'
   , (error, response) ->
     console.log(error) if error
   )
-
-@removeFromAlgolia = (article) ->
-  algoliaSearch.index.deleteObject(article.id)
-    .then()
-    .catch((error) ->
-      console.log('AlgoliaSearchIndexingDeletingError: Article ' + article.id + ' : ' + JSON.stringify(error, null, 2)) if error
-    )
 
 stripHtmlTags = (str) ->
   if (str == null)
