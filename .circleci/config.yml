@@ -71,13 +71,13 @@ workflows:
             - run: mkdir -p ./coverage ./.nyc_output
             - run:
                 name: Copy jest coverage artifacts
-                command: docker cp hokusai_positron_1:/app/coverage ./
+                command: docker cp hokusai-positron-1:/app/coverage ./
                 when: always
             - codecov/upload:
                 file: ./coverage/lcov.info
             - run:
                 name: Copy mocha coverage artifacts
-                command: docker cp hokusai_positron_1:/app/.nyc_output ./
+                command: docker cp hokusai-positron-1:/app/.nyc_output ./
                 when: always
             - codecov/upload:
                 file: ./.nyc_output/lcov.info
