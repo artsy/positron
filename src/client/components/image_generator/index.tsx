@@ -44,7 +44,7 @@ export class ImageGenerator extends Component<Props, State> {
       ctx.font = '32px "Unica77LLWebMedium"'
       ctx.fillText("News", 120, 62)
       ctx.fillText(date, 490, 62)
-      ctx.font = '50px "Adobe Garamond W08"'
+      ctx.font = '50px "Unica77LLWebMedium"'
       this.wrapText(ctx, text, 120, 130, 840, 50)
 
       // Create image blob and upload to s3
