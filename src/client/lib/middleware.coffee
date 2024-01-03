@@ -51,9 +51,9 @@ useragent = require 'useragent'
   else
     next()
 
-@teamOnly = (req, res, next) ->
-  if !req.user?.get('roles').includes("team")
-    err = new Error 'You must have "team" role'
+@editorialOnly = (req, res, next) ->
+  if !req.user?.get('roles').includes("editorial")
+    err = new Error 'You must have "editorial" role'
     err.status = 403
     next err
   else
