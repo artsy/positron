@@ -25,7 +25,7 @@ setupPassport = ->
       success: (user) ->
         user.set 'roles', jwtDecode(accessToken).roles
         id = user.get('channel_ids').concat(user.get('partner_ids'))[0]
-        id = process.env.DEFAULT_PARTNER_ID if not id and user.get('type') is 'Admin'
+        id = process.env.DEFAULT_PARTNER_ID if not id and user.get('roles').includes('editorial')
         new Channel(id: id).fetchChannelOrPartner
           headers: 'X-Access-Token': accessToken
           error: (m, err) ->
