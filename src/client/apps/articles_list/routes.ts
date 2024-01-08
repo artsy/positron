@@ -5,7 +5,7 @@ import { ArticlesListQuery as query } from "./query"
 
 const { API_URL } = process.env
 
-export const articles_list = (req, res, next) => {
+export const articles_list = (req, res) => {
   let published
   const channel_id = req.user.get("current_channel").id
 
