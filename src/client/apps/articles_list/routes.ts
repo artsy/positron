@@ -5,7 +5,7 @@ import { ArticlesListQuery as query } from "./query"
 
 const { API_URL } = process.env
 
-export const articles_list = (req, res) => {
+export const articles_list = (req, res, next) => {
   let published
   const channel_id = req.user.get("current_channel").id
 
@@ -37,7 +37,11 @@ export const articles_list = (req, res) => {
         })
       }
     })
-    .catch(() => {
+    .catch(error => {
+      if (error) {
+        console.warn(error)
+        next()
+      }
       // If the user is authenticated and valid but not a member of the channel, redirect them to the settings page.
       return res.redirect("/settings")
     })
