@@ -145,6 +145,15 @@ describe("routes", () => {
       expect(next).toBeCalled()
     })
 
+    it("redirects to settings if no error", async () => {
+      res.redirect = jest.fn()
+      LokkaMock.mockImplementationOnce(() => ({
+        query: jest.fn().mockReturnValue(Promise.reject()),
+      }))
+      await articles_list(req, res, next)
+      expect(res.redirect).toBeCalled()
+    })
+
     describe("queries", () => {
       it("sets sd.HAS_PUBLISHED to true by default", async () => {
         await articles_list(req, res, next)
