@@ -40,7 +40,7 @@ export const articles_list = (req, res, next) => {
     .catch(error => {
       if (error) {
         console.warn(error)
-        next()
+        return next()
       }
       // If the user is authenticated and valid but not a member of the channel, redirect them to the settings page.
       return res.redirect("/settings")
