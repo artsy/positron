@@ -18,8 +18,8 @@ jwtDecode = require 'jwt-decode'
   next()
 
 # Require team role middleware
-@teamOnly = (req, res, next) ->
-  return res.err 401, 'Must have team role' unless req.user?.roles?.includes("team")
+@editorialOnly = (req, res, next) ->
+  return res.err 401, 'Must have editorial role' unless req.user?.roles?.includes("editorial")
   next()
 
 # Set the user from an access token and alias the `me` param

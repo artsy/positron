@@ -38,7 +38,7 @@ describe("Edit Header Controls", () => {
         isSaving: false,
         isPublishing: false,
       },
-      hasTeamRole: false,
+      hasEditorialRole: false,
       publishArticleAction: jest.fn(),
       saveArticleAction: jest.fn(),
     }
@@ -51,7 +51,7 @@ describe("Edit Header Controls", () => {
   })
 
   it("renders admin button for team users", () => {
-    props.hasTeamRole = true
+    props.hasEditorialRole = true
     const component = getWrapper()
 
     expect(component.find("TabButton").length).toBe(2)
