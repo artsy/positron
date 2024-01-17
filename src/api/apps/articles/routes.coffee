@@ -58,8 +58,8 @@ User = require '../users/model.coffee'
     res.send present req.article
 
 @restrictFeature = (req, res, next) ->
-  if !req.user?.roles?.includes("team") and req.body.featured
-    res.err 401, 'You must have team role to feature an article.'
+  if !req.user?.roles?.includes("editorial") and req.body.featured
+    res.err 401, 'You must have editorial role to feature an article.'
   else
     next()
 

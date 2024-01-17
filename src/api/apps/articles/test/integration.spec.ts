@@ -88,7 +88,7 @@ describe("articles endpoints", () => {
         .send({ featured: true })
         .end((err, res) => {
           err.status.should.equal(401)
-          res.body.message.should.containEql("must have team role")
+          res.body.message.should.containEql("must have editorial role")
           done()
         })
     })

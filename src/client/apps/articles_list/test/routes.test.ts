@@ -139,10 +139,19 @@ describe("routes", () => {
 
     it("calls next if error is thrown", async () => {
       LokkaMock.mockImplementationOnce(() => ({
-        query: jest.fn().mockReturnValue(Promise.reject()),
+        query: jest.fn().mockReturnValue(Promise.reject({ error: "error" })),
       }))
       await articles_list(req, res, next)
       expect(next).toBeCalled()
+    })
+
+    it("redirects to settings if no error", async () => {
+      res.redirect = jest.fn()
+      LokkaMock.mockImplementationOnce(() => ({
+        query: jest.fn().mockReturnValue(Promise.reject()),
+      }))
+      await articles_list(req, res, next)
+      expect(res.redirect).toBeCalled()
     })
 
     describe("queries", () => {
