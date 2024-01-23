@@ -55,17 +55,11 @@ There are many reasons [why](https://medium.com/@cramforce/why-amp-is-fast-7d2ff
 
 We use sitemaps to manage distribution of Artsy's editorial content to Google Search.
 
-The [articles sitemap](https://www.artsy.net/sitemap-articles-2018.xml) is generated daily. It is housed by S3, served by Force, and configured via Cinder and Fulcrum, with the help of a few external services.
+The [articles sitemap](https://www.artsy.net/sitemap-articles-2018.xml) is generated daily. It is housed by S3, served by Force, and configured via Ember, with the help of a few external services.
 
-Changes to the sitemap itself are made in Cinder via the [ArticleSitemapJob](https://github.com/artsy/cinder/blob/main/src/main/scala/net/artsy/jobs/sitemaps/ArticleSitemapJob.scala). A more detailed description of the Artsy's sitemap processes can be found in the [Cinder docs](https://github.com/artsy/cinder/blob/main/doc/sitemaps.md).
+Changes to the sitemap itself are made in Ember via the [ArticleSitemapJob](https://github.com/artsy/ember/blob/main/src/ember/jobs/sitemaps/article_sitemap_job.py).
 
-If additional fields are added to the article sitemap, we must also fetch the new field from Positron via [Fulcrum's positron-tables.yml](https://github.com/artsy/fulcrum/blob/master/config/positron-tables.yml).
-
-After the above changes, the following steps are required for production:
-
-- Deploy cinder via Jenkins (this job also deploys Fulcrum automatically)
-- If the schema has changed, update it in Hive (can be done via CLI or [UI here](http://spark.artsy.net:8888/beeswax))
-- Run [Oozie import job](http://spark.artsy.net:8888/oozie/editor/workflow/edit/?workflow=31) to pull new data
+If additional fields are added to the article sitemap, we must also fetch the new field from Positron via [Fulcrum's PositronExtracts](https://github.com/artsy/fulcrum/blob/main/lib/fulcrum/extract/positron_extracts.rb).
 
 ### News sitemap
 
