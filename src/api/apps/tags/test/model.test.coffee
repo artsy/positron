@@ -2,7 +2,7 @@ _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Tag = require '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'Tag', ->
 
@@ -25,7 +25,7 @@ describe 'Tag', ->
   describe '#find', ->
 
     it 'finds a tag by an id string', (done) ->
-      fabricate 'tags', { _id: ObjectId('5086df098523e60002000018') }, ->
+      fabricate 'tags', { _id: new ObjectId('5086df098523e60002000018') }, ->
         Tag.find '5086df098523e60002000018', (err, tag) ->
           tag._id.toString().should.equal '5086df098523e60002000018'
           done()
@@ -39,14 +39,14 @@ describe 'Tag', ->
       }, (err, tag) ->
         tag.name.should.equal 'Berlin'
         tag.public.should.be.true()
-        db.tags.count (err, count) ->
+        db.collection('tags').count (err, count) ->
           count.should.equal 11
           done()
 
   describe '#present', ->
 
     it 'converts _id to id', (done) ->
-      db.tags.findOne (err, tag) ->
+      db.collection('tags').findOne (err, tag) ->
         data = Tag.present tag
         (typeof data.id).should.equal 'string'
         done()
