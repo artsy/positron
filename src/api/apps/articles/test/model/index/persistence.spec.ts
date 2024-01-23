@@ -1,6 +1,6 @@
 // import rewire from "rewire"
 import moment from "moment"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import { times } from "underscore"
 const {
   db,
@@ -72,7 +72,7 @@ describe("Article Persistence", () => {
           article.title.should.equal("Top Ten Shows")
           article.channel_id.toString().should.equal("5086df098523e60002002223")
           article.vertical.name.should.eql("Culture")
-          db.articles.count((error, count) => {
+          db.collection("articles").count((error, count) => {
             if (error) {
               done(error)
             }
@@ -286,7 +286,7 @@ describe("Article Persistence", () => {
                 done(err)
               }
               article.slugs[0].should.equal("craig-spaeth-heyo-01-01-99")
-              db.articles.count((error, count) => {
+              db.collection("articles").count((error, count) => {
                 if (error) {
                   done(error)
                 }
@@ -317,9 +317,9 @@ describe("Article Persistence", () => {
 
           publishStub
             .withArgs("editorial", "article.published", {
-              id: ObjectId("5086df098523e60002002222"),
+              id: new ObjectId("5086df098523e60002002222"),
               title: "Top Ten Shows",
-              featured_artist_ids: [ObjectId("52868347b202a37bb000072a")],
+              featured_artist_ids: [new ObjectId("52868347b202a37bb000072a")],
               href: "/article/undefined-ten-shows",
             })
             .callCount.should.eql(1)
@@ -966,9 +966,9 @@ describe("Article Persistence", () => {
       fabricate(
         "articles",
         {
-          _id: ObjectId("5086df098523e60002000018"),
+          _id: new ObjectId("5086df098523e60002000018"),
           id: "5086df098523e60002000018",
-          author_id: ObjectId("5086df098523e60002000018"),
+          author_id: new ObjectId("5086df098523e60002000018"),
           published: false,
           author: {
             name: "Kana Abe",
@@ -983,7 +983,7 @@ describe("Article Persistence", () => {
         () =>
           Article.save(
             {
-              _id: ObjectId("5086df098523e60002000018"),
+              _id: new ObjectId("5086df098523e60002000018"),
               id: "5086df098523e60002000018",
               author_id: "5086df098523e60002000018",
               published: true,

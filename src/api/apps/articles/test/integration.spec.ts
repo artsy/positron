@@ -1,4 +1,4 @@
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import request from "superagent"
 const {
   db,
@@ -99,8 +99,8 @@ describe("articles endpoints", () => {
         [
           {
             title: "Cows on the prarie",
-            _id: ObjectId("5086df098523e60002000012"),
-            partner_channel_id: ObjectId("5086df098523e60002000012"),
+            _id: new ObjectId("5086df098523e60002000012"),
+            partner_channel_id: new ObjectId("5086df098523e60002000012"),
             published: false,
           },
         ],
@@ -180,7 +180,7 @@ describe("articles endpoints", () => {
         [
           {
             title: "Winter Is Coming",
-            channel_id: ObjectId("5086df098523e60002000012"),
+            channel_id: new ObjectId("5086df098523e60002000012"),
             published: true,
           },
         ],
@@ -234,7 +234,7 @@ describe("articles endpoints", () => {
         [
           {
             title: "Cows on the prarie",
-            _id: ObjectId("5086df098523e60002000012"),
+            _id: new ObjectId("5086df098523e60002000012"),
             sections: [
               {
                 type: "text",
@@ -270,8 +270,8 @@ describe("articles endpoints", () => {
         [
           {
             title: "Cows on the prarie",
-            _id: ObjectId("5086df098523e60002000012"),
-            partner_channel_id: ObjectId("5086df098523e60002000012"),
+            _id: new ObjectId("5086df098523e60002000012"),
+            partner_channel_id: new ObjectId("5086df098523e60002000012"),
             published: false,
           },
         ],
@@ -300,8 +300,8 @@ describe("articles endpoints", () => {
           { title: "Flowers on Flowers" },
           {
             title: "Cows on the prarie",
-            _id: ObjectId("5086df098523e60002000012"),
-            partner_channel_id: ObjectId("5086df098523e60002000012"),
+            _id: new ObjectId("5086df098523e60002000012"),
+            partner_channel_id: new ObjectId("5086df098523e60002000012"),
           },
         ],
         (err, _articles) => {
@@ -334,8 +334,8 @@ describe("articles endpoints", () => {
           { title: "Flowers on Flowers" },
           {
             title: "Cows on the prarie",
-            _id: ObjectId("5086df098523e60002000012"),
-            partner_channel_id: ObjectId("5086df098523e60002000012"),
+            _id: new ObjectId("5086df098523e60002000012"),
+            partner_channel_id: new ObjectId("5086df098523e60002000012"),
           },
         ],
         (err, _articles) => {
@@ -349,7 +349,7 @@ describe("articles endpoints", () => {
               if (error) {
                 done(error)
               }
-              db.articles.count((e, count) => {
+              db.collection("articles").count((e, count) => {
                 if (e) {
                   done(e)
                 }

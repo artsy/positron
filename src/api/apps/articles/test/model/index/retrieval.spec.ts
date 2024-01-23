@@ -1,5 +1,5 @@
 import moment from "moment"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import { pluck, times } from "underscore"
 import * as Article from "../../../model"
 const {
@@ -62,7 +62,7 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         {
-          author_id: (aid = ObjectId("4d8cd73191a5c50ce220002a")),
+          author_id: (aid = new ObjectId("4d8cd73191a5c50ce220002a")),
           title: "Hello Wurld",
         },
         () =>
@@ -145,16 +145,20 @@ describe("Article Retrieval", () => {
         [
           {
             title: "Foo",
-            featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artist_ids: [new ObjectId("4dc98d149a96300001003033")],
           },
           {
             title: "Bar",
-            primary_featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
+            primary_featured_artist_ids: [
+              new ObjectId("4dc98d149a96300001003033"),
+            ],
           },
           {
             title: "Baz",
-            featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
-            primary_featured_artist_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artist_ids: [new ObjectId("4dc98d149a96300001003033")],
+            primary_featured_artist_ids: [
+              new ObjectId("4dc98d149a96300001003033"),
+            ],
           },
         ],
         () =>
@@ -179,11 +183,11 @@ describe("Article Retrieval", () => {
         [
           {
             title: "Foo",
-            featured_artwork_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artwork_ids: [new ObjectId("4dc98d149a96300001003033")],
           },
           {
             title: "Baz",
-            featured_artwork_ids: [ObjectId("4dc98d149a96300001003033")],
+            featured_artwork_ids: [new ObjectId("4dc98d149a96300001003033")],
           },
         ],
         () =>
@@ -203,7 +207,7 @@ describe("Article Retrieval", () => {
       ))
 
     it("can find articles sorted by an attr", done =>
-      db.articles.drop(() =>
+      db.collection("articles").drop(() =>
         fabricate(
           "articles",
           [{ title: "C" }, { title: "A" }, { title: "B" }],
@@ -225,9 +229,9 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         [
-          { title: "C", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "A", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "B", fair_ids: [ObjectId("4dc98d149a96300001003032")] },
+          { title: "C", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
+          { title: "A", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
+          { title: "B", fair_ids: [new ObjectId("4dc98d149a96300001003032")] },
         ],
         () =>
           Article.where(
@@ -254,8 +258,8 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         [
-          { title: "C", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "A", fair_ids: [ObjectId("4dc98d149a96300001003033")] },
+          { title: "C", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
+          { title: "A", fair_ids: [new ObjectId("4dc98d149a96300001003033")] },
         ],
         () =>
           Article.where(
@@ -277,9 +281,9 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         {
-          author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+          author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
           title: "Hello Wurld",
-          fair_programming_ids: [ObjectId("52617c6c8b3b81f094000013")],
+          fair_programming_ids: [new ObjectId("52617c6c8b3b81f094000013")],
         },
         () =>
           Article.where(
@@ -302,9 +306,9 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         {
-          author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+          author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
           title: "Hello Wurld",
-          fair_artsy_ids: [ObjectId("53da550a726169083c0a0700")],
+          fair_artsy_ids: [new ObjectId("53da550a726169083c0a0700")],
         },
         () =>
           Article.where(
@@ -327,9 +331,9 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         {
-          author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+          author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
           title: "Hello Wurld",
-          fair_about_ids: [ObjectId("53da550a726169083c0a0700")],
+          fair_about_ids: [new ObjectId("53da550a726169083c0a0700")],
         },
         () =>
           Article.where(
@@ -352,9 +356,18 @@ describe("Article Retrieval", () => {
       fabricate(
         "articles",
         [
-          { title: "Foo", partner_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "Bar", partner_ids: [ObjectId("4dc98d149a96300001003033")] },
-          { title: "Baz", partner_ids: [ObjectId("4dc98d149a96300001003031")] },
+          {
+            title: "Foo",
+            partner_ids: [new ObjectId("4dc98d149a96300001003033")],
+          },
+          {
+            title: "Bar",
+            partner_ids: [new ObjectId("4dc98d149a96300001003033")],
+          },
+          {
+            title: "Baz",
+            partner_ids: [new ObjectId("4dc98d149a96300001003031")],
+          },
         ],
         () =>
           Article.where(
@@ -395,14 +408,14 @@ describe("Article Retrieval", () => {
         "articles",
         [
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
             contributing_authors: [
-              { id: ObjectId("4d8cd73191a5c50ce220002b") },
+              { id: new ObjectId("4d8cd73191a5c50ce220002b") },
             ],
             title: "Hello Wurld",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002b"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002b"),
             title: "Hello Waaarld",
           },
         ],
@@ -428,17 +441,17 @@ describe("Article Retrieval", () => {
         "articles",
         [
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
             title: "Hello Wurld",
             is_super_article: false,
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002b"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002b"),
             title: "Hello Waaarldie",
             is_super_article: true,
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002b"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002b"),
             title: "Hello Waaarld",
           },
         ],
@@ -456,20 +469,20 @@ describe("Article Retrieval", () => {
       ))
 
     it("can find super article by article (opposite of the above test!)", done => {
-      const superArticleId = ObjectId("4d7ab73191a5c50ce220001c")
-      const childArticleId = ObjectId("4d8cd73191a5c50ce111111a")
+      const superArticleId = new ObjectId("4d7ab73191a5c50ce220001c")
+      const childArticleId = new ObjectId("4d8cd73191a5c50ce111111a")
       fabricate(
         "articles",
         [
           {
             _id: childArticleId,
-            author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
             title: "Child Article",
             is_super_article: false,
           },
           {
             _id: superArticleId,
-            author_id: ObjectId("4d8cd73191a5c50ce220002b"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002b"),
             title: "Super Article",
             is_super_article: true,
             super_article: {
@@ -499,22 +512,22 @@ describe("Article Retrieval", () => {
         "articles",
         [
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
             tags: ["pickle", "samosa"],
             title: "Hello Wuuuurld - Food",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002b"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002b"),
             tags: ["pickle", "muffin"],
             title: "Hello Waaarld - Food",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002c"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002c"),
             tags: ["muffin", "lentils"],
             title: "Hello Weeeerld - Food",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002e"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002e"),
             tags: ["radio", "pixels"],
             title: "Hello I am Weiiird - Electronics",
           },
@@ -542,24 +555,24 @@ describe("Article Retrieval", () => {
         "articles",
         [
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002a"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002a"),
             tracking_tags: ["video", "evergreen"],
             title:
               "The Shanghai Art Project That’s Working to Save Us from a Dystopian Future",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002b"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002b"),
             tracking_tags: ["video", "evergreen"],
             title:
               "$448 Million Christie’s Post-War and Contemporary Sale Led by Bacon and Twombly",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002c"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002c"),
             tracking_tags: ["podcast", "evergreen"],
             title: "8 Works to Collect at ARCOlisboa",
           },
           {
-            author_id: ObjectId("4d8cd73191a5c50ce220002e"),
+            author_id: new ObjectId("4d8cd73191a5c50ce220002e"),
             tracking_tags: ["op-eds", "explainers"],
             title:
               "NYC Releases Data That Will Help Shape the City’s Cultural Future",
@@ -594,7 +607,7 @@ describe("Article Retrieval", () => {
           {
             title: "Hello Wurld",
             published: true,
-            biography_for_artist_id: ObjectId("5086df098523e60002000016"),
+            biography_for_artist_id: new ObjectId("5086df098523e60002000016"),
           },
         ],
         () =>
@@ -623,7 +636,7 @@ describe("Article Retrieval", () => {
           {
             title: "Hello Wurld",
             published: true,
-            channel_id: ObjectId("5086df098523e60002000016"),
+            channel_id: new ObjectId("5086df098523e60002000016"),
           },
         ],
         () =>
@@ -652,7 +665,7 @@ describe("Article Retrieval", () => {
           {
             title: "Hello Wurld",
             published: true,
-            partner_channel_id: ObjectId("5086df098523e60002000016"),
+            partner_channel_id: new ObjectId("5086df098523e60002000016"),
           },
         ],
         () =>
@@ -753,7 +766,7 @@ describe("Article Retrieval", () => {
         [
           {
             title: "Hello Wurld",
-            _id: ObjectId("5086df098523e60002000018"),
+            _id: new ObjectId("5086df098523e60002000018"),
             published: true,
           },
         ],
@@ -774,21 +787,24 @@ describe("Article Retrieval", () => {
 
   describe("#find", () => {
     it("finds an article by an id string", done =>
-      fabricate("articles", { _id: ObjectId("5086df098523e60002000018") }, () =>
-        Article.find("5086df098523e60002000018", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article._id.toString().should.equal("5086df098523e60002000018")
-          done()
-        })
+      fabricate(
+        "articles",
+        { _id: new ObjectId("5086df098523e60002000018") },
+        () =>
+          Article.find("5086df098523e60002000018", (err, article) => {
+            if (err) {
+              done(err)
+            }
+            article._id.toString().should.equal("5086df098523e60002000018")
+            done()
+          })
       ))
 
     it("can lookup an article by slug", done =>
       fabricate(
         "articles",
         {
-          _id: ObjectId("5086df098523e60002000018"),
+          _id: new ObjectId("5086df098523e60002000018"),
           slugs: ["foo-bar"],
         },
         () =>

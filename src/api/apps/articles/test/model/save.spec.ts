@@ -1,5 +1,5 @@
 import moment from "moment"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import rewire from "rewire"
 import sinon from "sinon"
 import { times } from "underscore"
@@ -427,7 +427,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [
           {
             type: "text",
@@ -448,7 +448,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [
           {
             type: "text",
@@ -470,7 +470,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [
           {
             type: "text",
@@ -491,7 +491,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [
           {
             type: "text",
@@ -512,7 +512,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         lead_paragraph:
           '<a href="insecure-website.com">link</a><a href="http://artsy.net/artist/andy-warhol">artsy link</a>',
       }))
@@ -529,7 +529,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         postscript:
           '<a href="insecure-website.com">link</a><a href="http://artsy.net/artist/andy-warhol">artsy link</a>',
       }))
@@ -546,7 +546,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         news_source: {
           url: "http://artsy.net/artist/andy-warhol",
         },
@@ -564,7 +564,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [
           {
             type: "text",
@@ -583,7 +583,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [
           {
             type: "text",
@@ -605,7 +605,7 @@ describe("Save", () => {
       })(null, {
         indexable: true,
         published: true,
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
       })
     })
 
@@ -620,7 +620,7 @@ describe("Save", () => {
         })
       })(null, {
         indexable: false,
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
       })
     })
 
@@ -636,7 +636,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         thumbnail_title: "Thumbnail Title",
         thumbnail_image: "foo.png",
         scheduled_publish_at: "123",
@@ -657,7 +657,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         thumbnail_title: "Thumbnail Title",
         thumbnail_image: "foo.png",
         email_metadata: {
@@ -678,7 +678,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         published: true,
         sections: [{ type: "text", body: "<p>Testing 123</p>" }],
       }))
@@ -693,7 +693,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         sections: [{ type: "text", body: "<p>Testing 123</p>" }],
         description: "Do not override me",
       }))
@@ -708,7 +708,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         thumbnail_title: "Thumbnail Title",
         sections: [{ type: "text", body: "<p>Testing 123</p>" }],
         title: "A new title \n",
@@ -736,7 +736,7 @@ describe("Save", () => {
           done()
         })
       )(null, {
-        _id: ObjectId("5086df098523e60002000011"),
+        _id: new ObjectId("5086df098523e60002000011"),
         media: {
           url: "https://media.artsy.net/video.mp4",
           cover_image_url: "https://media.artsy.net/images.jpg",
