@@ -1,5 +1,5 @@
 User = require '../../client/models/user'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 moment = require 'moment'
 
 
@@ -11,7 +11,7 @@ module.exports = ->
 
   fixtures.articles =
     id: '54276766fd4f50996aeca2b8'
-    author_id: ObjectId('4d8cd73191a5c50ce210002a')
+    author_id: new ObjectId('4d8cd73191a5c50ce210002a')
     layout: 'standard'
     thumbnail_title: 'Top Ten Booths at miart 2014',
     thumbnail_teaser: 'Look here! Before the lines start forming...',
