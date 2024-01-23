@@ -11,7 +11,7 @@ const {
   presentCollection,
   find,
 } = require("api/apps/articles/model/index.js")
-const { ObjectId } = require("mongojs")
+const { ObjectId } = require("mongodb")
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
