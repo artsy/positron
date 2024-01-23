@@ -3,7 +3,7 @@ sinon = require 'sinon'
 rewire = require 'rewire'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 User = rewire '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 gravity = require('@artsy/antigravity').server
 gravityFabricate = require('@artsy/antigravity').fabricate
 express = require 'express'
@@ -43,13 +43,13 @@ describe 'User', ->
 
     it 'inserts a non-existing user', (done) ->
       User.fromAccessToken 'foobar', (err, user) ->
-        db.users.findOne (err, user) ->
+        db.collection('users').findOne (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           done()
 
     it 'finds an existing user', (done) ->
       user = fixtures().users
-      db.users.insert user, ->
+      db.collection('users').insertOne user, ->
         User.fromAccessToken 'foobar', (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           done()
@@ -60,7 +60,7 @@ describe 'User', ->
         partner_ids: ['5086df098523e60002000012']
         access_token: '$2a$10$PJrPMBadu1NPdmnshBgFbeZG5cyzJHBLK8D73niNWb7bPz5GyKH.u'
       }
-      db.users.insert user, (err, result) ->
+      db.collection('users').insertOne user, (err, result) ->
         User.fromAccessToken 'foobar', (err, user) ->
           user.name.should.equal 'Kana Abe'
           done()
@@ -72,7 +72,7 @@ describe 'User', ->
 
     it 'updates a user if partner_ids have changed', (done) ->
       user = _.extend {}, fixtures().users, partner_ids: []
-      db.users.insert user, ->
+      db.collection('users').insertOne user, ->
         User.fromAccessToken 'foobar', (err, user) ->
           user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
           done()
@@ -88,7 +88,7 @@ describe 'User', ->
 
     it 'refreshes the user basic info', (done) ->
       user = _.extend fixtures().users, {name: 'Nah'}
-      db.users.insert user, ->
+      db.collection('users').insertOne user, ->
         User.refresh 'foobar', (err, user) ->
           user.name.should.equal 'Craig Spaeth'
           User.fromAccessToken 'foobar', (err, user) ->
@@ -97,31 +97,33 @@ describe 'User', ->
 
     it 'refreshes the user partner access', (done) ->
       user = _.extend fixtures().users, { has_access_token: true, partner_ids: ['123'] }
-      db.users.insert user, (err, user) ->
-        user.partner_ids.length.should.equal 1
-        user.partner_ids[0].should.equal '123'
-        User.refresh 'foobar', (err, user) ->
-          user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
-          User.fromAccessToken 'foobar', (err, user) ->
+      db.collection('users').insertOne user, (err, res) ->
+        db.collection('users').findOne {_id: res.insertedId}, (err, user) ->
+          user.partner_ids.length.should.equal 1
+          user.partner_ids[0].should.equal '123'
+          User.refresh 'foobar', (err, user) ->
             user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
-            done()
+            User.fromAccessToken 'foobar', (err, user) ->
+              user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
+              done()
 
     it 'refreshes the user channel access', (done) ->
       user = _.extend fixtures().users, { has_access_token: true, channel_ids: ['123'] }
-      db.users.insert user, (err, user) ->
-        user.channel_ids.length.should.equal 1
-        User.refresh 'foobar', (err, user) ->
-          user.channel_ids.length.should.equal 0
-          User.fromAccessToken 'foobar', (err, user) ->
+      db.collection('users').insertOne user, (err, res) ->
+        db.collection('users').findOne {_id: res.insertedId}, (err, user) ->
+          user.channel_ids.length.should.equal 1
+          User.refresh 'foobar', (err, user) ->
             user.channel_ids.length.should.equal 0
-            done()
+            User.fromAccessToken 'foobar', (err, user) ->
+              user.channel_ids.length.should.equal 0
+              done()
 
   describe '#hasChannelAccess', ->
 
     it 'returns true for a channel member', (done) ->
       user = _.extend fixtures().users, { channel_ids: [ ObjectId '5086df098523e60002000018' ] }
-      channel = _.extend fixtures().channels, { _id: ObjectId('5086df098523e60002000018') }
-      db.channels.insert channel , (err, channel) ->
+      channel = _.extend fixtures().channels, { _id: new ObjectId('5086df098523e60002000018') }
+      db.collection('channels').insertOne channel , (err, channel) ->
         User.hasChannelAccess(user, '5086df098523e60002000018').should.be.true()
         done()
 
