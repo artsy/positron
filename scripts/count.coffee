@@ -7,7 +7,6 @@ env = require 'node-env-file'
 # Connect to database
 client = new MongoClient(process.env.MONGOHQ_URL)
 await client.connect()
-#TODO: this should be a variable
 db = await client.db()
 collection = await db.collection('articles')
 

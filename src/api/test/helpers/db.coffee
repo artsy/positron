@@ -13,7 +13,7 @@ bcrypt = require 'bcryptjs'
     data = (fixturize collectionName, obj for obj in data)
     return collection.insertMany data, (err, res) ->
       collection.find({}).toArray(callback)
-  if collectionName == 'sessions' #TODO: fix this hack
+  if collectionName == 'sessions'
     data = fixturize collectionName, data
     return collection.insertMany data, (err, res) ->
       collection.find({}).toArray(callback)
