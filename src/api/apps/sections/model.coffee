@@ -11,7 +11,7 @@ async = require 'async'
 Joi = require '../../lib/joi'
 moment = require 'moment'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
 #
@@ -50,15 +50,15 @@ querySchema = (->
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slug: id }
-  db.sections.findOne query, callback
+  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { slug: id }
+  db.collection('sections').findOne query, callback
 
 @where = (input, callback) ->
   Joi.validate input, querySchema, (err, input) =>
     return callback err if err
     query = _.omit input, 'q', 'limit', 'offset'
     query.title = { $regex: ///#{input.q}///i } if input.q
-    cursor = db.sections
+    cursor = db.collection('sections')
       .find(query)
       .limit(input.limit)
       .sort($natural: -1)
@@ -66,7 +66,7 @@ querySchema = (->
     async.parallel [
       (cb) -> cursor.toArray cb
       (cb) -> cursor.count cb
-      (cb) -> db.sections.count cb
+      (cb) -> db.collection('sections').count cb
     ], (err, [sections, count, total]) =>
       callback err, {
         total: total
@@ -82,10 +82,11 @@ querySchema = (->
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: input.id
-    db.sections.save data, callback
+    db.collection('sections').insertOne data, (err, res) ->
+      db.collection('sections').findOne {_id: res.insertedId}, callback
 
 @destroy = (id, callback) ->
-  db.sections.remove { _id: ObjectId(id) }, callback
+  db.collection('sections').remove { _id: new ObjectId(id) }, callback
 
 #
 # JSON views

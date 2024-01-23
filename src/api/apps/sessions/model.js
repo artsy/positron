@@ -34,7 +34,7 @@ export const where = (input, callback) => {
       .subtract(INVALID_THRESHOLD, "minutes")
       .format()
 
-    const cursor = db.sessions.find({
+    const cursor = db.collection("sessions").find({
       timestamp: {
         $gte: timeLimit,
       },
@@ -46,7 +46,7 @@ export const where = (input, callback) => {
 
     // clear out any session that hasn't been updated
     // in more than a given max
-    db.sessions.remove({
+    db.collection("sessions").deleteMany({
       timestamp: {
         $lte: timeLimit,
       },
@@ -68,12 +68,19 @@ export const save = (inputData, callback) => {
       _id: id,
     }
 
-    db.sessions.save(data, callback)
+    db.collection("sessions").updateOne(
+      { _id: data._id },
+      { $set: inputData },
+      { upsert: true },
+      (err, res) => {
+        db.collection("sessions").findOne({ _id: res.upsertedId }, callback)
+      }
+    )
   })
 }
 
 export const destroy = (id, callback) => {
-  db.sessions.remove({ _id: id }, (err, data) => {
+  db.collection("sessions").deleteOne({ _id: id }, (err, data) => {
     callback(err, { _id: id })
   })
 }
