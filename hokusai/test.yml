@@ -14,7 +14,7 @@ services:
       - positron-mongodb
       - positron-elasticsearch
   positron-elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.23
+    image: artsy/elasticsearch:6.8.23
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
