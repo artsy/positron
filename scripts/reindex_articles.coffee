@@ -16,7 +16,7 @@ switch process.env.NODE_ENV
   else env path.resolve __dirname, '../.env'
 
 # Connect to database
-client = new mongodb.MongoClient(process.env.MONGOHQ_URL)
+client = new MongoClient(process.env.MONGOHQ_URL)
 await client.connect()
 db = await client.db()
 articles = await db.collection('articles')
