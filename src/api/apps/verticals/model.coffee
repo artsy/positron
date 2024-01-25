@@ -7,7 +7,7 @@ _ = require 'underscore'
 db = require '../../lib/db'
 async = require 'async'
 Joi = require '../../lib/joi'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { API_MAX, API_PAGE_SIZE } = process.env
 
 #
@@ -29,8 +29,8 @@ Joi = require '../../lib/joi'
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { name: id }
-  db.verticals.findOne query, callback
+  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { name: id }
+  db.collection('verticals').findOne query, callback
 
 @where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
@@ -40,7 +40,7 @@ Joi = require '../../lib/joi'
 @mongoFetch = (input, callback) =>
   query = _.omit input, 'q', 'limit', 'offset', 'count'
   query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
-  cursor = db.verticals
+  cursor = db.collection('verticals')
     .find(query)
     .limit(input.limit)
     .sort($natural: -1)
@@ -52,7 +52,7 @@ Joi = require '../../lib/joi'
       cursor.count cb
     (cb) ->
       return cb() unless input.count
-      db.verticals.count cb
+      db.collection('verticals').count cb
   ], (err, [verticals, verticalCount, total]) =>
     callback err, {
       total: total if input.count
@@ -64,19 +64,20 @@ Joi = require '../../lib/joi'
 # Persistence
 #
 @save = (input, callback) ->
-  Joi.validate input, @schema, (err, input) =>
+  Joi.validate input, @schema, (err, input) ->
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: input.id
-    db.verticals.save data, callback
+    db.collection('verticals').insertOne data, (err, res) ->
+      db.collection('verticals').findOne {_id: res.insertedId}, callback
 
 @destroy = (id, callback) ->
-  db.verticals.remove { _id: ObjectId(id) }, callback
+  db.collection('verticals').remove { _id: new ObjectId(id) }, callback
 
 #
 # JSON views
 #
-@present = (vertical) =>
+@present = (vertical) ->
   _.extend
     id: vertical?._id?.toString()
   , _.omit(vertical, '_id')

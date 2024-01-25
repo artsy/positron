@@ -7,12 +7,21 @@ bcrypt = require 'bcryptjs'
 @fixtures = fixtures = require '../../../test/helpers/fixtures'
 @db = require '../../lib/db'
 
-@fabricate = (collection, data, callback) =>
+@fabricate = (collectionName, data, callback) =>
+  collection = @db.collection(collectionName)
   if _.isArray(data)
-    data = (fixturize collection, obj for obj in data)
+    data = (fixturize collectionName, obj for obj in data)
+    return collection.insertMany data, (err, res) ->
+      collection.find({}).toArray(callback)
+  if collectionName == 'sessions'
+    data = fixturize collectionName, data
+    return collection.insertMany data, (err, res) ->
+      collection.find({}).toArray(callback)
   else
-    data = fixturize collection, data
-  @db[collection].insert data, callback
+    data = fixturize collectionName, data
+    return collection.insertOne data, (err, res) ->
+      collection.findOne({_id: res.insertedId}, callback)
+
 
 fixturize = (collection, data) ->
   data = _.extend fixtures()[collection], data
@@ -20,7 +29,7 @@ fixturize = (collection, data) ->
   data
 
 @empty = (callback) =>
-  @db.getCollectionNames (err, names) =>
-    return callback() if names.length is 0
-    cb = _.after names.length, callback
-    @db.collection(col).drop(cb) for col in names
+  @db.listCollections({}).toArray (err, collections) =>
+    return callback() if collections.length is 0
+    cb = _.after collections.length, callback
+    @db.collection(col.name).drop(cb) for col in collections

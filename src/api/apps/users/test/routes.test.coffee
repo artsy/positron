@@ -3,7 +3,7 @@ _ = require 'underscore'
 sinon = require 'sinon'
 rewire = require 'rewire'
 routes = rewire '../routes'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'routes', ->
 
@@ -43,6 +43,6 @@ describe 'routes', ->
       @req.get = -> 'test-access-token'
       routes.setUser @req, @res, @next
       @User.fromAccessToken.args[0][0].should.equal 'test-access-token'
-      u = _.extend fixtures().users, _id: ObjectId('5086df098523e60002000012')
+      u = _.extend fixtures().users, _id: new ObjectId('5086df098523e60002000012')
       @User.fromAccessToken.args[0][1] null, u
       @req.query.author_id.should.equal u._id.toString()

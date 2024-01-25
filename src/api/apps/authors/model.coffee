@@ -6,7 +6,7 @@
 db = require '../../lib/db'
 async = require 'async'
 Joi = require '../../lib/joi'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { API_MAX, API_PAGE_SIZE } = process.env
 
 #
@@ -32,8 +32,8 @@ Joi = require '../../lib/joi'
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { name: id }
-  db.authors.findOne query, callback
+  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { name: id }
+  db.collection("authors").findOne query, callback
 
 @where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
@@ -48,8 +48,7 @@ Joi = require '../../lib/joi'
   else
     query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
   query._id = { $in: input.ids } if input.ids
-
-  cursor = db.authors
+  cursor = db.collection("authors")
     .find(query)
     .limit(input.limit or Number API_PAGE_SIZE)
     .sort($natural: -1)
@@ -61,7 +60,7 @@ Joi = require '../../lib/joi'
       cursor.count cb
     (cb) ->
       return cb() unless input.count
-      db.authors.count cb
+      db.collection("authors").count cb
   ], (err, [authors, authorCount, total]) =>
     callback err, {
       total: total if input.count
@@ -77,10 +76,11 @@ Joi = require '../../lib/joi'
     return callback err if err
     data = extend omit(input, 'id'),
       _id: input.id
-    db.authors.save data, callback
+    db.collection("authors").insertOne data, (err, res) ->
+      db.collection("authors").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
-  db.authors.remove { _id: ObjectId(id) }, callback
+  db.collection("authors").removeOne { _id: new ObjectId(id) }, callback
 
 #
 # JSON views

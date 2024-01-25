@@ -2,7 +2,7 @@ _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
 app = require '../../../'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'channels endpoints', ->
 
@@ -18,7 +18,7 @@ describe 'channels endpoints', ->
   it 'gets a single channel', (done) ->
     fabricate 'channels', [
       {
-        _id: ObjectId('55356a9deca560a0137aa4b7')
+        _id: new ObjectId('55356a9deca560a0137aa4b7')
         name: 'Life At Artsy'
       }
     ], (err, channels) =>

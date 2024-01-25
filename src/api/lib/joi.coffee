@@ -1,5 +1,5 @@
 Joi = require('joi')
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 customJoi = Joi.extend(
   base: Joi.string()
@@ -10,7 +10,7 @@ customJoi = Joi.extend(
     name: 'objectid'
     validate: (params, value, state, options) ->
       if ObjectId.isValid(value)
-        return ObjectId(value)
+        return new ObjectId(value)
       else
         @createError('string.objectid', { v: value }, state, options)
   }]

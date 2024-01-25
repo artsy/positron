@@ -70,7 +70,7 @@ removeStopWords = (title) ->
     return cb null, article
 
   # # Appends published_at to slug if that slug already exists
-  db.articles.count { slugs: slug }, (err, count) ->
+  db.collection('articles').count { slugs: slug }, (err, count) ->
     return cb(err) if err
     if count
       format = if article.published then 'MM-DD-YY' else 'X'
@@ -160,13 +160,11 @@ removeStopWords = (title) ->
 
 @sanitizeAndSave = (callback) => (err, article) =>
   return callback err if err
-  if article.published or article.scheduled_publish_at
-    article = setOnPublishFields article
-    indexForSearch(article, ->) if article.indexable
-    db.articles.save sanitize(article), callback
-  else
-    indexForSearch(article, ->) if article.indexable
-    db.articles.save sanitize(article), callback
+  article = setOnPublishFields article if article.published or article.scheduled_publish_at
+  indexForSearch(article, ->) if article.indexable
+  inputData = _.omit(article, '_id')
+  db.collection('articles').updateOne { _id: article._id }, { $set: sanitize(inputData)}, { upsert: true }, (err, res) ->
+    db.collection('articles').findOne { _id: article._id || res.upsertedId }, callback
 
 # TODO: Create a Joi plugin for this https://github.com/hapijs/joi/issues/577
 sanitize = (article) ->
@@ -216,4 +214,3 @@ sanitizeHtml = (html) ->
   _.map article.sections, (section) ->
     condensedHTML = condensedHTML.concat section.body if section.type is 'text'
   condensedHTML
-

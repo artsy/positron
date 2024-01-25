@@ -2,7 +2,7 @@ _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Curations = require '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'Curations', ->
 
@@ -24,7 +24,7 @@ describe 'Curations', ->
   describe '#find', ->
 
     it 'finds a curation by an id string', (done) ->
-      fabricate 'curations', { _id: ObjectId('5086df098523e60002000018') }, ->
+      fabricate 'curations', { _id: new ObjectId('5086df098523e60002000018') }, ->
         Curations.find '5086df098523e60002000018', (err, curation) ->
           curation._id.toString().should.equal '5086df098523e60002000018'
           done()
@@ -36,7 +36,7 @@ describe 'Curations', ->
         name: 'The General Title'
       }, (err, curation) ->
         curation.name.should.equal 'The General Title'
-        db.curations.count (err, count) ->
+        db.collection('curations').count (err, count) ->
           count.should.equal 11
           done()
 
@@ -54,14 +54,14 @@ describe 'Curations', ->
         curation.links[0].url.should.equal 'https://artsy.net'
         curation.links[0].thumbnail_url.should.equal 'https://artsy.net/img.jpg'
         curation.links[0].title.should.equal 'Homepage Link'
-        db.curations.count (err, count) ->
+        db.collection('curations').count (err, count) ->
           count.should.equal 11
           done()
 
   describe '#present', ->
 
     it 'converts _id to id', (done) ->
-      db.curations.findOne (err, curation) ->
+      db.collection('curations').findOne (err, curation) ->
         data = Curations.present curation
         (typeof data.id).should.equal 'string'
         done()

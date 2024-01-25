@@ -6,7 +6,7 @@ import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
 import { toQuery } from "./retrieve"
-import { ObjectId } from "mongojs"
+import { ObjectId } from "mongodb"
 import moment from "moment"
 import {
   onPublish,
@@ -41,7 +41,8 @@ export const where = (input, callback) => {
 
 export const mongoFetch = (input, callback) => {
   const { query, limit, offset, sort, count } = toQuery(input)
-  const cursor = db.articles
+  const cursor = db
+    .collection("articles")
     .find(query)
     .skip(offset || 0)
     .sort(sort)
@@ -53,7 +54,7 @@ export const mongoFetch = (input, callback) => {
         if (!count) {
           return cb()
         }
-        return db.articles.count(cb)
+        return db.collection("articles").count(cb)
       },
       cb => {
         if (!count) {
@@ -78,7 +79,8 @@ export const mongoFetch = (input, callback) => {
 
 export const promisedMongoFetch = input => {
   const { query, limit, offset, sort, count } = toQuery(input)
-  const cursor = db.articles
+  const cursor = db
+    .collection("articles")
     .find(query)
     .skip(offset || 0)
     .sort(sort)
@@ -91,7 +93,7 @@ export const promisedMongoFetch = input => {
           if (!count) {
             return cb()
           }
-          return db.articles.count(cb)
+          return db.collection("articles").count(cb)
         },
         cb => {
           if (!count) {
@@ -116,8 +118,8 @@ export const promisedMongoFetch = input => {
 }
 
 export const find = (id, callback) => {
-  const query = ObjectId.isValid(id) ? { _id: ObjectId(id) } : { slugs: id }
-  db.articles.findOne(query, callback)
+  const query = ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { slugs: id }
+  db.collection("articles").findOne(query, callback)
 }
 
 //
@@ -141,7 +143,6 @@ export const save = (input, accessToken, options, callback) => {
       if (err) {
         return callback(err)
       }
-
       // Create a new article by merging the values of input and article
       const modifiedArticle = _.extend(cloneDeep(article), input)
 
@@ -164,7 +165,6 @@ export const save = (input, accessToken, options, callback) => {
         const unPublishing = article.published && !modifiedArticle.published
         const hasSlugs =
           modifiedArticle.slugs && modifiedArticle.slugs.length > 0
-
         if (publishing) {
           return onPublish(modifiedArticle, postPublishCallback(callback))
         } else if (scheduledPublishing) {
@@ -182,9 +182,10 @@ export const save = (input, accessToken, options, callback) => {
 }
 
 export const publishScheduledArticles = callback => {
-  db.articles.find(
-    { scheduled_publish_at: { $lt: new Date() } },
-    (err, articles) => {
+  db.collection("articles")
+    .find({ scheduled_publish_at: { $lt: new Date() } })
+    .toArray() // I believe the old find returned the array, not the cursor.
+    .then((articles, err) => {
       if (err) {
         return callback(err, [])
       }
@@ -208,14 +209,14 @@ export const publishScheduledArticles = callback => {
           return callback(null, results)
         }
       )
-    }
-  )
+    })
 }
 
 export const unqueue = callback => {
-  db.articles.find(
-    { $or: [{ weekly_email: true }, { daily_email: true }] },
-    (err, articles) => {
+  db.collection("articles")
+    .find({ $or: [{ weekly_email: true }, { daily_email: true }] })
+    .toArray()
+    .then((articles, err) => {
       if (err) {
         return callback(err, [])
       }
@@ -238,8 +239,7 @@ export const unqueue = callback => {
           return callback(null, results)
         }
       )
-    }
-  )
+    })
 }
 
 //
@@ -254,7 +254,7 @@ export const destroy = (id, callback) => {
       return callback(new Error("Article not found."))
     }
 
-    db.articles.remove({ _id: ObjectId(id) }, (err, res) => {
+    db.collection("articles").remove({ _id: new ObjectId(id) }, (err, res) => {
       if (err) {
         return callback(err)
       }
@@ -306,8 +306,8 @@ export const getSuperArticleCount = id => {
     if (!ObjectId.isValid(id)) {
       return resolve(0)
     }
-    db.articles
-      .find({ "super_article.related_articles": ObjectId(id) })
+    db.collection("articles")
+      .find({ "super_article.related_articles": new ObjectId(id) })
       .count((err, count) => {
         if (err) {
           return reject(err)
@@ -322,46 +322,47 @@ export const backfill = callback => {
   const query = {
     published: true,
   }
+  db.collection("articles")
+    .find(query)
+    .toArray((err, articles) => {
+      if (err) {
+        return callback(err)
+      }
+      if (articles.length === 0) {
+        return callback(null, [])
+      }
 
-  db.articles.find(query).toArray((err, articles) => {
-    if (err) {
-      return callback(err)
-    }
-    if (articles.length === 0) {
-      return callback(null, [])
-    }
+      console.log(`There are ${articles.length} articles to backfill...`)
 
-    console.log(`There are ${articles.length} articles to backfill...`)
+      // Loop through found articles and do something with them
+      async.mapSeries(
+        articles,
+        (article, cb) => {
+          console.log("---------------------")
+          console.log("---------------------")
+          console.log("---------------------")
+          console.log("---------------------")
+          console.log("---------------------")
+          console.log("---------------------")
+          console.log(
+            `Backfilling article: ${articles.indexOf(article) + 1} of ${
+              articles.length
+            }, ${article.slugs[article.slugs.length - 1]}, published at ${
+              article.published_at
+            }`
+          )
 
-    // Loop through found articles and do something with them
-    async.mapSeries(
-      articles,
-      (article, cb) => {
-        console.log("---------------------")
-        console.log("---------------------")
-        console.log("---------------------")
-        console.log("---------------------")
-        console.log("---------------------")
-        console.log("---------------------")
-        console.log(
-          `Backfilling article: ${articles.indexOf(article) + 1} of ${
-            articles.length
-          }, ${article.slugs[article.slugs.length - 1]}, published at ${
-            article.published_at
-          }`
-        )
-
-        /*
+          /*
         Write backfill logic here. Make sure to callback with cb()
         eg: sanitizeAndSave(cb)(null, article)
       */
-      },
-      (err, results) => {
-        console.log(err)
-        callback()
-      }
-    )
-  })
+        },
+        (err, results) => {
+          console.log(err)
+          callback()
+        }
+      )
+    })
 }
 
 const postPublishCallback = callback => {
