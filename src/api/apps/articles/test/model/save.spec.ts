@@ -418,16 +418,13 @@ describe("Save", () => {
 
   describe("#sanitizeAndSave", () => {
     it("skips sanitizing links that do not have an href", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.sections[0].body.should.containEql("<a></a>")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].body.should.containEql("<a></a>")
+        done()
+      })(null, {
         sections: [
           {
             type: "text",
@@ -437,18 +434,15 @@ describe("Save", () => {
       }))
 
     it("sanitizes non artsy links", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.sections[0].body.should.containEql(
-            '<a href="http://insecure-website.com/">link</a><a href="https://insecure-website.com/">link</a>'
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].body.should.containEql(
+          '<a href="http://insecure-website.com/">link</a><a href="https://insecure-website.com/">link</a>'
+        )
+        done()
+      })(null, {
         sections: [
           {
             type: "text",
@@ -459,18 +453,15 @@ describe("Save", () => {
       }))
 
     it("sanitizes www.artsy.net links", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.sections[0].body.should.containEql(
-            '<a href="https://www.artsy.net/artist/andy-warhol">link</a>'
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].body.should.containEql(
+          '<a href="https://www.artsy.net/artist/andy-warhol">link</a>'
+        )
+        done()
+      })(null, {
         sections: [
           {
             type: "text",
@@ -480,18 +471,15 @@ describe("Save", () => {
       }))
 
     it("sanitizes *.artsy.net links", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.sections[0].body.should.containEql(
-            '<a href="https://folio.artsy.net/">link</a>'
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].body.should.containEql(
+          '<a href="https://folio.artsy.net/">link</a>'
+        )
+        done()
+      })(null, {
         sections: [
           {
             type: "text",
@@ -501,70 +489,58 @@ describe("Save", () => {
       }))
 
     it("sanitizes lead_paragraph", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.lead_paragraph.should.containEql(
-            '<a href="https://insecure-website.com/">link</a><a href="https://www.artsy.net/artist/andy-warhol">artsy link</a>'
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.lead_paragraph.should.containEql(
+          '<a href="https://insecure-website.com/">link</a><a href="https://www.artsy.net/artist/andy-warhol">artsy link</a>'
+        )
+        done()
+      })(null, {
         lead_paragraph:
           '<a href="insecure-website.com">link</a><a href="http://artsy.net/artist/andy-warhol">artsy link</a>',
       }))
 
     it("sanitizes postscript", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.postscript.should.containEql(
-            '<a href="https://insecure-website.com/">link</a><a href="https://www.artsy.net/artist/andy-warhol">artsy link</a>'
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.postscript.should.containEql(
+          '<a href="https://insecure-website.com/">link</a><a href="https://www.artsy.net/artist/andy-warhol">artsy link</a>'
+        )
+        done()
+      })(null, {
         postscript:
           '<a href="insecure-website.com">link</a><a href="http://artsy.net/artist/andy-warhol">artsy link</a>',
       }))
 
     it("sanitizes news_source", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.news_source.url.should.containEql(
-            "https://www.artsy.net/artist/andy-warhol"
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.news_source.url.should.containEql(
+          "https://www.artsy.net/artist/andy-warhol"
+        )
+        done()
+      })(null, {
         news_source: {
           url: "http://artsy.net/artist/andy-warhol",
         },
       }))
 
     it("can save follow artist links (allowlist data-id)", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.sections[0].body.should.containEql(
-            '<a data-id="andy-warhol"></a>'
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].body.should.containEql(
+          '<a data-id="andy-warhol"></a>'
+        )
+        done()
+      })(null, {
         sections: [
           {
             type: "text",
@@ -574,16 +550,13 @@ describe("Save", () => {
       }))
 
     it("can save layouts on text sections", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.sections[0].layout.should.eql("blockquote")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].layout.should.eql("blockquote")
+        done()
+      })(null, {
         sections: [
           {
             type: "text",
@@ -594,49 +567,40 @@ describe("Save", () => {
       }))
 
     it("indexes articles that are indexable", done => {
-      Save.sanitizeAndSave(() => {
-        Article.find("5086df098523e60002000011", (err, _article) => {
-          if (err) {
-            done(err)
-          }
-          indexForSearch.callCount.should.eql(1)
-          done()
-        })
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        indexForSearch.callCount.should.eql(1)
+        done()
       })(null, {
         indexable: true,
         published: true,
-        _id: new ObjectId("5086df098523e60002000011"),
       })
     })
 
     it("skips indexing articles that are not indexable", done => {
-      Save.sanitizeAndSave(() => {
-        Article.find("5086df098523e60002000011", (err, _article) => {
-          if (err) {
-            done(err)
-          }
-          indexForSearch.callCount.should.eql(0)
-          done()
-        })
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        indexForSearch.callCount.should.eql(0)
+        done()
       })(null, {
         indexable: false,
-        _id: new ObjectId("5086df098523e60002000011"),
       })
     })
 
     it("saves email metadata", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.email_metadata.image_url.should.containEql("foo.png")
-          article.email_metadata.author.should.containEql("Kana")
-          article.email_metadata.headline.should.containEql("Thumbnail Title")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.email_metadata.image_url.should.containEql("foo.png")
+        article.email_metadata.author.should.containEql("Kana")
+        article.email_metadata.headline.should.containEql("Thumbnail Title")
+        done()
+      })(null, {
         thumbnail_title: "Thumbnail Title",
         thumbnail_image: "foo.png",
         scheduled_publish_at: "123",
@@ -646,18 +610,15 @@ describe("Save", () => {
       }))
 
     it("does not override email metadata", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.email_metadata.image_url.should.containEql("bar.png")
-          article.email_metadata.author.should.containEql("Artsy Editorial")
-          article.email_metadata.headline.should.containEql("Custom Headline")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.email_metadata.image_url.should.containEql("bar.png")
+        article.email_metadata.author.should.containEql("Artsy Editorial")
+        article.email_metadata.headline.should.containEql("Custom Headline")
+        done()
+      })(null, {
         thumbnail_title: "Thumbnail Title",
         thumbnail_image: "foo.png",
         email_metadata: {
@@ -669,74 +630,62 @@ describe("Save", () => {
       }))
 
     it("saves generated descriptions", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.description.should.containEql("Testing 123")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.description.should.containEql("Testing 123")
+        done()
+      })(null, {
         published: true,
         sections: [{ type: "text", body: "<p>Testing 123</p>" }],
       }))
 
     it("does not override description", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.description.should.containEql("Do not override me")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.description.should.containEql("Do not override me")
+        done()
+      })(null, {
         sections: [{ type: "text", body: "<p>Testing 123</p>" }],
         description: "Do not override me",
       }))
 
     it("Strips linebreaks from titles", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.title.should.containEql("A new title")
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.title.should.containEql("A new title")
+        done()
+      })(null, {
         thumbnail_title: "Thumbnail Title",
         sections: [{ type: "text", body: "<p>Testing 123</p>" }],
         title: "A new title \n",
       }))
 
     it("saves media", done =>
-      Save.sanitizeAndSave(() =>
-        Article.find("5086df098523e60002000011", (err, article) => {
-          if (err) {
-            done(err)
-          }
-          article.media.url.should.equal("https://media.artsy.net/video.mp4")
-          article.media.cover_image_url.should.equal(
-            "https://media.artsy.net/images.jpg"
-          )
-          article.media.duration.should.equal(1000)
-          article.media.release_date.should.equal("2017-01-01")
-          article.media.published.should.equal(false)
-          article.media.description.should.equal(
-            "<p>This video is about kittens.</p>"
-          )
-          article.media.credits.should.equal(
-            "<p><b>Director</b><br>Marina Cashdan</p>"
-          )
-          done()
-        })
-      )(null, {
-        _id: new ObjectId("5086df098523e60002000011"),
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.media.url.should.equal("https://media.artsy.net/video.mp4")
+        article.media.cover_image_url.should.equal(
+          "https://media.artsy.net/images.jpg"
+        )
+        article.media.duration.should.equal(1000)
+        article.media.release_date.should.equal("2017-01-01")
+        article.media.published.should.equal(false)
+        article.media.description.should.equal(
+          "<p>This video is about kittens.</p>"
+        )
+        article.media.credits.should.equal(
+          "<p><b>Director</b><br>Marina Cashdan</p>"
+        )
+        done()
+      })(null, {
         media: {
           url: "https://media.artsy.net/video.mp4",
           cover_image_url: "https://media.artsy.net/images.jpg",
