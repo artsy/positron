@@ -68,14 +68,18 @@ export const save = (inputData, callback) => {
       _id: id,
     }
 
-    db.collection("sessions").updateOne(
-      { _id: data._id },
-      { $set: inputData },
-      { upsert: true },
-      (err, res) => {
-        db.collection("sessions").findOne({ _id: res.upsertedId }, callback)
-      }
-    )
+    if (data._id)
+      db.collection("sessions").updateOne(
+        { _id: data._id },
+        { $set: inputData },
+        (err, res) => {
+          db.collection("sessions").findOne({ _id: data._id }, callback)
+        }
+      )
+    else
+      db.collection("sessions").insertOne(inputData, (err, res) => {
+        db.collection("sessions").findOne({ _id: res.insertedId }, callback)
+      })
   })
 }
 
