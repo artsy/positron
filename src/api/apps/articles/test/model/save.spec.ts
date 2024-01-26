@@ -1,9 +1,7 @@
 import moment from "moment"
-import { ObjectId } from "mongodb"
 import rewire from "rewire"
 import sinon from "sinon"
 import { times } from "underscore"
-import * as Article from "../../model"
 const { fabricate, empty } = require("../../../../test/helpers/db.coffee")
 const Save = rewire("../../model/save.coffee")
 const gravity = require("@artsy/antigravity").server
@@ -567,7 +565,7 @@ describe("Save", () => {
       }))
 
     it("indexes articles that are indexable", done => {
-      Save.sanitizeAndSave((err, article) => {
+      Save.sanitizeAndSave(err => {
         if (err) {
           done(err)
         }
@@ -580,7 +578,7 @@ describe("Save", () => {
     })
 
     it("skips indexing articles that are not indexable", done => {
-      Save.sanitizeAndSave((err, article) => {
+      Save.sanitizeAndSave(err => {
         if (err) {
           done(err)
         }
