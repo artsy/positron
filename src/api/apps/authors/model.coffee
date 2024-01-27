@@ -76,8 +76,12 @@ Joi = require '../../lib/joi'
     return callback err if err
     data = extend omit(input, 'id'),
       _id: input.id
-    db.collection("authors").insertOne data, (err, res) ->
-      db.collection("authors").findOne { _id: res.insertedId }, callback
+    if data._id
+      db.collection("authors").updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection("authors").findOne { _id: data._id }, callback
+    else
+      db.collection("authors").insertOne data, (err, res) ->
+        db.collection("authors").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
   db.collection("authors").removeOne { _id: new ObjectId(id) }, callback

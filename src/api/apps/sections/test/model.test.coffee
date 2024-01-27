@@ -38,6 +38,9 @@ describe 'Section', ->
       }, (err, section) ->
         section.title.should.equal 'Top Ten Shows'
         section.description.should.equal 'Hello World'
+        Section.save {id: section._id.toString(), title: 'Top Ten Shows Updated'}, (err, updatedSection) ->
+          updatedSection._id.toString().should.equal section.id.toString()
+          updatedSection.title.should.equal 'Top Ten Shows Updated'
         db.collection('sections').count (err, count) ->
           count.should.equal 11
           done()

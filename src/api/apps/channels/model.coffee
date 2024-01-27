@@ -97,8 +97,12 @@ sortParamToQuery = (input) ->
     data = _.extend _.omit(input, 'id'),
       _id: input.id
       slug: _s.slugify(input.slug) if input.slug
-    db.collection('channels').insertOne data, (err, res) ->
-      db.collection('channels').findOne { _id: res.insertedId }, callback
+    if data._id
+      db.collection('channels').updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection('channels').findOne { _id: data._id }, callback
+    else
+      db.collection('channels').insertOne data, (err, res) ->
+        db.collection('channels').findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
   db.collection('channels').remove { _id: new ObjectId(id) }, callback

@@ -129,6 +129,9 @@ describe 'Channel', ->
         channel.slug.should.equal 'editorial'
         channel.pinned_articles[0].id.toString().should.equal '5086df098523e60002000015'
         channel.pinned_articles[1].id.toString().should.equal '5086df098523e60002000011'
+        Channel.save({id: channel._id.toString(), name: 'New Name'}, (err, updatedChannel) ->
+          updatedChannel._id.toString().should.equal channel._id.toString()
+          updatedChannel.name.should.equal 'New Name')
         done()
 
   describe '#present', ->

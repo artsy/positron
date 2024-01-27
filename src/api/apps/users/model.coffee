@@ -52,7 +52,7 @@ jwtDecode = require 'jwt-decode'
 save = (user, accessToken, callback) ->
   async.parallel [
     (cb) ->
-      db.collection('users').findOne {_id: ObjectId(user.id)}, cb
+      db.collection('users').findOne {user_ids: ObjectId(user.id)}, cb
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
   ], (err, results) ->
