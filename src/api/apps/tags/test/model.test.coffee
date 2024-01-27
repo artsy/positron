@@ -40,7 +40,7 @@ describe 'Tag', ->
         tag.name.should.equal 'Berlin'
         tag.public.should.be.true()
         Tag.save {id: tag._id.toString(), name: 'New York', public: false}, (err, updatedTag) ->
-          updatedTag._id.toString().should.equal tag.id.toString()
+          updatedTag._id.toString().should.equal tag._id.toString()
           updatedTag.name.should.equal 'New York'
           updatedTag.public.should.be.false()
         db.collection('tags').count (err, count) ->
