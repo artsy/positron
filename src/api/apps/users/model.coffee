@@ -61,16 +61,16 @@ save = (user, accessToken, callback) ->
     user.partner_ids = _.map partner_ids, ObjectId
     user.channel_ids = _.pluck results[0], '_id'
     encryptedAccessToken = results[1]
-    db.collection('users').insertOne {
-      _id: ObjectId(user.id)
+    data = {
       name: user.name
       email: user.email
       type: user.type
       access_token: encryptedAccessToken
       partner_ids: user.partner_ids
       channel_ids: user.channel_ids
-    }, (err, res) ->
-      db.collection('users').findOne {_id: res.insertedId}, callback
+    }
+    db.collection('users').updateOne { _id: ObjectId(user.id) }, { $set: data }, { upsert: true }, (err, res) ->
+      db.collection('users').findOne {_id: res.upsertedId || user._id}, callback
 #
 # Utility
 #
