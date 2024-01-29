@@ -70,7 +70,7 @@ save = (user, accessToken, callback) ->
       channel_ids: user.channel_ids
     }
     db.collection('users').updateOne { _id: ObjectId(user.id) }, { $set: data }, { upsert: true }, (err, res) ->
-      db.collection('users').findOne {_id: res.upsertedId || user._id}, callback
+      db.collection('users').findOne {_id: res.upsertedId || ObjectId(user.id)}, callback
 #
 # Utility
 #
