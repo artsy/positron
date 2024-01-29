@@ -64,6 +64,9 @@ describe 'Author', ->
         author.image_url.should.equal 'https://artsy-media/owen.jpg'
         author.twitter_handle.should.equal '@owendodd'
         author.bio.should.equal 'Designer based in NYC'
+        Author.save { id: author._id.toString(), name: 'Jane Doe'}, (err, updatedAuthor) ->
+          updatedAuthor._id.toString().should.equal author._id.toString()
+          updatedAuthor.name.should.equal 'Jane Doe'
         db.collection('authors').count (err, count) ->
           count.should.equal 11
           done()

@@ -163,7 +163,6 @@ removeStopWords = (title) ->
   article = setOnPublishFields article if article.published or article.scheduled_publish_at
   indexForSearch(article, ->) if article.indexable
   if article._id
-    inputData = _.omit(article, '_id')
     db.collection('articles').updateOne { _id: article._id }, { $set: sanitize(article) }, (err, res) ->
       db.collection('articles').findOne { _id: article._id }, callback
   else

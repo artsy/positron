@@ -36,6 +36,9 @@ describe 'Curations', ->
         name: 'The General Title'
       }, (err, curation) ->
         curation.name.should.equal 'The General Title'
+        Curations.save {id: curation._id.toString(), name: 'The Updated Title'}, (err, updatedCuration) ->
+          updatedCuration._id.toString().should.equal curation._id.toString()
+          updatedCuration.name.should.equal 'The Updated Title'
         db.collection('curations').count (err, count) ->
           count.should.equal 11
           done()

@@ -82,8 +82,12 @@ querySchema = (->
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: input.id
-    db.collection('sections').insertOne data, (err, res) ->
-      db.collection('sections').findOne {_id: res.insertedId}, callback
+    if data._id
+      db.collection("sections").updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection("sections").findOne { _id: data._id }, callback
+    else
+      db.collection("sections").insertOne data, (err, res) ->
+        db.collection("sections").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
   db.collection('sections').remove { _id: new ObjectId(id) }, callback

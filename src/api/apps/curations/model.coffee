@@ -67,8 +67,12 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: input.id
-    db.collection('curations').insertOne data, (err, res) ->
-      db.collection('curations').findOne {_id: res.insertedId}, callback
+    if data._id
+      db.collection("curations").updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection("curations").findOne { _id: data._id }, callback
+    else
+      db.collection("curations").insertOne data, (err, res) ->
+        db.collection("curations").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
   db.collection('curations').deleteOne { _id: new ObjectId(id) }, callback
