@@ -8,7 +8,7 @@ env = require 'node-env-file'
 client = new MongoClient(process.env.MONGOHQ_URL)
 await client.connect()
 db = await client.db()
-collection = await db.collection('articles')
+articles = await db.collection('articles')
 
 articles.find(indexable: true).count (err, count) ->
   console.log(count)
