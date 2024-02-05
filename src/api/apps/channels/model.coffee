@@ -11,7 +11,7 @@ async = require 'async'
 Joi = require '../../lib/joi'
 moment = require 'moment'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
 #
@@ -48,8 +48,8 @@ request = require 'superagent'
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { slug: id }
-  db.channels.findOne query, (err, channel) ->
+  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { slug: id }
+  db.collection('channels').findOne query, (err, channel) ->
     return callback new Error 'No channel found' unless channel
     callback null, channel
 
@@ -62,7 +62,7 @@ request = require 'superagent'
   query = _.omit input, 'limit', 'offset', 'q', 'user_id', 'sort'
   query.name = { $regex: ///#{input.q}///i } if input.q
   query.user_ids = input.user_id if input.user_id
-  cursor = db.channels
+  cursor = db.collection 'channels'
     .find(query)
     .limit(input.limit)
     .sort(sortParamToQuery(input.sort))
@@ -70,7 +70,7 @@ request = require 'superagent'
   async.parallel [
     (cb) -> cursor.toArray cb
     (cb) -> cursor.count cb
-    (cb) -> db.channels.count cb
+    (cb) -> db.collection('channels').count cb
   ], (err, [channels, count, total]) =>
     callback err, {
       total: total
@@ -97,10 +97,15 @@ sortParamToQuery = (input) ->
     data = _.extend _.omit(input, 'id'),
       _id: input.id
       slug: _s.slugify(input.slug) if input.slug
-    db.channels.save data, callback
+    if data._id
+      db.collection('channels').updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection('channels').findOne { _id: data._id }, callback
+    else
+      db.collection('channels').insertOne data, (err, res) ->
+        db.collection('channels').findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
-  db.channels.remove { _id: ObjectId(id) }, callback
+  db.collection('channels').remove { _id: new ObjectId(id) }, callback
 
 #
 # JSON views

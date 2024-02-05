@@ -2,7 +2,7 @@ _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
 app = require '../../../'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'tags endpoints', ->
 
@@ -62,7 +62,7 @@ describe 'tags endpoints', ->
   it 'gets a single tag', (done) ->
     fabricate 'tags', [
       {
-        _id: ObjectId('55356a9deca560a0137aa4b7')
+        _id: new ObjectId('55356a9deca560a0137aa4b7')
         name: 'Asia'
       }
     ], (err, sections) ->

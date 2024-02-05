@@ -1,12 +1,15 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-mongojs = require 'mongojs'
+{ MongoClient } = require 'mongodb'
 path = require 'path'
 Article = require '../src/api/apps/articles/model/index.js'
 env = require 'node-env-file'
 
 # Connect to database
-db = mongojs(process.env.MONGOHQ_URL, ['articles'])
+client = new MongoClient(process.env.MONGOHQ_URL)
+await client.connect()
+db = await client.db()
+articles = await db.collection('articles')
 
-db.articles.find(indexable: true).count (err, count) ->
+articles.find(indexable: true).count (err, count) ->
   console.log(count)
   process.exit()

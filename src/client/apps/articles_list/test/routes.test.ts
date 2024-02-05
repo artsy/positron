@@ -1,3 +1,7 @@
+/**
+ * @jest-environment node
+ */
+
 import { articles_list } from "../routes"
 const fixtures = require("../../../../test/helpers/fixtures")
 const User = require("../../../models/user")

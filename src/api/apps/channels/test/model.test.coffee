@@ -2,7 +2,7 @@ _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Channel = require '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'Channel', ->
 
@@ -72,7 +72,7 @@ describe 'Channel', ->
   describe '#find', ->
 
     it 'finds a channel by an id string', (done) ->
-      fabricate 'channels', { _id: ObjectId('5086df098523e60002000018') }, ->
+      fabricate 'channels', { _id: new ObjectId('5086df098523e60002000018') }, ->
         Channel.find '5086df098523e60002000018', (err, channel) ->
           channel._id.toString().should.equal '5086df098523e60002000018'
           done()
@@ -94,7 +94,7 @@ describe 'Channel', ->
         channel.user_ids[0].toString().should.equal '5086df098523e60002000015'
         channel.user_ids[1].toString().should.equal '5086df098523e60002000014'
         channel.type.should.equal 'editorial'
-        db.channels.count (err, count) ->
+        db.collection('channels').count (err, count) ->
           count.should.equal 11
           done()
 
@@ -129,12 +129,15 @@ describe 'Channel', ->
         channel.slug.should.equal 'editorial'
         channel.pinned_articles[0].id.toString().should.equal '5086df098523e60002000015'
         channel.pinned_articles[1].id.toString().should.equal '5086df098523e60002000011'
+        Channel.save({id: channel._id.toString(), name: 'New Name'}, (err, updatedChannel) ->
+          updatedChannel._id.toString().should.equal channel._id.toString()
+          updatedChannel.name.should.equal 'New Name')
         done()
 
   describe '#present', ->
 
     it 'converts _id to id', (done) ->
-      db.channels.findOne (err, channel) ->
+      db.collection('channels').findOne (err, channel) ->
         data = Channel.present channel
         (typeof data.id).should.equal 'string'
         done()

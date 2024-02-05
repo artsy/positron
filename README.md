@@ -61,7 +61,7 @@ With MongoDB running locally, follow these steps to create a dummy channel:
 {
   name: "Test Channel",
   type: "team", // this can be either editorial, team, support, or partner
-  user_ids: [ObjectId("<your_user_id>")]
+  user_ids: [new ObjectId("<your_user_id>")]
 }
 ```
 
@@ -75,7 +75,7 @@ This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Pos
 
 Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer.
 
-If you are an Artsy Admin, you should see the default partner gallery channel (David Zwirner). If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
+If you are an Artsy Admin, you should see the default partner gallery channel (David Zwirner). If you aren't an artsy admin you'll possibly get an Unauthorized page. You need to do one more mongo operation: edit the `users` collection and set your user's `channel_ids` to `[ new ObjectId("<your_above_channel_id>") ]`. Once that's done you should be able to see the main writer interface.
 
 ## Run tests
 

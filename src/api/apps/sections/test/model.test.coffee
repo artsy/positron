@@ -2,7 +2,7 @@ _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Section = require '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'Section', ->
 
@@ -24,7 +24,7 @@ describe 'Section', ->
   describe '#find', ->
 
     it 'finds an section by an id string', (done) ->
-      fabricate 'sections', { _id: ObjectId('5086df098523e60002000018') }, ->
+      fabricate 'sections', { _id: new ObjectId('5086df098523e60002000018') }, ->
         Section.find '5086df098523e60002000018', (err, section) ->
           section._id.toString().should.equal '5086df098523e60002000018'
           done()
@@ -38,14 +38,17 @@ describe 'Section', ->
       }, (err, section) ->
         section.title.should.equal 'Top Ten Shows'
         section.description.should.equal 'Hello World'
-        db.sections.count (err, count) ->
+        Section.save {id: section._id.toString(), title: 'Top Ten Shows Updated'}, (err, updatedSection) ->
+          updatedSection._id.toString().should.equal section._id.toString()
+          updatedSection.title.should.equal 'Top Ten Shows Updated'
+        db.collection('sections').count (err, count) ->
           count.should.equal 11
           done()
 
   describe '#present', ->
 
     it 'converts _id to id', (done) ->
-      db.sections.findOne (err, section) ->
+      db.collection('sections').findOne (err, section) ->
         data = Section.present section
         (typeof data.id).should.equal 'string'
         done()

@@ -2,7 +2,7 @@ _ = require 'underscore'
 moment = require 'moment'
 { db, fabricate, empty, fixtures } = require '../../../test/helpers/db'
 Vertical = require '../model'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'Vertical', ->
 
@@ -24,7 +24,7 @@ describe 'Vertical', ->
   describe '#find', ->
 
     it 'finds a vertical by an id string', (done) ->
-      fabricate 'verticals', { _id: ObjectId('5086df098523e60002000018') }, ->
+      fabricate 'verticals', { _id: new ObjectId('5086df098523e60002000018') }, ->
         Vertical.find '5086df098523e60002000018', (err, vertical) ->
           vertical._id.toString().should.equal '5086df098523e60002000018'
           done()
@@ -36,14 +36,17 @@ describe 'Vertical', ->
         name: 'Art Market'
       }, (err, vertical) ->
         vertical.name.should.equal 'Art Market'
-        db.verticals.count (err, count) ->
+        Vertical.save {id: vertical._id.toString(), name: 'Art Market Updated'}, (err, updatedVertical) ->
+          updatedVertical._id.toString().should.equal vertical.id.toString()
+          updatedVertical.name.should.equal 'Art Market Updated'
+        db.collection('verticals').count (err, count) ->
           count.should.equal 11
           done()
 
   describe '#present', ->
 
     it 'converts _id to id', (done) ->
-      db.verticals.findOne (err, vertical) ->
+      db.collection('verticals').findOne (err, vertical) ->
         data = Vertical.present vertical
         (typeof data.id).should.equal 'string'
         done()

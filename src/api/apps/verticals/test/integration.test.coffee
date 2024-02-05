@@ -2,7 +2,7 @@ _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
 app = require '../../../'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'verticals endpoints', ->
 
@@ -32,7 +32,7 @@ describe 'verticals endpoints', ->
   it 'gets a single vertical', (done) ->
     fabricate 'verticals', [
       {
-        _id: ObjectId('55356a9deca560a0137aa4b7')
+        _id: new ObjectId('55356a9deca560a0137aa4b7')
         name: 'Art Market'
       }
     ], (err, sections) ->

@@ -11,7 +11,7 @@ async = require 'async'
 Joi = require '../../lib/joi'
 moment = require 'moment'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
 OPTIONS = { allowUnknown: true, stripUnknown: false }
@@ -33,8 +33,8 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) }
-  db.curations.findOne query, callback
+  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) }
+  db.collection('curations').findOne query, callback
 
 @where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
@@ -43,7 +43,7 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
 
 @mongoFetch = (input, callback) ->
   query = _.omit input, 'limit', 'offset'
-  cursor = db.curations
+  cursor = db.collection('curations')
     .find(query)
     .limit(input.limit or Number API_PAGE_SIZE)
     .sort($natural: -1)
@@ -51,7 +51,7 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
   async.parallel [
     (cb) -> cursor.toArray cb
     (cb) -> cursor.count cb
-    (cb) -> db.curations.count cb
+    (cb) -> db.collection('curations').count cb
   ], (err, [curations, count, total]) =>
     callback err, {
       total: total
@@ -67,10 +67,15 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: input.id
-    db.curations.save data, callback
+    if data._id
+      db.collection("curations").updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection("curations").findOne { _id: data._id }, callback
+    else
+      db.collection("curations").insertOne data, (err, res) ->
+        db.collection("curations").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
-  db.curations.remove { _id: ObjectId(id) }, callback
+  db.collection('curations').deleteOne { _id: new ObjectId(id) }, callback
 
 #
 # JSON views

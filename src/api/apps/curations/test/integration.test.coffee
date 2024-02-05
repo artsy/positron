@@ -2,7 +2,7 @@ _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
 app = require '../../../'
 request = require 'superagent'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 
 describe 'curations endpoints', ->
 
@@ -17,7 +17,7 @@ describe 'curations endpoints', ->
 
   it 'gets a single curation by id', (done) ->
     fabricate 'curations', [
-      { name: 'Homepage', _id: ObjectId('55356a9deca560a0137aa4b7') }
+      { name: 'Homepage', _id: new ObjectId('55356a9deca560a0137aa4b7') }
       { name: 'Email Signups' }
     ], (err, curation) =>
       request

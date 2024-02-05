@@ -7,7 +7,7 @@ _ = require 'underscore'
 db = require '../../lib/db'
 async = require 'async'
 Joi = require '../../lib/joi'
-{ ObjectId } = require 'mongojs'
+{ ObjectId } = require 'mongodb'
 { API_MAX, API_PAGE_SIZE } = process.env
 
 #
@@ -32,8 +32,8 @@ Joi = require '../../lib/joi'
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: ObjectId(id) } else { name: id }
-  db.tags.findOne query, callback
+  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { name: id }
+  db.collection('tags').findOne query, callback
 
 @where = (input, callback) =>
   Joi.validate input, @querySchema, (err, input) =>
@@ -46,7 +46,7 @@ Joi = require '../../lib/joi'
     query.name = { $eq: input.q } if input.q and input.q.length
   else
     query.name = { $regex: ///#{input.q}///i } if input.q and input.q.length
-  cursor = db.tags
+  cursor = db.collection 'tags'
     .find(query)
     .limit(input.limit)
     .sort($natural: -1)
@@ -58,7 +58,7 @@ Joi = require '../../lib/joi'
       cursor.count cb
     (cb) ->
       return cb() unless input.count
-      db.tags.count cb
+      db.collection('tags').count cb
   ], (err, [tags, tagCount, total]) =>
     callback err, {
       total: total if input.count
@@ -74,10 +74,15 @@ Joi = require '../../lib/joi'
     return callback err if err
     data = _.extend _.omit(input, 'id'),
       _id: input.id
-    db.tags.save data, callback
+    if data._id
+      db.collection("tags").updateOne { _id: data._id }, { $set: data }, (err, res) ->
+        db.collection("tags").findOne { _id: data._id }, callback
+    else
+      db.collection("tags").insertOne data, (err, res) ->
+        db.collection("tags").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
-  db.tags.remove { _id: ObjectId(id) }, callback
+  db.collection('tags').remove { _id: new ObjectId(id) }, callback
 
 #
 # JSON views

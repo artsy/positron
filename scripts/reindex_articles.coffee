@@ -1,5 +1,5 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-mongojs = require 'mongojs'
+{ MongoClient } = require 'mongodb'
 path = require 'path'
 { indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
@@ -16,9 +16,12 @@ switch process.env.NODE_ENV
   else env path.resolve __dirname, '../.env'
 
 # Connect to database
-db = mongojs(process.env.MONGOHQ_URL, ['articles'])
+client = new MongoClient(process.env.MONGOHQ_URL)
+await client.connect()
+db = await client.db()
+articles = await db.collection('articles')
 
-db.articles.find({}).toArray (err, articles) ->
+articles.find({}).toArray (err, articles) ->
   console.log(err) if err
   console.log(articles.length)
   async.mapSeries(articles, indexWorker, (err, results) =>
@@ -27,7 +30,7 @@ db.articles.find({}).toArray (err, articles) ->
 
 indexWorker = (article, cb) ->
   console.log('indexing ', article._id)
-  articlePresent = Article.present(article) 
+  articlePresent = Article.present(article)
   indexForSearch articlePresent, () =>
     console.log('indexed on Elasticsearch ', article.id or article._id)
     cb()
