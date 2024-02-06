@@ -69,7 +69,7 @@ request = require 'superagent'
     .skip(input.offset or 0)
   async.parallel [
     (cb) -> cursor.toArray cb
-    (cb) -> cursor.count cb
+    (cb) -> db.collection('channels').countDocuments query, cb
     (cb) -> db.collection('channels').count cb
   ], (err, [channels, count, total]) =>
     callback err, {

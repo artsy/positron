@@ -57,7 +57,7 @@ Joi = require '../../lib/joi'
     (cb) -> cursor.toArray cb
     (cb) ->
       return cb() unless input.count
-      cursor.count cb
+      db.collection("authors").countDocuments query, cb
     (cb) ->
       return cb() unless input.count
       db.collection("authors").count cb

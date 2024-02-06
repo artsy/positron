@@ -50,7 +50,7 @@ OPTIONS = { allowUnknown: true, stripUnknown: false }
     .skip(input.offset or 0)
   async.parallel [
     (cb) -> cursor.toArray cb
-    (cb) -> cursor.count cb
+    (cb) -> db.collection('curations').countDocuments(query, cb)
     (cb) -> db.collection('curations').count cb
   ], (err, [curations, count, total]) =>
     callback err, {

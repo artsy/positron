@@ -65,7 +65,7 @@ querySchema = (->
       .skip(input.offset or 0)
     async.parallel [
       (cb) -> cursor.toArray cb
-      (cb) -> cursor.count cb
+      (cb) -> db.collection('sections').countDocuments(query, cb)
       (cb) -> db.collection('sections').count cb
     ], (err, [sections, count, total]) =>
       callback err, {
