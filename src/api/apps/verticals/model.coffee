@@ -49,7 +49,7 @@ Joi = require '../../lib/joi'
     (cb) -> cursor.toArray cb
     (cb) ->
       return cb() unless input.count
-      cursor.count cb
+      db.collection('verticals').countDocuments(query, cb)
     (cb) ->
       return cb() unless input.count
       db.collection('verticals').count cb
