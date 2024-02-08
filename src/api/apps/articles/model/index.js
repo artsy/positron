@@ -60,7 +60,7 @@ export const mongoFetch = (input, callback) => {
         if (!count) {
           return cb()
         }
-        return cursor.count(cb)
+        return db.collection("articles").countDocuments(query, cb)
       },
     ],
     (err, results) => {
@@ -99,7 +99,7 @@ export const promisedMongoFetch = input => {
           if (!count) {
             return cb()
           }
-          return cursor.count(cb)
+          return db.collection("articles").countDocuments(query, cb)
         },
       ],
       (err, results) => {
