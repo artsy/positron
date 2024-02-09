@@ -15,7 +15,7 @@ export const AdminFeaturing: React.SFC<AdminFeaturingProps> = props => {
         <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="partner_ids"
-            label="Partners (admin role required)"
+            label="Partners (editorial role required)"
             model="partners"
             placeholder="Search by partner name..."
             disabled={!isAdmin}
@@ -36,7 +36,7 @@ export const AdminFeaturing: React.SFC<AdminFeaturingProps> = props => {
         <Box width={["100%", "50%"]} pr={[0, 2]}>
           <AutocompleteListMetaphysics
             field="show_ids"
-            label="Shows (admin role required)"
+            label="Shows (editorial role required)"
             model="partner_shows"
             placeholder="Search by show name..."
             disabled={!isAdmin}
@@ -46,7 +46,7 @@ export const AdminFeaturing: React.SFC<AdminFeaturingProps> = props => {
         <Box width={["100%", "50%"]} pl={[0, 2]}>
           <AutocompleteListMetaphysics
             field="auction_ids"
-            label="Auctions (admin role required)"
+            label="Auctions (editorial role required)"
             model="sales"
             placeholder="Search by auction name..."
             disabled={!isAdmin}
