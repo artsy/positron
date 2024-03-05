@@ -106,7 +106,7 @@ spec:
   maxReplicas: 2
   targetCPUUtilizationPercentage: 70
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: positron-scheduled-posts-cron
@@ -143,7 +143,7 @@ spec:
                     values:
                     - background
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: positron-unqueue-cron
@@ -180,7 +180,7 @@ spec:
                     values:
                     - background
 ---
-apiVersion: batch/v1beta1
+apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: positron-data-import
