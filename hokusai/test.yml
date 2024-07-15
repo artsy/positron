@@ -24,7 +24,7 @@ services:
     ports:
       - "9200:9200"
   positron-mongodb:
-    image: mongo:5.0.23
+    image: mongo:6.0.16
     ports:
       - "27017:27017"
     command: ["--quiet", "--nojournal"]
