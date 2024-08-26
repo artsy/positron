@@ -8,12 +8,12 @@ import styled from "styled-components"
 
 export interface Item {
   name?: string
-  title?: string
+  display?: string
 }
 
 export interface SearchResultItem extends Item {
   id?: string
-  thumbnail_image?: string
+  image_url?: string
 }
 
 export interface AutocompleteProps {
@@ -124,18 +124,18 @@ export class Autocomplete extends Component<
 
   onSelect = async selected => {
     const { items, onSelect } = this.props
-    let newItems
-    if (items) {
-      newItems = clone(items)
-    } else {
-      newItems = []
-    }
+    // let newItems
+    // if (items) {
+    //   newItems = clone(items)
+    // } else {
+    //   newItems = []
+    // }
 
     try {
       const item = await this.formatSelected(selected)
-
-      newItems.push(item)
-      onSelect(uniq(newItems))
+      onSelect(item)
+      // newItems.push(item)
+      // onSelect(uniq(newItems))
       this.onBlur()
     } catch (err) {
       new Error(err)

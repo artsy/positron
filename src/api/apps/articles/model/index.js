@@ -127,12 +127,14 @@ export const find = (id, callback) => {
 //
 export const save = (input, accessToken, options, callback) => {
   // Validate the input with Joi
-  const validationOptions = _.extend({ stripUnknown: true }, options.validation)
+  const validationOptions = _.extend(
+    { stripUnknown: false },
+    options.validation
+  )
   Joi.validate(input, schema.inputSchema, validationOptions, (err, input) => {
     if (err) {
       return callback(err)
     }
-
     // Find the original article or create an empty one
     const articleId =
       input.id || input._id ? (input.id || input._id).toString() : null
@@ -145,7 +147,6 @@ export const save = (input, accessToken, options, callback) => {
       }
       // Create a new article by merging the values of input and article
       const modifiedArticle = _.extend(cloneDeep(article), input)
-
       generateKeywords(input, modifiedArticle, (err, modifiedArticle) => {
         if (err) {
           return callback(err)

@@ -54,7 +54,6 @@ export const newHeroSection = (type: SectionType) => {
  */
 export const newSection = (type: SectionType, sectionIndex, attrs = {}) => {
   const section = { ...setupSection(type), ...attrs } as SectionData
-
   return {
     type: actions.NEW_SECTION,
     payload: {
@@ -91,7 +90,6 @@ export const onChangeSection = (key: string, value: any) => {
     const {
       edit: { article },
     } = getState()
-
     dispatch(changeSection(key, value))
 
     if (!article.published) {
@@ -143,6 +141,14 @@ export const setupSection = (type: SectionType = "text") => {
         type: "image_collection",
         layout: "overflow_fillwidth",
         images: [],
+      } as SectionData
+    case "collection":
+      return {
+        type: "collection",
+        layout: "overflow_fillwidth",
+        slug: "",
+        image_url: "",
+        display: "",
       } as SectionData
     case "embed":
       return {

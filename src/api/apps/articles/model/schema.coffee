@@ -4,6 +4,7 @@ Joi = require '../../../lib/joi'
 #
 # Input Schema
 #
+
 imageSection = (->
   @object().meta(
     name: 'Image'
@@ -124,6 +125,15 @@ ImageCollectionSection = (->
   sections: @array().items([
     ImageCollectionSection
     videoSection
+      @object().meta(
+        name: 'Collection'
+        isTypeOf: (data) -> data.type is 'collection'
+        ).keys
+          type: @string().valid('collection')
+          slug: @string().allow('')
+          image_url: @string().allow('', null)
+          display: @string().allow('', null)
+          layout: @string().allow('', null)
     @object().meta(
       name: 'Callout'
       isTypeOf: (data) -> data.type is 'callout'
