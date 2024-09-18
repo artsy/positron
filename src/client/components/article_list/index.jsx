@@ -142,7 +142,7 @@ export class ArticleList extends Component {
           </a>
           <a
             className={`article-list__preview paginated-list-preview avant-garde-button ${lockedClass}`}
-            href={`${forceURL}/article/${article.slug}`}
+            href={`${forceURL}/article/${article.slug}?nocache=true`}
             target="_blank"
           >
             {shouldLockEditing ? (
