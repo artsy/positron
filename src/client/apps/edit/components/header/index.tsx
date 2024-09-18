@@ -213,7 +213,10 @@ export class EditHeader extends Component<Props> {
             {this.getSaveText()}
           </HeaderButton>
 
-          <a href={`${forceURL}/article/${article.slug}`} target="_blank">
+          <a
+            href={`${forceURL}/article/${article.slug}?nocache=true`}
+            target="_blank"
+          >
             <HeaderButton ml={1} variant="secondaryOutline" size="small">
               {article.published ? "View" : "Preview"}
             </HeaderButton>
