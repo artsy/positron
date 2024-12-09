@@ -144,6 +144,13 @@ export const setupSection = (type: SectionType = "text") => {
         layout: "overflow_fillwidth",
         images: [],
       } as SectionData
+    case "collection":
+      return {
+        type: "collection",
+        slug: "",
+        image_url: "",
+        display: "",
+      } as SectionData
     case "embed":
       return {
         type: "embed",

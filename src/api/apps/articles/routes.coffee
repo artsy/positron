@@ -43,7 +43,7 @@ User = require '../users/model.coffee'
 @update = (req, res, next) ->
   unless User.hasChannelAccess req.user, (req.body.channel_id or req.body.partner_channel_id)
     return res.err(401, 'Unauthorized')
-
+  console.log("req.body", req.body)
   Article.save req.body, req.user?.access_token, validation: noDefaults: true , (err, article) ->
     return next err if err
     res.send present article

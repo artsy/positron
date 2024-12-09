@@ -30,12 +30,11 @@ spec:
     spec:
       initContainers:
       - name: setenv
-        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:staging
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/opstools:staging
         imagePullPolicy: Always
         command:
         - python
-        - src/load/load.py
-        - kubernetes
+        - src/load_secrets_from_vault/load.py
         - staging
         - positron
         envFrom:
@@ -71,6 +70,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.labels['app.kubernetes.io/version']
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+          readOnly: true
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:staging
         imagePullPolicy: Always
         ports:
@@ -117,7 +120,6 @@ spec:
       volumes:
       - name: secrets
         emptyDir: {}
-
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler

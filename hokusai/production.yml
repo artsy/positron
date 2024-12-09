@@ -30,13 +30,12 @@ spec:
     spec:
       initContainers:
       - name: setenv
-        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:production
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/opstools:staging
         imagePullPolicy: Always
         command:
         - python
-        - src/load/load.py
-        - kubernetes
-        - production
+        - src/load_secrets_from_vault/load.py
+        - staging
         - positron
         envFrom:
         - configMapRef:
@@ -71,6 +70,10 @@ spec:
           valueFrom:
             fieldRef:
               fieldPath: metadata.labels['app.kubernetes.io/version']
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+          readOnly: true
         image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
         imagePullPolicy: Always
         ports:
