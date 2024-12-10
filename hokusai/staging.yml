@@ -50,7 +50,7 @@ spec:
         - yarn
         - production
         envFrom:
-        - configMarRef:
+        - configMapRef:
             name: secrets-config
         - configMapRef:
             name: positron-environment
