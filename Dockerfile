@@ -30,5 +30,5 @@ ARG COMMIT_HASH
 RUN test -n "$COMMIT_HASH" && \
   echo $COMMIT_HASH > COMMIT_HASH.txt
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+ENTRYPOINT ["/usr/bin/dumb-init", "./scripts/load_secrets_and_run.sh"]
 CMD ["yarn", "start"]
