@@ -30,10 +30,6 @@ ARG COMMIT_HASH
 RUN test -n "$COMMIT_HASH" && \
   echo $COMMIT_HASH > COMMIT_HASH.txt
 
-# Ensure COMMIT_HASH is present
-# Run this step as late as possible b/c it busts docker cache.
-RUN test -n "$COMMIT_HASH" && \
-  echo $COMMIT_HASH > COMMIT_HASH.txt
+ENTRYPOINT ["/usr/bin/dumb-init", "./scripts/load_secrets_and_run.sh"]
 
-ENTRYPOINT ["/usr/bin/dumb-init", "--"]
 CMD ["yarn", "start"]

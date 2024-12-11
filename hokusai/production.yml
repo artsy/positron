@@ -28,6 +28,22 @@ spec:
         app.kubernetes.io/version: production
       name: positron-web
     spec:
+      initContainers:
+      - name: setenv
+        image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:production
+        imagePullPolicy: Always
+        command:
+        - python
+        - src/load/load.py
+        - kubernetes
+        - production
+        - positron
+        envFrom:
+        - configMapRef:
+            name: secrets-config
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
       containers:
       - name: positron-web
         args:
@@ -35,7 +51,13 @@ spec:
         - production
         envFrom:
         - configMapRef:
+            name: secrets-config
+        - configMapRef:
             name: positron-environment
+        volumeMounts:
+        - name: secrets
+          mountPath: /secrets
+          readOnly: true
         env:
         - name: PORT
           value: '8080'
@@ -82,6 +104,7 @@ spec:
         options:
         - name: ndots
           value: '1'
+      serviceAccountName: positron
       affinity:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
@@ -91,6 +114,9 @@ spec:
                 operator: In
                 values:
                 - foreground
+      volumes:
+      - name: secrets
+        emptyDir: {}
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
@@ -121,10 +147,26 @@ spec:
           annotations:
             cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
         spec:
+          initContainers:
+          - name: setenv
+            image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:production
+            imagePullPolicy: Always
+            command:
+            - python
+            - src/load/load.py
+            - kubernetes
+            - production
+            - positron
+            envFrom:
+            - configMapRef:
+                name: secrets-config
+            volumeMounts:
+            - name: secrets
+              mountPath: /secrets
           containers:
           - name: positron-scheduled-posts-cron
             image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
-            command:
+            args:
             - yarn
             - task
             - scripts/scheduled_posts.js
@@ -132,7 +174,14 @@ spec:
             envFrom:
             - configMapRef:
                 name: positron-environment
+            - configMapRef:
+                name: secrets-config
+            volumeMounts:
+            - name: secrets
+              mountPath: /secrets
+              readOnly: true
           restartPolicy: Never
+          serviceAccountName: positron
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -142,6 +191,9 @@ spec:
                     operator: In
                     values:
                     - background
+          volumes:
+          - name: secrets
+            emptyDir: {}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -158,10 +210,26 @@ spec:
           annotations:
             cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
         spec:
+          initContainers:
+          - name: setenv
+            image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:production
+            imagePullPolicy: Always
+            command:
+            - python
+            - src/load/load.py
+            - kubernetes
+            - production
+            - positron
+            envFrom:
+            - configMapRef:
+                name: secrets-config
+            volumeMounts:
+            - name: secrets
+              mountPath: /secrets
           containers:
           - name: positron-unqueue-cron
             image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/positron:production
-            command:
+            args:
             - yarn
             - task
             - scripts/unqueue.js
@@ -169,7 +237,14 @@ spec:
             envFrom:
             - configMapRef:
                 name: positron-environment
+            - configMapRef:
+                name: secrets-config
+            volumeMounts:
+            - name: secrets
+              mountPath: /secrets
+              readOnly: true
           restartPolicy: Never
+          serviceAccountName: positron
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -179,6 +254,9 @@ spec:
                     operator: In
                     values:
                     - background
+          volumes:
+          - name: secrets
+            emptyDir: {}
 ---
 apiVersion: batch/v1
 kind: CronJob
@@ -195,6 +273,22 @@ spec:
           annotations:
             cluster-autoscaler.kubernetes.io/safe-to-evict: 'false'
         spec:
+          initContainers:
+          - name: setenv
+            image: 585031190124.dkr.ecr.us-east-1.amazonaws.com/fortress:production
+            imagePullPolicy: Always
+            command:
+            - python
+            - src/load/load.py
+            - kubernetes
+            - production
+            - positron
+            envFrom:
+            - configMapRef:
+                name: secrets-config
+            volumeMounts:
+            - name: secrets
+              mountPath: /secrets
           containers:
           - name: positron-data-export-cron
             image: artsy/mongo-data-sync
@@ -205,11 +299,22 @@ spec:
             envFrom:
             - configMapRef:
                 name: positron-environment
+            - configMapRef:
+                name: secrets-config
+            volumeMounts:
+            - name: secrets
+              mountPath: /secrets
+              readOnly: true
+            - name: scripts
+              mountPath: /usr/local/bin/load_secrets_and_run.sh
+              subPath: load_secrets_and_run.sh
+            command: ["/usr/local/bin/load_secrets_and_run.sh"]
             args:
             - sh
             - ./export-db.sh
             - production
           restartPolicy: Never
+          serviceAccountName: positron
           affinity:
             nodeAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
@@ -219,6 +324,30 @@ spec:
                     operator: In
                     values:
                     - background
+          volumes:
+          - name: secrets
+            emptyDir: {}
+          - name: scripts
+            configMap:
+              name: positron-scripts
+              defaultMode: 0755
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: positron-scripts
+  namespace: default
+data:
+  load_secrets_and_run.sh: |
+    #!/bin/bash
+    CMD="$@"
+    if [ ! -z "$SECRETS_FILE" ]
+    then
+      echo "SECRETS_FILE env var is defined. Sourcing secrets file..."
+      source "$SECRETS_FILE"
+    fi
+    echo "Running command: $CMD"
+    $CMD
 ---
 apiVersion: v1
 kind: Service
