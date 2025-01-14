@@ -305,10 +305,6 @@ spec:
             - name: secrets
               mountPath: /secrets
               readOnly: true
-            - name: scripts
-              mountPath: /usr/local/bin/load_secrets_and_run.sh
-              subPath: load_secrets_and_run.sh
-            command: ["/usr/local/bin/load_secrets_and_run.sh"]
             args:
             - sh
             - ./export-db.sh
@@ -327,27 +323,6 @@ spec:
           volumes:
           - name: secrets
             emptyDir: {}
-          - name: scripts
-            configMap:
-              name: positron-scripts
-              defaultMode: 0755
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: positron-scripts
-  namespace: default
-data:
-  load_secrets_and_run.sh: |
-    #!/bin/bash
-    CMD="$@"
-    if [ ! -z "$SECRETS_FILE" ]
-    then
-      echo "SECRETS_FILE env var is defined. Sourcing secrets file..."
-      source "$SECRETS_FILE"
-    fi
-    echo "Running command: $CMD"
-    $CMD
 ---
 apiVersion: v1
 kind: Service
