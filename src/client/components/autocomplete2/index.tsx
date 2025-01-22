@@ -128,7 +128,6 @@ export class Autocomplete extends Component<
     // refactor to use if statement
     try {
       const item = await this.formatSelected(selected)
-      // console.log("TOOOOPPPPPP", item)
       onClick(item)
       this.onBlur()
     } catch (err) {
@@ -138,14 +137,12 @@ export class Autocomplete extends Component<
       case "single":
         try {
           const item = await this.formatSelected(selected)
-          // console.log("TOOOOPPPPPP", item)
           onClick(item)
           this.onBlur()
         } catch (err) {
           new Error(err)
         }
       default:
-        // console.log("BOTTTOM", selected)
         let newItems
         if (items) {
           newItems = clone(items)

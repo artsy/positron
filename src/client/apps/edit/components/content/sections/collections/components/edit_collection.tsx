@@ -1,12 +1,10 @@
-import { Image } from "@artsy/reaction/dist/Components/Publishing/Sections/Image"
 import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
 import {
   onChangeHero,
   onChangeSection,
 } from "client/actions/edit/sectionActions"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
-import { RemoveButton } from "client/components/remove_button"
-import { clone, without } from "lodash"
+import { clone } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
@@ -75,12 +73,7 @@ export class EditCollection extends Component<Props> {
   }
 
   render() {
-    const { article, editing, section } = this.props
-    // const image = {
-    //   url: section.image_url,
-    //   type: "image",
-    //   width: 400,
-    // }
+    const { section } = this.props
     return (
       <EditCollectionContainer width={"100%"}>
         <div>
@@ -88,14 +81,6 @@ export class EditCollection extends Component<Props> {
           <div style={{margin: 20}}/>
           <img src={section.image_url} height={100}/>
         </div>
-        {/* <Image
-          editCaption={this.editCaption}
-          width={400}
-          image={image}
-          layout={article.layout}
-          linked={false}
-          sectionLayout={"overflow_fillwidth"}
-        /> */}
         {/* {editing && <RemoveButton onClick={this.removeImage} />} */}
       </EditCollectionContainer>
     )

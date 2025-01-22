@@ -20,11 +20,9 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { data as sd } from "sharify"
 import styled from "styled-components"
-const Collection = require("client/models/collection.coffee")
 
 interface CollectionsControlsProps {
   article: ArticleData
-  // isHero: boolean
   logErrorAction: (e: any) => void
   onChangeHeroAction: (key: string, val: any) => void
   onChangeSectionAction: (key: string, val: any) => void
@@ -40,25 +38,13 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
     const {
       removeSectionAction,
       editSection,
-      isHero,
       sectionIndex,
     } = this.props
 
-    if (!isHero && !editSection.collection) {
+    // Breadcrumb: removed !isHero conditional
+    if (!editSection.collection) {
+      // Come back to this 
       removeSectionAction(sectionIndex)
-    }
-  }
-
-  fetchDenormalizedCollection = async id => {
-    const { logErrorAction } = this.props
-
-    try {
-      const collection = await new Collection({ id }).fetch()
-      const coll = new Collection(collection).denormalized()
-      return coll
-    } catch (err) {
-      logErrorAction({ message: "Collection not found." })
-      return err
     }
   }
 
@@ -94,52 +80,26 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
 
   onSelectCollection = collection => {
     const {
-      // article: { layout },
-      editSection,
       onChangeSectionAction,
     } = this.props
-    // console.log("####################################")
-    // const newCollection = clone(editSection)
-    // const value = { ...newCollection, ...collection }
-    // console.log("value", value)
     const newCollection = clone(collection)
-    // console.log("newCollection", newCollection)
+    // TODO: Figure out why both are necessary for this to work.
     Object.keys(newCollection).forEach(key => {
       onChangeSectionAction(key, newCollection[key])
     })
-    // // BREADCRUMB
     onChangeSectionAction("collection", newCollection)
   }
 
-  // fillWidthAlert = () => {
-  //   const { logErrorAction } = this.props
-  //   const message =
-  //     "Fullscreen layouts accept one asset, please remove extra images or use another layout."
-
-  //   logErrorAction({ message })
-  // }
 
   render() {
-    const {
-      // isHero,
-       editSection
-    } = this.props
-
-    // const section = editSection
-
     return (
-      <SectionControls
-        // showLayouts={false}
-        // isHero={false} // TODO: Remove?
-        // disabledAlert={this.fillWidthAlert}
-      >
+      <SectionControls>
       <ArtworkInputs pt={1} onClick={undefined}>
           <Col xs={6} pr={1}>
             <Autocomplete
               filter={this.returnItems}
               formatSelected={this.returnSelected}
               formatSearchResult={this.formatResult}
-              // items={section.collection || []}
               onSelect={this.onSelectCollection}
               placeholder="Search collections by title..."
               url={`${
@@ -149,11 +109,6 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
             />
           </Col>
           <Col xs={6} pl={1} pt={1}>
-            {/* <InputArtworkUrl
-              addArtwork={this.onNewImage}
-              fetchArtwork={this.fetchDenormalizedCollection}
-              disabled={inputsAreDisabled}
-            /> */}
           </Col>
         </ArtworkInputs>
       </SectionControls>

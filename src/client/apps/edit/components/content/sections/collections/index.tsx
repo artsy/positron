@@ -25,7 +25,6 @@ import EditCollection, {
 interface SectionCollectionsProps {
   article: ArticleData
   editing: boolean
-  // isHero: boolean
   onChangeHeroAction: (key: string, val: any) => void
   onChangeSectionAction: (key: string, val: any) => void
   section: SectionData
