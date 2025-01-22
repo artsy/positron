@@ -25,6 +25,7 @@ export interface AutocompleteProps {
   onSelect: any
   placeholder: string
   url: string
+  returnType?: "single" | "multiple"
 }
 
 interface AutocompleteState {
@@ -123,22 +124,43 @@ export class Autocomplete extends Component<
   }
 
   onSelect = async selected => {
-    const { items, onSelect } = this.props
-    let newItems
-    if (items) {
-      newItems = clone(items)
-    } else {
-      newItems = []
-    }
-
+    const { items, onSelect: onClick, returnType } = this.props
+    // refactor to use if statement
     try {
       const item = await this.formatSelected(selected)
-
-      newItems.push(item)
-      onSelect(uniq(newItems))
+      // console.log("TOOOOPPPPPP", item)
+      onClick(item)
       this.onBlur()
     } catch (err) {
       new Error(err)
+    }
+    switch (returnType) {
+      case "single":
+        try {
+          const item = await this.formatSelected(selected)
+          // console.log("TOOOOPPPPPP", item)
+          onClick(item)
+          this.onBlur()
+        } catch (err) {
+          new Error(err)
+        }
+      default:
+        // console.log("BOTTTOM", selected)
+        let newItems
+        if (items) {
+          newItems = clone(items)
+        } else {
+          newItems = []
+        }
+
+        try {
+          const item = await this.formatSelected(selected)
+          newItems.push(item)
+          onClick(uniq(newItems))
+          this.onBlur()
+        } catch (err) {
+          new Error(err)
+        }
     }
   }
 

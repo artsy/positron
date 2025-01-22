@@ -125,6 +125,14 @@ ImageCollectionSection = (->
     ImageCollectionSection
     videoSection
     @object().meta(
+      name: 'Collection'
+      isTypeOf: (data) -> data.type is 'collection'
+      ).keys
+        type: @string().valid('collection')
+        slug: @string().allow('')
+        image_url: @string().allow('', null)
+        display: @string().allow('', null)
+    @object().meta(
       name: 'Callout'
       isTypeOf: (data) -> data.type is 'callout'
     ).keys
