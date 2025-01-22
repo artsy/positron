@@ -18,6 +18,10 @@ services:
       - positron-elasticsearch
     ports:
       - 3005:3005
+    volumes:
+      - ..:/app
+      # prevents bind mount from overwriting node_modules in docker image.
+      - /app/node_modules
   positron-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
     user: elasticsearch
