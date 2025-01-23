@@ -14,14 +14,13 @@ services:
       - positron-mongodb
       - positron-elasticsearch
   positron-elasticsearch:
-    image: elasticsearch:7.17.27
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
     user: elasticsearch
     environment:
       - discovery.type=single-node
       - xpack.security.enabled=false
       - bootstrap.memory_lock=true
-      - "ingest.geoip.downloader.enabled=false"
-      - "_JAVA_OPTIONS=-XX:UseSVE=0"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
   positron-mongodb:
