@@ -125,14 +125,7 @@ export class Autocomplete extends Component<
 
   onSelect = async selected => {
     const { items, onSelect: onClick, returnType } = this.props
-    // refactor to use if statement
-    try {
-      const item = await this.formatSelected(selected)
-      onClick(item)
-      this.onBlur()
-    } catch (err) {
-      new Error(err)
-    }
+
     switch (returnType) {
       case "single":
         try {
