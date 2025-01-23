@@ -7,6 +7,7 @@ import { IconEditText } from "@artsy/reaction/dist/Components/Publishing/Icon/Ic
 import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconEditVideo"
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
+import { IconImageSet } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageSet"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
 import {
   ArticleData,
@@ -97,8 +98,8 @@ export class SectionTool extends Component<Props> {
           </SectionToolMenuItem>
 
           <SectionToolMenuItem onClick={() => this.newSection("collection")}>
-            <IconEditImages />
-            Collection Rail
+            <IconImageSet />
+            Collection
           </SectionToolMenuItem>
 
           {!isNews && (
