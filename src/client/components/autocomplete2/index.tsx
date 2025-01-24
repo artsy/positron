@@ -14,6 +14,8 @@ export interface Item {
 export interface SearchResultItem extends Item {
   id?: string
   thumbnail_image?: string
+  image_url?: string
+  name?: string
 }
 
 export interface AutocompleteProps {
@@ -36,7 +38,7 @@ interface AutocompleteState {
 
 export class Autocomplete extends Component<
   AutocompleteProps,
-  AutocompleteState
+AutocompleteState
 > {
   public textInput: React.RefObject<HTMLInputElement>
   public engine

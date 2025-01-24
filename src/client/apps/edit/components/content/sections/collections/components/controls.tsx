@@ -49,10 +49,10 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
   }
 
   returnSelected = item => {
-    const { id, display, image_url } = item
+    const { id, name, image_url } = item
     return {
       slug: id,
-      display,
+      name,
       image_url,
     }
   }
@@ -61,7 +61,7 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
     return items.map(item => {
       return {
         id: item.id,
-        display: item.display,
+        name: item.name,
         image_url: item.image_url,
       }
     })
@@ -73,7 +73,7 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
         <AutocompleteResultImg width={45} height={45} mr={15}>
           {searchResult.image_url && <img src={searchResult.image_url || ""} />}
         </AutocompleteResultImg>
-        <div>{searchResult.display}</div>
+        <div>{searchResult.name}</div>
       </>
     )
   }

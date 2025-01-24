@@ -53,7 +53,7 @@ export class SectionCollections extends Component<
 
   render() {
     const { progress } = this.state
-    const { editing, isHero, section } = this.props
+    const { editing, section } = this.props
     const collection = section
 
     return (
@@ -62,7 +62,6 @@ export class SectionCollections extends Component<
           <CollectionControls
             section={section}
             editing={editing}
-            isHero={isHero}
             setProgress={(val: number) => this.setState({ progress: val })}
           />
         )}
@@ -73,7 +72,7 @@ export class SectionCollections extends Component<
           justifyContent="center"
           zIndex={editing ? 2 : -1}
         >
-          {collection.display ? (
+          {collection.name ? (
             this.renderCollection(collection, true)
           ) : (
             <EditSectionPlaceholder>

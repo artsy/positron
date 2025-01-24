@@ -149,8 +149,7 @@ export const setupSection = (type: SectionType = "text") => {
         type: "collection",
         slug: "",
         image_url: "",
-        // TODO: Can probably delete this
-        display: "",
+        name: "",
       } as SectionData
     case "embed":
       return {

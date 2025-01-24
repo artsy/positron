@@ -62,8 +62,7 @@ export class EditCollection extends Component<Props> {
         <Paragraph
           allowedStyles={["I"]}
           hasLinks
-          // TODO: fix section ty
-          html={section.display || ""}
+          html={section.name || ""}
           onChange={this.onCaptionChange}
           placeholder={section.caption}
           stripLinebreaks
@@ -77,7 +76,7 @@ export class EditCollection extends Component<Props> {
     return (
       <EditCollectionContainer width={"100%"}>
         <div>
-          <p>{section.display}</p>
+          <p>{section.name}</p>
           <div style={{margin: 20}}/>
           <img src={section.image_url} height={100}/>
         </div>

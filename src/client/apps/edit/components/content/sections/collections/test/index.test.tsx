@@ -1,6 +1,6 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/Sections/FullscreenViewer/FullScreenProvider"
-import { mount, shallow } from "enzyme"
+import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
@@ -44,7 +44,7 @@ describe("SectionImageCollection", () => {
       type: "collection",
       slug: "marketing-collection",
       image_url: "artsy.net/image-url",
-      display: ""
+      name: ""
     })
 
     collectionSection = clone(article.sections[article.sections.length - 1])
