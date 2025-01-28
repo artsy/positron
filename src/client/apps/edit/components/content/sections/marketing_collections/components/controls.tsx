@@ -21,7 +21,7 @@ import { connect } from "react-redux"
 import { data as sd } from "sharify"
 import styled from "styled-components"
 
-interface CollectionsControlsProps {
+interface MarketingCollectionsControlsProps {
   article: ArticleData
   logErrorAction: (e: any) => void
   onChangeHeroAction: (key: string, val: any) => void
@@ -33,7 +33,7 @@ interface CollectionsControlsProps {
   setProgress: (progress: number) => void
 }
 
-export class CollectionsControls extends Component<CollectionsControlsProps> {
+export class MarketingCollectionsControls extends Component<MarketingCollectionsControlsProps> {
   componentWillUnmount = () => {
     const {
       removeSectionAction,
@@ -87,7 +87,7 @@ export class CollectionsControls extends Component<CollectionsControlsProps> {
     Object.keys(newCollection).forEach(key => {
       onChangeSectionAction(key, newCollection[key])
     })
-    onChangeSectionAction("collection", newCollection)
+    onChangeSectionAction("marketing_collection", newCollection)
   }
 
 
@@ -132,7 +132,7 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(CollectionsControls)
+)(MarketingCollectionsControls)
 
 export const ArtworkInputs = styled(Flex)`
   input {

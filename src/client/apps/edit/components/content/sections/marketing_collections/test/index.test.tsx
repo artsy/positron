@@ -5,9 +5,9 @@ import { clone } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
-import { SectionCollections } from "../../collections/index"
+import { SectionMarketingCollections } from "../index"
 import { SectionControls } from "../../../section_controls"
-import { CollectionsControls } from "../components/controls"
+import { MarketingCollectionsControls } from "../components/controls"
 require("typeahead.js")
 
 describe("SectionImageCollection", () => {
@@ -30,7 +30,7 @@ describe("SectionImageCollection", () => {
     return mount(
       <Provider store={store}>
         <FullScreenProvider>
-          <SectionCollections {...passedProps} />
+          <SectionMarketingCollections {...passedProps} />
         </FullScreenProvider>
       </Provider>
     )
@@ -41,7 +41,7 @@ describe("SectionImageCollection", () => {
     // Hack: This should be in reaction.
     article.sections.push({
       id: "123456",
-      type: "collection",
+      type: "marketing_collection",
       slug: "marketing-collection",
       image_url: "artsy.net/image-url",
       name: ""
@@ -61,14 +61,14 @@ describe("SectionImageCollection", () => {
     it("Renders a preview for marketing collections", () => {
       const component = getWrapper()
 
-      expect(component.find(SectionCollections).length).toBe(1)
+      expect(component.find(SectionMarketingCollections).length).toBe(1)
     })
 
     it("Renders a preview for standard/feature image_set", () => {
       props.editing = true
       const component = getWrapper()
 
-      expect(component.find(CollectionsControls).length).toBe(1)
+      expect(component.find(MarketingCollectionsControls).length).toBe(1)
     })
 
     it("Renders controls if editing", () => {

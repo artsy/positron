@@ -20,9 +20,9 @@ import styled from "styled-components"
 import CollectionControls from "./components/controls"
 import EditCollection, {
   EditCollectionContainer,
-} from "./components/edit_collection"
+} from "./components/edit_marketing_collection"
 
-interface SectionCollectionsProps {
+interface SectionMarketingCollectionsProps {
   article: ArticleData
   editing: boolean
   onChangeHeroAction: (key: string, val: any) => void
@@ -30,13 +30,13 @@ interface SectionCollectionsProps {
   section: SectionData
 }
 
-interface SectionCollectionsState {
+interface SectionMarketingCollectionsState {
   progress: number | null
 }
 
-export class SectionCollections extends Component<
-  SectionCollectionsProps,
-  SectionCollectionsState
+export class SectionMarketingCollections extends Component<
+  SectionMarketingCollectionsProps,
+  SectionMarketingCollectionsState
 > {
   state = {
     progress: null,
@@ -57,7 +57,7 @@ export class SectionCollections extends Component<
     const collection = section
 
     return (
-      <SectionCollectionsContainer sectionLayout={"column_width"}>
+      <SectionMarketingCollectionsContainer sectionLayout={"column_width"}>
         {editing && (
           <CollectionControls
             section={section}
@@ -68,7 +68,7 @@ export class SectionCollections extends Component<
 
         {progress !== null && <ProgressBar progress={progress} cover />}
 
-        <SectionCollectionsList
+        <SectionMarketingCollectionsList
           justifyContent="center"
           zIndex={editing ? 2 : -1}
         >
@@ -79,8 +79,8 @@ export class SectionCollections extends Component<
               Search for Collections above
             </EditSectionPlaceholder>
           )}
-        </SectionCollectionsList>
-      </SectionCollectionsContainer>
+        </SectionMarketingCollectionsList>
+      </SectionMarketingCollectionsContainer>
     )
   }
 }
@@ -97,9 +97,9 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SectionCollections)
+)(SectionMarketingCollections)
 
-const SectionCollectionsContainer = styled.section<{
+const SectionMarketingCollectionsContainer = styled.section<{
   sectionLayout: SectionLayout
   isWrapping?: boolean
 }>`
@@ -131,7 +131,7 @@ const SectionCollectionsContainer = styled.section<{
   `};
 `
 
-const SectionCollectionsList = styled(Flex)<{
+const SectionMarketingCollectionsList = styled(Flex)<{
   isWrapping?: boolean
 }>`
   position: relative;

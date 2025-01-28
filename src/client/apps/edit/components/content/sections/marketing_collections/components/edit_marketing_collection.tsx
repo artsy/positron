@@ -29,10 +29,10 @@ interface Props {
   width: any
 }
 
-export class EditCollection extends Component<Props> {
+export class EditMarketingCollection extends Component<Props> {
   onChange = (collection: ArticleImage[]) => {
     const { onChangeSectionAction } = this.props
-    onChangeSectionAction("collection", collection)
+    onChangeSectionAction("marketing_collection", collection)
   }
 
   removeImage = () => {
@@ -74,14 +74,14 @@ export class EditCollection extends Component<Props> {
   render() {
     const { section } = this.props
     return (
-      <EditCollectionContainer width={"100%"}>
+      <EditMarketingCollectionContainer width={"100%"}>
         <div>
           <p>{section.name}</p>
           <div style={{margin: 20}}/>
           <img src={section.image_url} height={100}/>
         </div>
         {/* {editing && <RemoveButton onClick={this.removeImage} />} */}
-      </EditCollectionContainer>
+      </EditMarketingCollectionContainer>
     )
   }
 }
@@ -98,9 +98,9 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(EditCollection)
+)(EditMarketingCollection)
 
-export const EditCollectionContainer = styled.div<{ width?: any }>`
+export const EditMarketingCollectionContainer = styled.div<{ width?: any }>`
   width: ${props => props.width || "100%"};
   position: relative;
   max-width: 100%;

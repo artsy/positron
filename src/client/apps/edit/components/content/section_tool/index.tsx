@@ -97,7 +97,7 @@ export class SectionTool extends Component<Props> {
             {isNews ? "Image" : "Images"}
           </SectionToolMenuItem>
 
-          <SectionToolMenuItem onClick={() => this.newSection("collection")}>
+          <SectionToolMenuItem onClick={() => this.newSection("marketing_collection")}>
             <IconImageSet />
             Collection
           </SectionToolMenuItem>
