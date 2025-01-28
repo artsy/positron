@@ -144,9 +144,9 @@ export const setupSection = (type: SectionType = "text") => {
         layout: "overflow_fillwidth",
         images: [],
       } as SectionData
-    case "collection":
+    case "marketing_collection":
       return {
-        type: "collection",
+        type: "marketing_collection",
         slug: "",
         image_url: "",
         name: "",

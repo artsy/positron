@@ -125,8 +125,8 @@ ImageCollectionSection = (->
     ImageCollectionSection
     videoSection
     @object().meta(
-      name: 'Collection'
-      isTypeOf: (data) -> data.type is 'collection'
+      name: 'MarketingCollection'
+      isTypeOf: (data) -> data.type is 'marketing_collection'
       ).keys
         type: @string().valid('collection')
         slug: @string().allow('')

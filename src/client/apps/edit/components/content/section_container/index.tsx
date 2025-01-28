@@ -97,7 +97,7 @@ export class SectionContainer extends Component<SectionContainerProps> {
       case "image_collection": {
         return <SectionImages {...this.props} />
       }
-      case "collection": {
+      case "marketing_collection": {
         return <SectionCollections {...this.props} />
       }
 
