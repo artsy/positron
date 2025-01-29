@@ -19,7 +19,7 @@ import { connect } from "react-redux"
 import styled from "styled-components"
 import CollectionControls from "./components/controls"
 import EditCollection, {
-  EditCollectionContainer,
+  EditMarketingCollectionContainer,
 } from "./components/edit_marketing_collection"
 
 interface SectionMarketingCollectionsProps {
@@ -155,7 +155,7 @@ const SectionMarketingCollectionsList = styled(Flex)<{
       margin-right: 0;
     }
 
-    ${EditCollectionContainer} {
+    ${EditMarketingCollectionContainer} {
       margin-right: 0;
     }
   }
