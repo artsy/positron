@@ -13,14 +13,11 @@ import { DragContainer } from "client/components/drag_drop2"
 import { DraggableCover } from "client/components/drag_drop2/drag_source"
 import { DragTargetContainer } from "client/components/drag_drop2/drag_target"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
-import { ProgressBar } from "client/components/file_input/progress_bar"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import CollectionControls from "./components/controls"
-import EditCollection, {
-  EditMarketingCollectionContainer,
-} from "./components/edit_marketing_collection"
+import EditMarketingCollection from "./components/edit_marketing_collection"
 
 interface SectionMarketingCollectionsProps {
   article: ArticleData
@@ -38,9 +35,6 @@ export class SectionMarketingCollections extends Component<
   SectionMarketingCollectionsProps,
   SectionMarketingCollectionsState
 > {
-  state = {
-    progress: null,
-  }
 
   renderCollection = (collection, editing = false) => {
     const props = {
@@ -48,11 +42,10 @@ export class SectionMarketingCollections extends Component<
       editing,
       section: this.props.section,
     }
-    return <EditCollection {...props} />
+    return <EditMarketingCollection {...props} />
   }
 
   render() {
-    const { progress } = this.state
     const { editing, section } = this.props
     const collection = section
 
@@ -62,11 +55,8 @@ export class SectionMarketingCollections extends Component<
           <CollectionControls
             section={section}
             editing={editing}
-            setProgress={(val: number) => this.setState({ progress: val })}
           />
         )}
-
-        {progress !== null && <ProgressBar progress={progress} cover />}
 
         <SectionMarketingCollectionsList
           justifyContent="center"
@@ -155,7 +145,7 @@ const SectionMarketingCollectionsList = styled(Flex)<{
       margin-right: 0;
     }
 
-    ${EditMarketingCollectionContainer} {
+    ${EditMarketingCollection} {
       margin-right: 0;
     }
   }

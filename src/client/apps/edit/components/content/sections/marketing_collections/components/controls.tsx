@@ -41,9 +41,8 @@ export class MarketingCollectionsControls extends Component<MarketingCollections
       sectionIndex,
     } = this.props
 
-    // Breadcrumb: removed !isHero conditional
     if (!editSection.collection) {
-      // Come back to this 
+      // Come back to this
       removeSectionAction(sectionIndex)
     }
   }
