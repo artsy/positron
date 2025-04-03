@@ -8,5 +8,5 @@ client = new elasticsearch.Client
           maxSockets: 10
 
 module.exports =
-  index: 'articles_' + ELASTICSEARCH_INDEX_SUFFIX
+  index: 'articles_' + (ELASTICSEARCH_INDEX_SUFFIX or 'production')
   client: client
