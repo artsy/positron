@@ -8,6 +8,7 @@ services:
     environment:
       - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron
       - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
+      - ELASTICSEARCH_INDEX_SUFFIX=development
       # SALT is an oss value. The '$' is escaped.
       - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
     env_file:
