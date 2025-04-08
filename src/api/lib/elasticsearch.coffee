@@ -1,5 +1,5 @@
 elasticsearch = require('elasticsearch')
-{ NODE_ENV, ELASTICSEARCH_URL } = process.env
+{ ELASTICSEARCH_URL, ELASTICSEARCH_INDEX_SUFFIX } = process.env
 
 client = new elasticsearch.Client
           host: ELASTICSEARCH_URL
@@ -8,5 +8,5 @@ client = new elasticsearch.Client
           maxSockets: 10
 
 module.exports =
-  index: 'articles_' + NODE_ENV
+  index: 'articles_' + (ELASTICSEARCH_INDEX_SUFFIX or 'production')
   client: client
