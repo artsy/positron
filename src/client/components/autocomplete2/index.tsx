@@ -14,6 +14,8 @@ export interface Item {
 export interface SearchResultItem extends Item {
   id?: string
   thumbnail_image?: string
+  image_url?: string
+  name?: string
 }
 
 export interface AutocompleteProps {
@@ -25,6 +27,7 @@ export interface AutocompleteProps {
   onSelect: any
   placeholder: string
   url: string
+  returnType?: "single" | "multiple"
 }
 
 interface AutocompleteState {
@@ -35,7 +38,7 @@ interface AutocompleteState {
 
 export class Autocomplete extends Component<
   AutocompleteProps,
-  AutocompleteState
+AutocompleteState
 > {
   public textInput: React.RefObject<HTMLInputElement>
   public engine
@@ -123,22 +126,33 @@ export class Autocomplete extends Component<
   }
 
   onSelect = async selected => {
-    const { items, onSelect } = this.props
-    let newItems
-    if (items) {
-      newItems = clone(items)
-    } else {
-      newItems = []
-    }
+    const { items, onSelect: onClick, returnType } = this.props
 
-    try {
-      const item = await this.formatSelected(selected)
+    switch (returnType) {
+      case "single":
+        try {
+          const item = await this.formatSelected(selected)
+          onClick(item)
+          this.onBlur()
+        } catch (err) {
+          new Error(err)
+        }
+      default:
+        let newItems
+        if (items) {
+          newItems = clone(items)
+        } else {
+          newItems = []
+        }
 
-      newItems.push(item)
-      onSelect(uniq(newItems))
-      this.onBlur()
-    } catch (err) {
-      new Error(err)
+        try {
+          const item = await this.formatSelected(selected)
+          newItems.push(item)
+          onClick(uniq(newItems))
+          this.onBlur()
+        } catch (err) {
+          new Error(err)
+        }
     }
   }
 

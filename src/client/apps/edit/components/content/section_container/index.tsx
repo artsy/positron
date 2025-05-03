@@ -20,6 +20,7 @@ import { SectionSocialEmbed } from "../sections/social_embed"
 import SectionText from "../sections/text"
 import SectionText2 from "../sections/text/index2"
 import SectionVideo from "../sections/video"
+import SectionMarketingCollections from "../sections/marketing_collections"
 const SectionSlideshow = require("../sections/slideshow/index.coffee")
 
 interface SectionContainerProps {
@@ -95,6 +96,9 @@ export class SectionContainer extends Component<SectionContainerProps> {
       case "image_set":
       case "image_collection": {
         return <SectionImages {...this.props} />
+      }
+      case "marketing_collection": {
+        return <SectionMarketingCollections {...this.props} />
       }
 
       case "text": {
