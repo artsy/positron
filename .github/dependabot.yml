@@ -7,7 +7,6 @@ updates:
     # Limit to 0 to enable only security updates:
     open-pull-requests-limit: 0
     assignees:
-      - jonallured
       - damassi
     reviewers:
       - artsy/grow-devs
