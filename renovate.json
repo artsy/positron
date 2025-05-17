@@ -1,4 +1,3 @@
 {
-  "extends": ["@artsy:app"],
-  "assignees": ["jonallured"]
+  "extends": ["@artsy:app"]
 }
