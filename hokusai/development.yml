@@ -31,8 +31,8 @@ services:
       - 9300:9300
       - 9200:9200
   positron-mongodb:
-    image: mongo:6.0.16
-    command: ["--quiet", "--nojournal"]
+    image: mongo:7.0
+    command: ["--quiet"]
     ports:
       - 27017:27017
     volumes:
