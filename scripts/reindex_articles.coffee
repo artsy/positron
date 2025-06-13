@@ -1,5 +1,5 @@
 require('node-env-file')(require('path').resolve __dirname, '../.env')
-{ MongoClient } = require 'mongodb'
+{ MongoClient } = require 'mongodb-legacy'
 path = require 'path'
 { indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'

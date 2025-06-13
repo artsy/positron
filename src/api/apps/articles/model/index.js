@@ -6,7 +6,7 @@ import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
 import { toQuery } from "./retrieve"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import moment from "moment"
 import {
   onPublish,

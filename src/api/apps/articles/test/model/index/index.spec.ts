@@ -1,5 +1,5 @@
 import moment from "moment"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import rewire from "rewire"
 import { extend, times } from "underscore"
 import sinon from "sinon"

@@ -1,6 +1,6 @@
 // import rewire from "rewire"
 import moment from "moment"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import { times } from "underscore"
 const {
   db,

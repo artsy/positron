@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import rewire from "rewire"
 import sinon from "sinon"
 import { extend } from "underscore"

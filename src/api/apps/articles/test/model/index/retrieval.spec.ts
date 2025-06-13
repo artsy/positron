@@ -1,5 +1,5 @@
 import moment from "moment"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import { pluck, times } from "underscore"
 import * as Article from "../../../model"
 const {

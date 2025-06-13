@@ -1,4 +1,4 @@
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import request from "superagent"
 const {
   db,

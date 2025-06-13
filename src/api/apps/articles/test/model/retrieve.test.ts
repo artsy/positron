@@ -2,7 +2,7 @@
  * @jest-environment node
  */
 
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import { toQuery } from "../../model/retrieve"
 
 describe("Retrieve", () => {
