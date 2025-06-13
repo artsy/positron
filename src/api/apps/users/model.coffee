@@ -17,7 +17,7 @@ jwtDecode = require 'jwt-decode'
 # Retrieval
 #
 @find = (id, callback) ->
-  db.collection('users').findOne { _id: ObjectId(id) }, callback
+  db.collection('users').findOne { _id: new ObjectId(id) }, callback
 
 @fromAccessToken = (accessToken, callback) ->
   # Find via access token from DB if they exist
@@ -52,13 +52,13 @@ jwtDecode = require 'jwt-decode'
 save = (user, accessToken, callback) ->
   async.parallel [
     (cb) ->
-      db.collection('channels').find({user_ids: ObjectId(user.id)}).toArray cb
+      db.collection('channels').find({user_ids: new ObjectId(user.id)}).toArray cb
     (cb) ->
       bcrypt.hash accessToken, SALT, cb
   ], (err, results) ->
     return callback err if err
     partner_ids = jwtDecode(accessToken)?.partner_ids or []
-    user.partner_ids = _.map partner_ids, ObjectId
+    user.partner_ids = _.map partner_ids, (id) -> new ObjectId(id)
     user.channel_ids = _.pluck results[0], '_id'
     encryptedAccessToken = results[1]
     data = {
@@ -69,8 +69,8 @@ save = (user, accessToken, callback) ->
       partner_ids: user.partner_ids
       channel_ids: user.channel_ids
     }
-    db.collection('users').updateOne { _id: ObjectId(user.id) }, { $set: data }, { upsert: true }, (err, res) ->
-      db.collection('users').findOne {_id: res.upsertedId || ObjectId(user.id)}, callback
+    db.collection('users').updateOne { _id: new ObjectId(user.id) }, { $set: data }, { upsert: true }, (err, res) ->
+      db.collection('users').findOne {_id: res.upsertedId || new ObjectId(user.id)}, callback
 #
 # Utility
 #

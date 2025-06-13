@@ -121,7 +121,7 @@ describe 'User', ->
   describe '#hasChannelAccess', ->
 
     it 'returns true for a channel member', (done) ->
-      user = _.extend fixtures().users, { channel_ids: [ ObjectId '5086df098523e60002000018' ] }
+      user = _.extend fixtures().users, { channel_ids: [ new ObjectId('5086df098523e60002000018') ] }
       channel = _.extend fixtures().channels, { _id: new ObjectId('5086df098523e60002000018') }
       db.collection('channels').insertOne channel , (err, channel) ->
         User.hasChannelAccess(user, '5086df098523e60002000018').should.be.true()

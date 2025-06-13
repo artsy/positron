@@ -37,7 +37,7 @@ describe 'Vertical', ->
       }, (err, vertical) ->
         vertical.name.should.equal 'Art Market'
         Vertical.save {id: vertical._id.toString(), name: 'Art Market Updated'}, (err, updatedVertical) ->
-          updatedVertical._id.toString().should.equal vertical.id.toString()
+          updatedVertical._id.toString().should.equal vertical._id.toString()
           updatedVertical.name.should.equal 'Art Market Updated'
         db.collection('verticals').count (err, count) ->
           count.should.equal 11
