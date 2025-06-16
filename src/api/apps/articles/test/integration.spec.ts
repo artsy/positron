@@ -25,8 +25,10 @@ describe("articles endpoints", () => {
     })
   })
 
-  afterEach(() => {
-    server.close()
+  afterEach(done => {
+    server.close(() => {
+      done()
+    })
   })
 
   describe("as a non-logged in user", () =>
@@ -349,7 +351,7 @@ describe("articles endpoints", () => {
               if (error) {
                 done(error)
               }
-              db.collection("articles").count((e, count) => {
+              db.collection("articles").countDocuments((e, count) => {
                 if (e) {
                   done(e)
                 }

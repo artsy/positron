@@ -163,7 +163,7 @@ export const toQuery = input => {
     const slugs = []
     each(input.omit, function(id) {
       if (ObjectId.isValid(id)) {
-        return objectids.push(ObjectId(id))
+        return objectids.push(new ObjectId(id))
       } else {
         return slugs.push(id)
       }

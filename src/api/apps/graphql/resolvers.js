@@ -148,7 +148,7 @@ export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
   const relatedArticleArgs = {
     ids: related_article_ids,
-    channel_id: ObjectId(root.channel_id),
+    channel_id: new ObjectId(root.channel_id),
   }
   const unauthorized = !User.hasChannelAccess(req.user, root.channel_id)
   if (unauthorized) {
@@ -218,12 +218,20 @@ export const relatedArticlesPanel = root => {
         relatedArticleArgs
       ).catch(e => reject(e))
 
-      const mergedArticles = {
-        results: relatedArticleResults.results.concat(articleFeed.results),
+      if (
+        relatedArticleResults &&
+        relatedArticleResults.results &&
+        articleFeed &&
+        articleFeed.results
+      ) {
+        const mergedArticles = {
+          results: relatedArticleResults.results.concat(articleFeed.results),
+        }
+        relatedArticles = presentCollection(mergedArticles).results
+      } else if (articleFeed && articleFeed.results) {
+        relatedArticles = presentCollection(articleFeed).results
       }
-
-      relatedArticles = presentCollection(mergedArticles).results
-    } else {
+    } else if (articleFeed && articleFeed.results) {
       relatedArticles = presentCollection(articleFeed).results
     }
 
@@ -274,12 +282,20 @@ export const relatedArticlesCanvas = root => {
         relatedArticleArgs
       ).catch(e => reject(e))
 
-      const mergedArticles = {
-        results: relatedArticleResults.results.concat(articleFeed.results),
+      if (
+        relatedArticleResults &&
+        relatedArticleResults.results &&
+        articleFeed &&
+        articleFeed.results
+      ) {
+        const mergedArticles = {
+          results: relatedArticleResults.results.concat(articleFeed.results),
+        }
+        relatedArticles = presentCollection(mergedArticles).results
+      } else if (articleFeed && articleFeed.results) {
+        relatedArticles = presentCollection(articleFeed).results
       }
-
-      relatedArticles = presentCollection(mergedArticles).results
-    } else {
+    } else if (articleFeed && articleFeed.results) {
       relatedArticles = presentCollection(articleFeed).results
     }
 

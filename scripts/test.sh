@@ -3,5 +3,5 @@
 set -e -x
 
 yarn mocha $(find src -name '*.test.coffee')
-yarn mocha $(find src -name '*.spec.*')
+yarn mocha --exit $(find src -name '*.spec.*')
 yarn jest
