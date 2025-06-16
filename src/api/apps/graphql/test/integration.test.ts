@@ -46,6 +46,7 @@ describe("graphql endpoint", () => {
               {
                 title: "Top Eleven Booths",
                 published: true,
+                published_at: "2024-01-15",
                 _id: new ObjectId("5c9d3c1aa4ba105ad8336956"),
                 author_ids: [new ObjectId("55356a9deca560a0137bb4ae")],
                 channel_id: new ObjectId("5aa99c11da4c00d6bc33a816"),
@@ -54,6 +55,7 @@ describe("graphql endpoint", () => {
                 title: "Top Twelve Booths",
                 _id: new ObjectId("5f32e33bd273fe3b7f0e3f00"),
                 published: true,
+                published_at: "2024-01-16",
                 featured: true,
                 vertical: {
                   name: "Culture",
