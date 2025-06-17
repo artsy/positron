@@ -54,7 +54,7 @@ export const mongoFetch = (input, callback) => {
         if (!count) {
           return cb()
         }
-        return db.collection("articles").count(cb)
+        return db.collection("articles").countDocuments(cb)
       },
       cb => {
         if (!count) {
@@ -93,7 +93,7 @@ export const promisedMongoFetch = input => {
           if (!count) {
             return cb()
           }
-          return db.collection("articles").count(cb)
+          return db.collection("articles").countDocuments(cb)
         },
         cb => {
           if (!count) {
@@ -308,7 +308,7 @@ export const getSuperArticleCount = id => {
     }
     db.collection("articles")
       .find({ "super_article.related_articles": new ObjectId(id) })
-      .count((err, count) => {
+      .countDocuments((err, count) => {
         if (err) {
           return reject(err)
         }

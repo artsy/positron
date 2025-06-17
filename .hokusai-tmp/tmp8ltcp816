@@ -1,0 +1,34 @@
+version: "2"
+services:
+  positron:
+    command: ["yarn", "test"]
+    build:
+      context: ../
+      args:
+        - COMMIT_HASH
+    environment:
+      - CI=true
+      - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
+      - ELASTICSEARCH_INDEX_SUFFIX=test
+      - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
+      # SALT is an oss value. The '$' is escaped.
+      - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
+    env_file: ../.env.test
+    depends_on:
+      - positron-mongodb
+      - positron-elasticsearch
+  positron-elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.18
+    user: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+  positron-mongodb:
+    image: mongo:7.0
+    ports:
+      - "27017:27017"
+    command: ["--quiet"]
