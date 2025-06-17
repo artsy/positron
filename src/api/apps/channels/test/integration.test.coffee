@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
+{ TEST_PORT } = require '../../../test/helpers/config'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongodb'
@@ -9,7 +10,7 @@ describe 'channels endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
+        @server = app.listen TEST_PORT, ->
           done()
 
   afterEach ->
@@ -23,7 +24,7 @@ describe 'channels endpoints', ->
       }
     ], (err, channels) =>
       request
-        .get("http://localhost:5000/channels/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{TEST_PORT}/channels/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Life At Artsy'
           done()

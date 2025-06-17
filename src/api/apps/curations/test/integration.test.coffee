@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
+{ TEST_PORT } = require '../../../test/helpers/config'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongodb'
@@ -9,7 +10,7 @@ describe 'curations endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
+        @server = app.listen TEST_PORT, ->
           done()
 
   afterEach ->
@@ -21,7 +22,7 @@ describe 'curations endpoints', ->
       { name: 'Email Signups' }
     ], (err, curation) =>
       request
-        .get("http://localhost:5000/curations/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{TEST_PORT}/curations/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Homepage'
           done()
@@ -34,7 +35,7 @@ describe 'curations endpoints', ->
       { name: 'About Page' }
     ], (err, curations) =>
       request
-        .get("http://localhost:5000/curations")
+        .get("http://localhost:#{TEST_PORT}/curations")
         .end (err, res) ->
           res.body.total.should.equal 4
           res.body.count.should.equal 4
