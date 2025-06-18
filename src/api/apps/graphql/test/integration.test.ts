@@ -2,7 +2,6 @@
  * @jest-environment node
  */
 
-const { performance } = require("perf_hooks")
 import {
   ArticleSectionsQuery,
   RelatedArticlesCanvasQuery,
