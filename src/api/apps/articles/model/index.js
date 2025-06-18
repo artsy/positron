@@ -6,7 +6,7 @@ import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
 import { toQuery } from "./retrieve"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import moment from "moment"
 import {
   onPublish,
@@ -254,13 +254,16 @@ export const destroy = (id, callback) => {
       return callback(new Error("Article not found."))
     }
 
-    db.collection("articles").remove({ _id: new ObjectId(id) }, (err, res) => {
-      if (err) {
-        return callback(err)
+    db.collection("articles").deleteOne(
+      { _id: new ObjectId(id) },
+      (err, res) => {
+        if (err) {
+          return callback(err)
+        }
+        removeFromSearch(id.toString())
+        return callback(null)
       }
-      removeFromSearch(id.toString())
-      return callback(null)
-    })
+    )
   })
 }
 

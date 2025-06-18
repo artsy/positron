@@ -18,6 +18,7 @@ bcrypt = require 'bcryptjs'
     return collection.insertMany data, (err, res) ->
       collection.find({}).toArray(callback)
   else
+    debugger
     data = fixturize collectionName, data
     return collection.insertOne data, (err, res) ->
       collection.findOne({_id: res.insertedId}, callback)

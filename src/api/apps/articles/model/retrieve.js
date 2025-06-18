@@ -1,5 +1,5 @@
 import { each, omit } from "lodash"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 
 export const toQuery = input => {
   const { limit, offset, sort, count } = input
@@ -163,7 +163,7 @@ export const toQuery = input => {
     const slugs = []
     each(input.omit, function(id) {
       if (ObjectId.isValid(id)) {
-        return objectids.push(ObjectId(id))
+        return objectids.push(new ObjectId(id))
       } else {
         return slugs.push(id)
       }

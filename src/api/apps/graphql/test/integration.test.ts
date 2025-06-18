@@ -2,13 +2,14 @@
  * @jest-environment node
  */
 
+const { performance } = require("perf_hooks")
 import {
   ArticleSectionsQuery,
   RelatedArticlesCanvasQuery,
   RelatedArticlesQuery,
 } from "api/apps/graphql/test/queries"
 import request from "superagent"
-const { ObjectId } = require("mongodb")
+const { ObjectId } = require("mongodb-legacy")
 const app = require("../../../index.coffee")
 const {
   fabricate,

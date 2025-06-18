@@ -11,7 +11,7 @@ const {
   presentCollection,
   find,
 } = require("api/apps/articles/model/index.js")
-const { ObjectId } = require("mongodb")
+const { ObjectId } = require("mongodb-legacy")
 
 export const articles = (root, args, req, ast) => {
   const unpublished = !args.published || args.scheduled
@@ -148,7 +148,7 @@ export const relatedArticles = (root, args, req) => {
   const { related_article_ids } = root
   const relatedArticleArgs = {
     ids: related_article_ids,
-    channel_id: ObjectId(root.channel_id),
+    channel_id: new ObjectId(root.channel_id),
   }
   const unauthorized = !User.hasChannelAccess(req.user, root.channel_id)
   if (unauthorized) {

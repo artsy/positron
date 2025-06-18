@@ -17,7 +17,7 @@ export function init() {
   })
 
   tracer.use("mongodb-core", {
-    service: `${ddServicePrefix}.mongodb`,
+    service: `${ddServicePrefix}.mongodb-legacy`,
   })
 
   tracer.use("elasticsearch", {

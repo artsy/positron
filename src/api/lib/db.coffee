@@ -1,4 +1,4 @@
-{ MongoClient } = require 'mongodb'
+{ MongoClient } = require 'mongodb-legacy'
 fs = require 'fs'
 path = require 'path'
 { MONGOHQ_URL } = process.env

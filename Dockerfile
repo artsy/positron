@@ -1,4 +1,4 @@
-FROM node:18-alpine
+FROM node:22.5.1-alpine
 
 ENV PORT 3005
 EXPOSE 3005
