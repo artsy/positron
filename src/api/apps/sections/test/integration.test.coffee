@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
+{ TEST_PORT } = require '../../../test/helpers/config'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongodb'
@@ -9,7 +10,7 @@ describe 'sections endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
+        @server = app.listen TEST_PORT, ->
           done()
 
   afterEach ->
@@ -22,7 +23,7 @@ describe 'sections endpoints', ->
       {}
     ], (err, sections) =>
       request
-        .get("http://localhost:5000/sections?q=Miami Basel")
+        .get("http://localhost:#{TEST_PORT}/sections?q=Miami Basel")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -37,7 +38,7 @@ describe 'sections endpoints', ->
       }
     ], (err, sections) =>
       request
-        .get("http://localhost:5000/sections/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{TEST_PORT}/sections/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.title.should.equal 'Cat Season in the Art World'
           done()

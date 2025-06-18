@@ -219,7 +219,9 @@ export const relatedArticlesPanel = root => {
       ).catch(e => reject(e))
 
       const mergedArticles = {
-        results: relatedArticleResults.results.concat(articleFeed.results),
+        results: (relatedArticleResults?.results || []).concat(
+          articleFeed?.results || []
+        ),
       }
 
       relatedArticles = presentCollection(mergedArticles).results

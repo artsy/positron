@@ -15,12 +15,13 @@ const {
   fixtures,
   empty,
 } = require("../../../test/helpers/db.coffee")
+const { TEST_PORT, GRAPHQL_URL } = require("../../../test/helpers/config.coffee")
 
 describe("graphql endpoint", () => {
   let server
 
   beforeAll(done => {
-    server = app.listen(5000, () => {
+    server = app.listen(TEST_PORT, () => {
       done()
     })
   })
@@ -83,7 +84,7 @@ describe("graphql endpoint", () => {
         }
       `
     request
-      .post("http://localhost:5000/graphql")
+      .post(GRAPHQL_URL)
       .send({ query })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -99,7 +100,7 @@ describe("graphql endpoint", () => {
 
   it("can get sections in an article", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(GRAPHQL_URL)
       .send({ query: ArticleSectionsQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -118,7 +119,7 @@ describe("graphql endpoint", () => {
 
   it("can get authors in relatedArticles", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(GRAPHQL_URL)
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -135,7 +136,7 @@ describe("graphql endpoint", () => {
 
   it("can get seriesArticle in relatedArticles", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(GRAPHQL_URL)
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -153,7 +154,7 @@ describe("graphql endpoint", () => {
 
   it("can get authors in relatedArticlesCanvas", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(GRAPHQL_URL)
       .send({ query: RelatedArticlesCanvasQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {

@@ -51,11 +51,11 @@ describe("resolvers", () => {
 
   beforeEach(() => {
     articleFixture = {
+      ...StandardArticle,
       slugs: ["slug-1"],
       channel_id: "456",
       tags: ["dog"],
       vertical: { name: "Art Market", id: "54276766fd4f50996aeca2b3" },
-      ...StandardArticle,
     }
     articlesFixture = {
       total: 20,
