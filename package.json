@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "engines": {
-    "node": ">=12.22.6"
+    "node": ">=22.5.1"
   },
   "scripts": {
     "assets": "sh scripts/assets.sh",
@@ -22,7 +22,7 @@
     "prettier": "prettier",
     "production": "sh scripts/production.sh",
     "publish-assets": "sh scripts/publish-assets.sh",
-    "start": "sh scripts/start.sh",
+    "start": "NODE_OPTIONS=\"--openssl-legacy-provider --no-experimental-fetch\" sh scripts/start.sh",
     "task": "node -r coffeescript/register -r @babel/register -r ./scripts/autoenv",
     "test:watch": "yarn jest -- --watch --runInBand",
     "test": "sh scripts/test.sh",
@@ -154,7 +154,7 @@
     "@types/express": "4.17.2",
     "@types/jest": "21.1.9",
     "@types/jquery": "3.3.29",
-    "@types/node": "8.5.2",
+    "@types/node": "22.5.1",
     "@types/react": "16.8.4",
     "@types/react-dom": "16.8.2",
     "@types/styled-components": "5.1.4",
