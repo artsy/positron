@@ -1,3 +1,8 @@
+// Add performance polyfill for Node.js 22 compatibility
+if (typeof performance === "undefined") {
+  global.performance = require("perf_hooks").performance
+}
+
 require("regenerator-runtime/runtime")
 require("@babel/register")({
   extensions: [".js", ".jsx", ".mjs", ".ts", ".tsx"],
@@ -21,7 +26,9 @@ const {
 } = require("@artsy/reaction/dist/Components/Publishing/Fixtures/Articles")
 
 // Patch React 16 with deprecated helpers
+// eslint-disable-next-line react/no-deprecated
 React.DOM = DOM
+// eslint-disable-next-line react/no-deprecated
 React.createClass = createClass
 
 Enzyme.configure({
@@ -43,7 +50,9 @@ try {
         removeListener: function() {},
       }
     }
-} catch (error) {}
+} catch (error) {
+  console.error("Error setting up global variables:", error)
+}
 
 sd.data = {
   ARTICLE: FeatureArticle,

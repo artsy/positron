@@ -3,8 +3,8 @@ version: 2.1
 orbs:
   codecov: codecov/codecov@1.2.5
   hokusai: artsy/hokusai@volatile
-  yarn: artsy/yarn@6.5.0
   horizon: artsy/release@volatile
+  node: circleci/node@5.3.0
 
 jobs:
   detect-secrets:
@@ -61,8 +61,13 @@ workflows:
       - detect-secrets:
           <<: *only_dev
 
-      - yarn/type-check:
+      # Type-check
+      - node/run:
           <<: *not_staging_or_release
+          name: type-check
+          pkg-manager: yarn
+          yarn-run: type-check
+          version: 22.5.1
 
       - hokusai/test:
           name: test
