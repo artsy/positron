@@ -1,5 +1,5 @@
 User = require '../../client/models/user'
-{ ObjectId } = require 'mongodb'
+{ ObjectId } = require 'mongodb-legacy'
 moment = require 'moment'
 
 
