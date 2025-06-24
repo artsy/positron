@@ -114,11 +114,13 @@ describe("WebSocket Server", () => {
   })
 
   it("broadcasts a message when a user is currently editing", () => {
-    onUserCurrentlyEditing({ io, socket }, data).then(() => {
+    onUserCurrentlyEditing({ io, socket }, data).then(async () => {
       expect(io.sockets.emit.mock.calls[0][0]).toBe("articlesRequested")
       expect(io.sockets.emit.mock.calls[0][1]).toEqual({
         type: "EDITED_ARTICLES_RECEIVED",
-        payload: fetch().resolve()[0],
+        payload: await fetch().then(result => {
+          return result[0]
+        }),
       })
     })
   })
@@ -150,6 +152,7 @@ function fetch() {
     resolve([
       {
         _id: 123456,
+        id: 123456,
         timestamp: "2018-01-30T23:12:20.973Z",
         user: {
           id: "123",

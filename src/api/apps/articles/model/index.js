@@ -309,14 +309,13 @@ export const getSuperArticleCount = id => {
     if (!ObjectId.isValid(id)) {
       return resolve(0)
     }
-    db.collection("articles")
-      .find({ "super_article.related_articles": new ObjectId(id) })
-      .countDocuments((err, count) => {
-        if (err) {
-          return reject(err)
-        }
-        resolve(count)
-      })
+    const query = { "super_article.related_articles": new ObjectId(id) }
+    db.collection("articles").countDocuments(query, (err, count) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(count)
+    })
   })
 }
 
@@ -334,8 +333,6 @@ export const backfill = callback => {
       if (articles.length === 0) {
         return callback(null, [])
       }
-
-      console.log(`There are ${articles.length} articles to backfill...`)
 
       // Loop through found articles and do something with them
       async.mapSeries(
