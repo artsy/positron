@@ -253,7 +253,10 @@ describe("Article", () => {
       )))
 
   // HACK: Blame mc-jones. It needs to be resolved, but let's get the
-  // the node upgrade done first.
+  // the node upgrade done first. There seems to be a race condition with the
+  // test above this one, where one of them sometimes returns 0 results.
+  // Skipping for now.
+
   // describe("#mongoFetch", () =>
   //   it("returns results, counts, and totals", done =>
   //     fabricate(
