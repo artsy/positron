@@ -11,6 +11,7 @@ services:
       - ELASTICSEARCH_INDEX_SUFFIX=development
       # SALT is an oss value. The '$' is escaped.
       - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
+      - NODE_OPTIONS=--openssl-legacy-provider --no-experimental-fetch
     env_file:
       - ../.env.shared
       - ../.env
