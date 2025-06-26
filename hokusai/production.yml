@@ -66,7 +66,7 @@ spec:
             fieldRef:
               fieldPath: spec.nodeName
         - name: NODE_OPTIONS
-          value: "--max_old_space_size=256 --openssl-legacy-provider --no-experimental-fetch"
+          value: --max_old_space_size=256
         - name: DD_VERSION
           valueFrom:
             fieldRef:
