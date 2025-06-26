@@ -6,7 +6,7 @@
     "node": ">=22.5.1"
   },
   "scripts": {
-    "assets": "sh scripts/assets.sh",
+    "assets": "NODE_OPTIONS=\"--openssl-legacy-provider --no-experimental-fetch\" sh scripts/assets.sh",
     "clean": "rm -rf public && mkdir -p public/assets && echo '[Positron] Cleaned build directory'",
     "copy-schema-to-mp": "yarn dump-schema ../metaphysics/src/data/positron.graphql",
     "cypress": "cypress open",
