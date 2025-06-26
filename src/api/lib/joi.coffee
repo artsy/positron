@@ -1,5 +1,5 @@
 Joi = require('joi')
-{ ObjectId } = require 'mongodb'
+{ ObjectId } = require 'mongodb-legacy'
 
 customJoi = Joi.extend(
   base: Joi.string()

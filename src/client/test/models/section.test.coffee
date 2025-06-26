@@ -8,11 +8,12 @@ benv = require 'benv'
 
 describe "Article", ->
 
-  beforeEach ->
+  beforeEach (done) ->
     benv.setup =>
       benv.expose $: benv.require 'jquery'
       sinon.stub Backbone, 'sync'
       @section = new Section fixtures().articles.sections[0]
+      done()
 
   afterEach ->
     Backbone.sync.restore()

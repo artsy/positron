@@ -349,7 +349,7 @@ describe("articles endpoints", () => {
               if (error) {
                 done(error)
               }
-              db.collection("articles").count((e, count) => {
+              db.collection("articles").countDocuments((e, count) => {
                 if (e) {
                   done(e)
                 }

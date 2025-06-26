@@ -6,7 +6,7 @@ import _ from "underscore"
 import async from "async"
 import { cloneDeep } from "lodash"
 import { toQuery } from "./retrieve"
-import { ObjectId } from "mongodb"
+import { ObjectId } from "mongodb-legacy"
 import moment from "moment"
 import {
   onPublish,
@@ -54,7 +54,7 @@ export const mongoFetch = (input, callback) => {
         if (!count) {
           return cb()
         }
-        return db.collection("articles").count(cb)
+        return db.collection("articles").countDocuments(cb)
       },
       cb => {
         if (!count) {
@@ -93,7 +93,7 @@ export const promisedMongoFetch = input => {
           if (!count) {
             return cb()
           }
-          return db.collection("articles").count(cb)
+          return db.collection("articles").countDocuments(cb)
         },
         cb => {
           if (!count) {
@@ -254,13 +254,16 @@ export const destroy = (id, callback) => {
       return callback(new Error("Article not found."))
     }
 
-    db.collection("articles").remove({ _id: new ObjectId(id) }, (err, res) => {
-      if (err) {
-        return callback(err)
+    db.collection("articles").deleteOne(
+      { _id: new ObjectId(id) },
+      (err, res) => {
+        if (err) {
+          return callback(err)
+        }
+        removeFromSearch(id.toString())
+        return callback(null)
       }
-      removeFromSearch(id.toString())
-      return callback(null)
-    })
+    )
   })
 }
 
@@ -306,14 +309,13 @@ export const getSuperArticleCount = id => {
     if (!ObjectId.isValid(id)) {
       return resolve(0)
     }
-    db.collection("articles")
-      .find({ "super_article.related_articles": new ObjectId(id) })
-      .count((err, count) => {
-        if (err) {
-          return reject(err)
-        }
-        resolve(count)
-      })
+    const query = { "super_article.related_articles": new ObjectId(id) }
+    db.collection("articles").countDocuments(query, (err, count) => {
+      if (err) {
+        return reject(err)
+      }
+      return resolve(count)
+    })
   })
 }
 
@@ -331,8 +333,6 @@ export const backfill = callback => {
       if (articles.length === 0) {
         return callback(null, [])
       }
-
-      console.log(`There are ${articles.length} articles to backfill...`)
 
       // Loop through found articles and do something with them
       async.mapSeries(

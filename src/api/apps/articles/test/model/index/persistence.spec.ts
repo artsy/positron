@@ -72,7 +72,7 @@ describe("Article Persistence", () => {
           article.title.should.equal("Top Ten Shows")
           article.channel_id.toString().should.equal("5086df098523e60002002223")
           article.vertical.name.should.eql("Culture")
-          db.collection("articles").count((error, count) => {
+          db.collection("articles").countDocuments((error, count) => {
             if (error) {
               done(error)
             }
@@ -286,7 +286,7 @@ describe("Article Persistence", () => {
                 done(err)
               }
               article.slugs[0].should.equal("craig-spaeth-heyo-01-01-99")
-              db.collection("articles").count((error, count) => {
+              db.collection("articles").countDocuments((error, count) => {
                 if (error) {
                   done(error)
                 }
