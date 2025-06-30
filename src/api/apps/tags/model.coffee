@@ -7,7 +7,7 @@ _ = require 'underscore'
 db = require '../../lib/db'
 async = require 'async'
 Joi = require '../../lib/joi'
-{ ObjectId } = require 'mongodb'
+{ ObjectId } = require 'mongodb-legacy'
 { API_MAX, API_PAGE_SIZE } = process.env
 
 #

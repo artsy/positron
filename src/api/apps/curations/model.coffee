@@ -11,7 +11,7 @@ async = require 'async'
 Joi = require '../../lib/joi'
 moment = require 'moment'
 request = require 'superagent'
-{ ObjectId } = require 'mongodb'
+{ ObjectId } = require 'mongodb-legacy'
 { ARTSY_URL, API_MAX, API_PAGE_SIZE } = process.env
 
 OPTIONS = { allowUnknown: true, stripUnknown: false }

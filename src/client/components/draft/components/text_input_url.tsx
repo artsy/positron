@@ -17,7 +17,7 @@ interface Props {
 
 interface State {
   url: string
-  selectionPosition: ClientRect
+  selectionPosition: Partial<ClientRect>
 }
 
 /**
@@ -30,7 +30,7 @@ export class TextInputUrl extends Component<Props, State> {
 
     this.state = {
       url: this.props.urlValue || "",
-      selectionPosition: getVisibleSelectionRect(window),
+      selectionPosition: getVisibleSelectionRect(window) || {},
     }
   }
 
@@ -83,7 +83,12 @@ export class TextInputUrl extends Component<Props, State> {
     let top
     let left
 
-    if (editorPosition) {
+    if (
+      editorPosition &&
+      selectionPosition.top !== undefined &&
+      selectionPosition.left !== undefined &&
+      selectionPosition.width !== undefined
+    ) {
       top = selectionPosition.top - editorPosition.top + textHeight
       left =
         selectionPosition.left -

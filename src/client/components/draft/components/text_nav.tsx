@@ -20,7 +20,7 @@ interface ButtonType {
 }
 
 interface State {
-  selectionPosition: ClientRect
+  selectionPosition: Partial<ClientRect>
 }
 
 interface Props {
@@ -41,7 +41,7 @@ interface Props {
  */
 export class TextNav extends Component<Props, State> {
   state = {
-    selectionPosition: getVisibleSelectionRect(window),
+    selectionPosition: getVisibleSelectionRect(window) || {},
   }
 
   getButtonsFromBlockMap = () => {
