@@ -41,8 +41,8 @@ describe("graphql endpoint", () => {
           fabricate(
             "articles",
             [
-              fixtures.articles,
-              { published: false, ...fixtures.articles },
+              fixtures().articles,
+              { published: false, ...fixtures().articles },
               {
                 title: "Top Eleven Booths",
                 published: true,
