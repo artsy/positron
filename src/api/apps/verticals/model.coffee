@@ -52,7 +52,7 @@ Joi = require '../../lib/joi'
       db.collection('verticals').countDocuments(query, cb)
     (cb) ->
       return cb() unless input.count
-      db.collection('verticals').count cb
+      db.collection('verticals').countDocuments({}, cb)
   ], (err, [verticals, verticalCount, total]) =>
     callback err, {
       total: total if input.count
