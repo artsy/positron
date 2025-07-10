@@ -7,7 +7,7 @@ describe("sessions endpoints", () => {
   beforeEach(function(done) {
     empty(() => {
       fabricate("users", {}, (_, _user) => {
-        server = app.listen(5000, () => done())
+        server = app.listen(5001, () => done())
       })
     })
   })
@@ -18,7 +18,7 @@ describe("sessions endpoints", () => {
 
   it("gets a list of sessions", done =>
     fabricate("sessions", {}, (_, sessions) => {
-      request.get("http://localhost:5000/sessions").end((_, res) => {
+      request.get("http://localhost:5001/sessions").end((_, res) => {
         res.body.length.should.equal(3)
         res.body[1]._id.should.equal(246810)
         res.body[0]._id.should.equal(123456)
