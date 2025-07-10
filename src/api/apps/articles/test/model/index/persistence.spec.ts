@@ -26,7 +26,7 @@ describe("Article Persistence", () => {
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
-    server = app.listen(5000, () =>
+    server = app.listen(5001, () =>
       search.client.indices.create(
         { index: "articles_" + process.env.NODE_ENV },
         () => done()

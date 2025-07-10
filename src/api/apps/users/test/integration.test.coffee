@@ -9,7 +9,7 @@ describe 'GET /api/users/me', ->
   beforeEach (done) ->
     @token = fixtures().users.access_token
     fabricate 'users', {}, (err, @user) =>
-      @server = app.listen 5000, ->
+      @server = app.listen 5001, ->
         done()
 
   afterEach (done) ->
@@ -18,7 +18,7 @@ describe 'GET /api/users/me', ->
 
   it 'returns yourself', (done) ->
     request
-      .get("http://localhost:5000/users/me")
+      .get("http://localhost:5001/users/me")
       .set('X-Access-Token': @token)
       .end (err, res) =>
         res.body.name.should.equal @user.name
@@ -33,7 +33,7 @@ describe 'GET /api/users/me/refresh', ->
       name: 'Outdated Name',
       partner_ids: ['123']
     }, (err, @user) =>
-      @server = app.listen 5000, ->
+      @server = app.listen 5001, ->
         done()
 
   afterEach (done) ->
@@ -42,7 +42,7 @@ describe 'GET /api/users/me/refresh', ->
 
   it 'returns yourself, updated', (done) ->
     request
-      .get("http://localhost:5000/users/me/refresh")
+      .get("http://localhost:5001/users/me/refresh")
       .set('X-Access-Token': @token)
       .end (err, res) =>
         res.body.name.should.equal 'Craig Spaeth'
