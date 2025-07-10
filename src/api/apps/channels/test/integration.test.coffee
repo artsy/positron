@@ -9,7 +9,7 @@ describe 'channels endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
+        @server = app.listen 5001, ->
           done()
 
   afterEach ->
@@ -23,7 +23,7 @@ describe 'channels endpoints', ->
       }
     ], (err, channels) =>
       request
-        .get("http://localhost:5000/channels/55356a9deca560a0137aa4b7")
+        .get("http://localhost:5001/channels/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Life At Artsy'
           done()

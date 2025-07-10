@@ -18,12 +18,12 @@ describe 'User', ->
 
   beforeEach (done) ->
     empty =>
-      User.__set__ 'ARTSY_URL', 'http://localhost:5000/__gravity'
+      User.__set__ 'ARTSY_URL', 'http://localhost:5001/__gravity'
       User.__set__ 'jwtDecode', @jwtDecode = sinon.stub().returns({
         partner_ids: ['5086df098523e60002000012']
       })
       fabricate 'channels', { id: '5086df098523e60002000018' }, (err, @channel) =>
-        @server = app.listen 5000, ->
+        @server = app.listen 5001, ->
           done()
 
   afterEach ->

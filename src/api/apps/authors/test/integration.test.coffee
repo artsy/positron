@@ -9,7 +9,7 @@ describe 'authors endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
+        @server = app.listen 5001, ->
           done()
 
   afterEach ->
@@ -22,7 +22,7 @@ describe 'authors endpoints', ->
       {}
     ], (err, authors) ->
       request
-        .get("http://localhost:5000/authors?count=true")
+        .get("http://localhost:5001/authors?count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 3
@@ -36,7 +36,7 @@ describe 'authors endpoints', ->
       {}
     ], (err, authors) ->
       request
-        .get("http://localhost:5000/authors?q=Alex&count=true")
+        .get("http://localhost:5001/authors?q=Alex&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -51,7 +51,7 @@ describe 'authors endpoints', ->
       }
     ], (err, sections) ->
       request
-        .get("http://localhost:5000/authors/55356a9deca560a0137aa4b7")
+        .get("http://localhost:5001/authors/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Alex'
           done()
