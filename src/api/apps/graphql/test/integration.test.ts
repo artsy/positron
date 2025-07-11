@@ -15,13 +15,21 @@ const {
   fixtures,
   empty,
 } = require("../../../test/helpers/db.coffee")
+const { getAvailablePort } = require("../../../test/helpers/port.coffee")
 
 describe("graphql endpoint", () => {
   let server
+  let port
 
   beforeAll(done => {
-    server = app.listen(5000, () => {
-      done()
+    getAvailablePort((err, p) => {
+      if (err) {
+        done(err)
+      }
+      port = p
+      server = app.listen(port, () => {
+        done()
+      })
     })
   })
 
@@ -83,7 +91,7 @@ describe("graphql endpoint", () => {
         }
       `
     request
-      .post("http://localhost:5000/graphql")
+      .post(`http://localhost:${port}/graphql`)
       .send({ query })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -99,7 +107,7 @@ describe("graphql endpoint", () => {
 
   it("can get sections in an article", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(`http://localhost:${port}/graphql`)
       .send({ query: ArticleSectionsQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -118,7 +126,7 @@ describe("graphql endpoint", () => {
 
   it("can get authors in relatedArticles", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(`http://localhost:${port}/graphql`)
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -135,7 +143,7 @@ describe("graphql endpoint", () => {
 
   it("can get seriesArticle in relatedArticles", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(`http://localhost:${port}/graphql`)
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -153,7 +161,7 @@ describe("graphql endpoint", () => {
 
   it("can get authors in relatedArticlesCanvas", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(`http://localhost:${port}/graphql`)
       .send({ query: RelatedArticlesCanvasQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {

@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
+{ getAvailablePort } = require '../../../test/helpers/port'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongodb-legacy'
@@ -9,8 +10,12 @@ describe 'tags endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
-          done()
+        return done(err) if err
+        getAvailablePort (err, port) =>
+          return done(err) if err
+          @port = port
+          @server = app.listen @port, ->
+            done()
 
   afterEach ->
     @server.close()
@@ -22,7 +27,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?q=Asia&count=true")
+        .get("http://localhost:#{@port}/tags?q=Asia&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -37,7 +42,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?q=Market&count=true&strict=true")
+        .get("http://localhost:#{@port}/tags?q=Market&count=true&strict=true")
         .end (err, res) ->
           res.body.total.should.equal 4
           res.body.count.should.equal 1
@@ -51,7 +56,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?public=true&count=true")
+        .get("http://localhost:#{@port}/tags?public=true&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 2
@@ -67,7 +72,7 @@ describe 'tags endpoints', ->
       }
     ], (err, sections) ->
       request
-        .get("http://localhost:5000/tags/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{@port}/tags/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Asia'
           done()

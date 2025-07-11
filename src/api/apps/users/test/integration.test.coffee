@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
+{ getAvailablePort } = require '../../../test/helpers/port'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongodb-legacy'
@@ -9,8 +10,11 @@ describe 'GET /api/users/me', ->
   beforeEach (done) ->
     @token = fixtures().users.access_token
     fabricate 'users', {}, (err, @user) =>
-      @server = app.listen 5000, ->
-        done()
+      getAvailablePort (err, port) =>
+        return done(err) if err
+        @port = port
+        @server = app.listen @port, ->
+          done()
 
   afterEach (done) ->
     @server.close()
@@ -18,7 +22,7 @@ describe 'GET /api/users/me', ->
 
   it 'returns yourself', (done) ->
     request
-      .get("http://localhost:5000/users/me")
+      .get("http://localhost:#{@port}/users/me")
       .set('X-Access-Token': @token)
       .end (err, res) =>
         res.body.name.should.equal @user.name
@@ -33,8 +37,11 @@ describe 'GET /api/users/me/refresh', ->
       name: 'Outdated Name',
       partner_ids: ['123']
     }, (err, @user) =>
-      @server = app.listen 5000, ->
-        done()
+      getAvailablePort (err, port) =>
+        return done(err) if err
+        @port = port
+        @server = app.listen @port, ->
+          done()
 
   afterEach (done) ->
     @server.close()
@@ -42,7 +49,7 @@ describe 'GET /api/users/me/refresh', ->
 
   it 'returns yourself, updated', (done) ->
     request
-      .get("http://localhost:5000/users/me/refresh")
+      .get("http://localhost:#{@port}/users/me/refresh")
       .set('X-Access-Token': @token)
       .end (err, res) =>
         res.body.name.should.equal 'Craig Spaeth'

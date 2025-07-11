@@ -1,5 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
+{ getAvailablePort } = require '../../../test/helpers/port'
 app = require '../../../'
 request = require 'superagent'
 { ObjectId } = require 'mongodb-legacy'
@@ -9,8 +10,11 @@ describe 'verticals endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
-          done()
+        getAvailablePort (err, port) =>
+          return done(err) if err
+          @port = port
+          @server = app.listen @port, ->
+            done()
 
   afterEach ->
     @server.close()
@@ -22,7 +26,7 @@ describe 'verticals endpoints', ->
       {}
     ], (err, verticals) ->
       request
-        .get("http://localhost:5000/verticals?q=Art Market&count=true")
+        .get("http://localhost:#{@port}/verticals?q=Art Market&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -37,7 +41,7 @@ describe 'verticals endpoints', ->
       }
     ], (err, sections) ->
       request
-        .get("http://localhost:5000/verticals/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{@port}/verticals/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Art Market'
           done()
