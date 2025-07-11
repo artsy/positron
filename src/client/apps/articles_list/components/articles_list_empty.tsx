@@ -8,6 +8,8 @@ export const ArticlesListEmpty: React.SFC = () => {
         You haven’t written any articles yet.
       </Serif>
 
+      <Serif size={5}>Hello, world!</Serif>
+
       <Separator width={50} mx="auto" my={2} />
 
       <Serif size={5}>
