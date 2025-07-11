@@ -7,53 +7,65 @@ request = require 'superagent'
 
 describe 'GET /api/users/me', ->
 
+  token = null
+  user = null
+  port = null
+  server = null
+
   beforeEach (done) ->
-    @token = fixtures().users.access_token
-    fabricate 'users', {}, (fabricateErr, @user) =>
+    token = fixtures().users.access_token
+    fabricate 'users', {}, (fabricateErr, u) ->
       return done(fabricateErr) if fabricateErr
-      getAvailablePort (portErr, port) =>
+      user = u
+      getAvailablePort (portErr, p) ->
         return done(portErr) if portErr
-        @port = port
-        @server = app.listen @port, ->
+        port = p
+        server = app.listen port, ->
           done()
 
   afterEach (done) ->
-    @server.close()
+    server.close()
     empty -> done()
 
   it 'returns yourself', (done) ->
     request
-      .get("http://localhost:#{@port}/users/me")
-      .set('X-Access-Token': @token)
-      .end (err, res) =>
-        res.body.name.should.equal @user.name
+      .get("http://localhost:#{port}/users/me")
+      .set('X-Access-Token': token)
+      .end (err, res) ->
+        res.body.name.should.equal user.name
         done()
     return
 
 describe 'GET /api/users/me/refresh', ->
 
+  token = null
+  user = null
+  port = null
+  server = null
+
   beforeEach (done) ->
-    @token = fixtures().users.access_token
+    token = fixtures().users.access_token
     fabricate 'users', {
       name: 'Outdated Name',
       partner_ids: ['123']
-    }, (fabricateErr, @user) =>
+    }, (fabricateErr, u) ->
       return done(fabricateErr) if fabricateErr
-      getAvailablePort (portErr, port) =>
+      user = u
+      getAvailablePort (portErr, p) ->
         return done(portErr) if portErr
-        @port = port
-        @server = app.listen @port, ->
+        port = p
+        server = app.listen port, ->
           done()
 
   afterEach (done) ->
-    @server.close()
+    server.close()
     empty -> done()
 
   it 'returns yourself, updated', (done) ->
     request
-      .get("http://localhost:#{@port}/users/me/refresh")
-      .set('X-Access-Token': @token)
-      .end (err, res) =>
+      .get("http://localhost:#{port}/users/me/refresh")
+      .set('X-Access-Token': token)
+      .end (err, res) ->
         res.body.name.should.equal 'Craig Spaeth'
         done()
     return

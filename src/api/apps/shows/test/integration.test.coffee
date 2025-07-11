@@ -6,19 +6,22 @@ request = require 'superagent'
 
 describe 'shows endpoints', ->
 
+  port = null
+  server = null
+
   beforeEach (done) ->
-    getAvailablePort (portErr, port) =>
+    getAvailablePort (portErr, p) ->
       return done(portErr) if portErr
-      @port = port
-      @server = app.listen @port, ->
+      port = p
+      server = app.listen port, ->
         done()
 
   afterEach ->
-    @server.close()
+    server.close()
 
   it 'returns a show by id', (done) ->
     request
-      .get("http://localhost:#{@port}/show/foo")
+      .get("http://localhost:#{port}/show/foo")
       .set('X-Access-Token': 'foo-token')
       .end (err, res) ->
         res.body.name.should.equal 'Inez & Vinoodh'

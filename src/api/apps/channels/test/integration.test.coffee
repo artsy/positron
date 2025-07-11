@@ -7,17 +7,20 @@ request = require 'superagent'
 
 describe 'channels endpoints', ->
 
+  port = null
+  server = null
+
   beforeEach (done) ->
-    empty (emptyErr) =>
+    empty (emptyErr) ->
       return done(emptyErr) if emptyErr
-      getAvailablePort (portErr, port) =>
+      getAvailablePort (portErr, p) ->
         return done(portErr) if portErr
-        @port = port
-        @server = app.listen @port, ->
+        port = p
+        server = app.listen port, ->
           done()
 
   afterEach ->
-    @server.close()
+    server.close()
 
   it 'gets a single channel', (done) ->
     fabricate 'channels', [
@@ -27,7 +30,7 @@ describe 'channels endpoints', ->
       }
     ], (err, channels) =>
       request
-        .get("http://localhost:#{@port}/channels/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{port}/channels/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Life At Artsy'
           done()

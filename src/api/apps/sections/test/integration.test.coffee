@@ -7,17 +7,20 @@ request = require 'superagent'
 
 describe 'sections endpoints', ->
 
+  port = null
+  server = null
+
   beforeEach (done) ->
-    empty (emptyErr) =>
+    empty (emptyErr) ->
       return done(emptyErr) if emptyErr
-      getAvailablePort (portErr, port) =>
+      getAvailablePort (portErr, p) ->
         return done(portErr) if portErr
-        @port = port
-        @server = app.listen @port, ->
+        port = p
+        server = app.listen port, ->
           done()
 
   afterEach ->
-    @server.close()
+    server.close()
 
   it 'gets a list of sections by query', (done) ->
     fabricate 'sections', [
@@ -26,7 +29,7 @@ describe 'sections endpoints', ->
       {}
     ], (err, sections) =>
       request
-        .get("http://localhost:#{@port}/sections?q=Miami Basel")
+        .get("http://localhost:#{port}/sections?q=Miami Basel")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -41,7 +44,7 @@ describe 'sections endpoints', ->
       }
     ], (err, sections) =>
       request
-        .get("http://localhost:#{@port}/sections/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{port}/sections/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.title.should.equal 'Cat Season in the Art World'
           done()
