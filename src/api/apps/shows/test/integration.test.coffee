@@ -24,6 +24,7 @@ describe 'shows endpoints', ->
       .get("http://localhost:#{port}/show/foo")
       .set('X-Access-Token': 'foo-token')
       .end (err, res) ->
+        return done(err) if err
         res.body.name.should.equal 'Inez & Vinoodh'
         done()
     return

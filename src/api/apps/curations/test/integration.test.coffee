@@ -30,6 +30,7 @@ describe 'curations endpoints', ->
       request
         .get("http://localhost:#{port}/curations/55356a9deca560a0137aa4b7")
         .end (err, res) ->
+          return done(err) if err
           res.body.name.should.equal 'Homepage'
           done()
 
@@ -43,6 +44,7 @@ describe 'curations endpoints', ->
       request
         .get("http://localhost:#{port}/curations")
         .end (err, res) ->
+          return done(err) if err
           res.body.total.should.equal 4
           res.body.count.should.equal 4
           res.body.results[3].name.should.equal 'Homepage'

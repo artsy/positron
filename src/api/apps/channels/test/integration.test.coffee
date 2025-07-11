@@ -32,5 +32,6 @@ describe 'channels endpoints', ->
       request
         .get("http://localhost:#{port}/channels/55356a9deca560a0137aa4b7")
         .end (err, res) ->
+          return done(err) if err
           res.body.name.should.equal 'Life At Artsy'
           done()

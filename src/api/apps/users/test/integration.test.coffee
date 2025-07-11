@@ -32,6 +32,7 @@ describe 'GET /api/users/me', ->
       .get("http://localhost:#{port}/users/me")
       .set('X-Access-Token': token)
       .end (err, res) ->
+        return done(err) if err
         res.body.name.should.equal user.name
         done()
     return
@@ -66,6 +67,7 @@ describe 'GET /api/users/me/refresh', ->
       .get("http://localhost:#{port}/users/me/refresh")
       .set('X-Access-Token': token)
       .end (err, res) ->
+        return done(err) if err
         res.body.name.should.equal 'Craig Spaeth'
         done()
     return

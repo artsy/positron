@@ -31,6 +31,7 @@ describe 'sections endpoints', ->
       request
         .get("http://localhost:#{port}/sections?q=Miami Basel")
         .end (err, res) ->
+          return done(err) if err
           res.body.total.should.equal 3
           res.body.count.should.equal 1
           res.body.results[0].title.should.equal 'Miami Basel'
@@ -46,5 +47,6 @@ describe 'sections endpoints', ->
       request
         .get("http://localhost:#{port}/sections/55356a9deca560a0137aa4b7")
         .end (err, res) ->
+          return done(err) if err
           res.body.title.should.equal 'Cat Season in the Art World'
           done()
