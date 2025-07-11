@@ -12,17 +12,14 @@ bcrypt = require 'bcryptjs'
   if _.isArray(data)
     data = (fixturize collectionName, obj for obj in data)
     return collection.insertMany data, (err, res) ->
-      return callback(err) if err
       collection.find({}).toArray(callback)
   if collectionName == 'sessions'
     data = fixturize collectionName, data
     return collection.insertMany data, (err, res) ->
-      return callback(err) if err
       collection.find({}).toArray(callback)
   else
     data = fixturize collectionName, data
     return collection.insertOne data, (err, res) ->
-      return callback(err) if err
       collection.findOne({_id: res.insertedId}, callback)
 
 
@@ -33,10 +30,6 @@ fixturize = (collection, data) ->
 
 @empty = (callback) =>
   @db.listCollections({}).toArray (err, collections) =>
-    return callback(err) if err
     return callback() if collections.length is 0
-    cb = _.after collections.length, (err) ->
-      callback(err)
-    for col in collections
-      @db.collection(col.name).drop (dropErr) ->
-        cb(dropErr)
+    cb = _.after collections.length, callback
+    @db.collection(col.name).drop(cb) for col in collections
