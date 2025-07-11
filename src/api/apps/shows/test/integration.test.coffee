@@ -7,8 +7,8 @@ request = require 'superagent'
 describe 'shows endpoints', ->
 
   beforeEach (done) ->
-    getAvailablePort (err, port) =>
-      return done(err) if err
+    getAvailablePort (portErr, port) =>
+      return done(portErr) if portErr
       @port = port
       @server = app.listen @port, ->
         done()

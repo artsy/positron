@@ -15,16 +15,19 @@ describe("articles endpoints", () => {
   let token
   let port
   beforeEach(done => {
-    empty(() => {
+    empty(emptyErr => {
+      if (emptyErr) {
+        done(emptyErr)
+      }
       token = fixtures().users.access_token
-      fabricate("users", {}, (err, u) => {
-        if (err) {
-          done(err)
+      fabricate("users", {}, (fabricateErr, u) => {
+        if (fabricateErr) {
+          done(fabricateErr)
         }
         user = u
-        getAvailablePort((err, p) => {
-          if (err) {
-            done(err)
+        getAvailablePort((portErr, p) => {
+          if (portErr) {
+            done(portErr)
           }
           port = p
           server = app.listen(port, () => done())

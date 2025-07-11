@@ -31,3 +31,4 @@ isPortAvailable = (port, callback) ->
         tryPort(port + 1)
   
   tryPort(getTestPort())
+  

@@ -8,14 +8,13 @@ request = require 'superagent'
 describe 'tags endpoints', ->
 
   beforeEach (done) ->
-    empty =>
-      fabricate 'users', {}, (err, @user) =>
-        return done(err) if err
-        getAvailablePort (err, port) =>
-          return done(err) if err
-          @port = port
-          @server = app.listen @port, ->
-            done()
+    empty (emptyErr) =>
+      return done(emptyErr) if emptyErr
+      getAvailablePort (portErr, port) =>
+        return done(portErr) if portErr
+        @port = port
+        @server = app.listen @port, ->
+          done()
 
   afterEach ->
     @server.close()

@@ -9,9 +9,10 @@ describe 'GET /api/users/me', ->
 
   beforeEach (done) ->
     @token = fixtures().users.access_token
-    fabricate 'users', {}, (err, @user) =>
-      getAvailablePort (err, port) =>
-        return done(err) if err
+    fabricate 'users', {}, (fabricateErr, @user) =>
+      return done(fabricateErr) if fabricateErr
+      getAvailablePort (portErr, port) =>
+        return done(portErr) if portErr
         @port = port
         @server = app.listen @port, ->
           done()
@@ -36,9 +37,10 @@ describe 'GET /api/users/me/refresh', ->
     fabricate 'users', {
       name: 'Outdated Name',
       partner_ids: ['123']
-    }, (err, @user) =>
-      getAvailablePort (err, port) =>
-        return done(err) if err
+    }, (fabricateErr, @user) =>
+      return done(fabricateErr) if fabricateErr
+      getAvailablePort (portErr, port) =>
+        return done(portErr) if portErr
         @port = port
         @server = app.listen @port, ->
           done()

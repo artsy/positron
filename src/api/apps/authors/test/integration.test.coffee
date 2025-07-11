@@ -6,17 +6,21 @@ request = require 'superagent'
 { ObjectId } = require 'mongodb-legacy'
 
 describe 'authors endpoints', ->
+  
+  port = null
+  server = null
 
   beforeEach (done) ->
-    empty =>
-      fabricate 'users', {}, (err, @user) =>
-        getAvailablePort (err, port) =>
-          @port = port
-          @server = app.listen @port, ->
-            done()
+    empty (emptyErr) ->
+      return done(emptyErr) if emptyErr
+      getAvailablePort (portErr, p) ->
+        return done(portErr) if portErr
+        port = p
+        server = app.listen port, ->
+          done()
 
   afterEach ->
-    @server.close()
+    server.close()
 
   it 'gets a list of authors', (done) ->
     fabricate 'authors', [
@@ -25,7 +29,7 @@ describe 'authors endpoints', ->
       {}
     ], (err, authors) ->
       request
-        .get("http://localhost:#{@port}/authors?count=true")
+        .get("http://localhost:#{port}/authors?count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 3
@@ -39,7 +43,7 @@ describe 'authors endpoints', ->
       {}
     ], (err, authors) ->
       request
-        .get("http://localhost:#{@port}/authors?q=Alex&count=true")
+        .get("http://localhost:#{port}/authors?q=Alex&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -54,7 +58,7 @@ describe 'authors endpoints', ->
       }
     ], (err, sections) ->
       request
-        .get("http://localhost:#{@port}/authors/55356a9deca560a0137aa4b7")
+        .get("http://localhost:#{port}/authors/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Alex'
           done()

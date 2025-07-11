@@ -8,12 +8,13 @@ request = require 'superagent'
 describe 'curations endpoints', ->
 
   beforeEach (done) ->
-    empty =>
-      fabricate 'users', {}, (err, @user) =>
-        getAvailablePort (err, port) =>
-          @port = port
-          @server = app.listen @port, ->
-            done()
+    empty (emptyErr) =>
+      return done(emptyErr) if emptyErr
+      getAvailablePort (portErr, port) =>
+        return done(portErr) if portErr
+        @port = port
+        @server = app.listen @port, ->
+          done()
 
   afterEach ->
     @server.close()

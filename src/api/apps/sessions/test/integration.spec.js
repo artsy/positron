@@ -7,15 +7,16 @@ describe("sessions endpoints", () => {
   let server
   let port
   beforeEach(function(done) {
-    empty(() => {
-      fabricate("users", {}, (_, _user) => {
-        getAvailablePort((err, p) => {
-          if (err) {
-            done(err)
-          }
-          port = p
-          server = app.listen(port, () => done())
-        })
+    empty(emptyErr => {
+      if (emptyErr) {
+        done(emptyErr)
+      }
+      getAvailablePort((portErr, p) => {
+        if (portErr) {
+          done(portErr)
+        }
+        port = p
+        server = app.listen(port, () => done())
       })
     })
   })
