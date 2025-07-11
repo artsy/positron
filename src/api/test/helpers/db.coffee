@@ -36,7 +36,6 @@ fixturize = (collection, data) ->
     return callback(err) if err
     return callback() if collections.length is 0
     cb = _.after collections.length, (err) ->
-      # If any drop failed, still call callback once with the error
       callback(err)
     for col in collections
       @db.collection(col.name).drop (dropErr) ->
