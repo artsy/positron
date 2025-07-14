@@ -277,7 +277,7 @@ ImageCollectionSection = (->
   fair_id: @string().objectid()
   fair_ids: @array().items(@string().objectid())
   fair_programming_id: @string().objectid()
-  featured: @boolean().default(false)
+  featured: @boolean().optional()
   has_video: @boolean()
   indexable: @boolean()
   in_editorial_feed: @boolean()
