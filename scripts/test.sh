@@ -2,6 +2,6 @@
 
 set -e -x
 
-yarn mocha $(find src -name '*.test.coffee')
-yarn mocha $(find src -name '*.spec.*')
-yarn jest
+yarn mocha --runInBand $(find src -name '*.test.coffee')
+yarn mocha --runInBand $(find src -name '*.spec.*')
+yarn jest --runInBand
