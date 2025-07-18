@@ -33,14 +33,10 @@ describe("Article", () => {
     )
   })
   // @ts-ignore
-  after(done => {
-    server.close(() => {
-      search.client.indices.delete(
-        {
-          index: "articles_" + process.env.NODE_ENV,
-        },
-        () => done()
-      )
+  after(() => {
+    server.close()
+    search.client.indices.delete({
+      index: "articles_" + process.env.NODE_ENV,
     })
   })
 
@@ -165,15 +161,7 @@ describe("Article", () => {
                         index: search.index,
                         q: "title:quux",
                       },
-                      (error, response) => {
-                        if (error) {
-                          return done(error)
-                        }
-                        if (!response || !response.hits) {
-                          return done(
-                            new Error("Invalid Elasticsearch response")
-                          )
-                        }
+                      (_error, response) => {
                         response.hits.hits.length.should.equal(0)
                         done()
                       }

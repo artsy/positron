@@ -24,14 +24,10 @@ describe("Article Retrieval", () => {
     )
   })
   // @ts-ignore
-  after(done => {
-    server.close(() => {
-      search.client.indices.delete(
-        {
-          index: "articles_" + process.env.NODE_ENV,
-        },
-        () => done()
-      )
+  after(() => {
+    server.close()
+    search.client.indices.delete({
+      index: "articles_" + process.env.NODE_ENV,
     })
   })
 

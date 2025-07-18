@@ -25,8 +25,8 @@ describe("articles endpoints", () => {
     })
   })
 
-  afterEach(done => {
-    server.close(() => done())
+  afterEach(() => {
+    server.close()
   })
 
   describe("as a non-logged in user", () =>
