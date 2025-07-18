@@ -25,6 +25,7 @@ export const toQuery = input => {
     "channel_id",
     "all_by_author",
     "artist_id",
+    "author_ids",
     "has_video",
     "has_published_media",
     "fair_ids",
@@ -70,6 +71,9 @@ export const toQuery = input => {
   }
   if (input.tracking_tags) {
     query.tracking_tags = { $in: input.tracking_tags }
+  }
+  if (input.author_ids) {
+    query.author_ids = { $in: input.author_ids }
   }
 
   // Convert query for super article for article
