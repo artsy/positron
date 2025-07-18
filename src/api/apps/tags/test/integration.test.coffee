@@ -9,7 +9,7 @@ describe 'tags endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
+        @server = app.listen 5001, ->
           done()
 
   afterEach ->
@@ -22,7 +22,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?q=Asia&count=true")
+        .get("http://localhost:5001/tags?q=Asia&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -37,7 +37,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?q=Market&count=true&strict=true")
+        .get("http://localhost:5001/tags?q=Market&count=true&strict=true")
         .end (err, res) ->
           res.body.total.should.equal 4
           res.body.count.should.equal 1
@@ -51,7 +51,7 @@ describe 'tags endpoints', ->
       {}
     ], (err, tags) ->
       request
-        .get("http://localhost:5000/tags?public=true&count=true")
+        .get("http://localhost:5001/tags?public=true&count=true")
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 2
@@ -67,7 +67,7 @@ describe 'tags endpoints', ->
       }
     ], (err, sections) ->
       request
-        .get("http://localhost:5000/tags/55356a9deca560a0137aa4b7")
+        .get("http://localhost:5001/tags/55356a9deca560a0137aa4b7")
         .end (err, res) ->
           res.body.name.should.equal 'Asia'
           done()

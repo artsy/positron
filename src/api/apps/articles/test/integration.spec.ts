@@ -20,7 +20,7 @@ describe("articles endpoints", () => {
           done(err)
         }
         user = u
-        server = app.listen(5000, () => done())
+        server = app.listen(5001, () => done())
       })
     })
   })
@@ -43,7 +43,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles?count=true")
+            .get("http://localhost:5001/articles?count=true")
             .end((error, res) => {
               if (error) {
                 done(error)
@@ -83,7 +83,7 @@ describe("articles endpoints", () => {
 
     it("does not allow featuring", done => {
       request
-        .post("http://localhost:5000/articles")
+        .post("http://localhost:5001/articles")
         .set({ "X-Access-Token": normieToken })
         .send({ featured: true })
         .end((err, res) => {
@@ -109,7 +109,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles/5086df098523e60002000012")
+            .get("http://localhost:5001/articles/5086df098523e60002000012")
             .end((error, _res) => {
               if (error) {
                 done(error)
@@ -124,7 +124,7 @@ describe("articles endpoints", () => {
   describe("as a channel member", () => {
     it("creates articles", done => {
       request
-        .post("http://localhost:5000/articles")
+        .post("http://localhost:5001/articles")
         .set({ "X-Access-Token": token })
         .send({
           title: "Hi",
@@ -154,7 +154,7 @@ describe("articles endpoints", () => {
           }
           request
             .get(
-              `http://localhost:5000/articles?author_id=${
+              `http://localhost:5001/articles?author_id=${
                 user._id
               }&published=true&count=true`
             )
@@ -190,7 +190,7 @@ describe("articles endpoints", () => {
           }
           request
             .get(
-              "http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true"
+              "http://localhost:5001/articles?channel_id=5086df098523e60002000012&published=true&count=true"
             )
             .set({ "X-Access-Token": token })
             .end((error, res) => {
@@ -219,7 +219,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles?published=false")
+            .get("http://localhost:5001/articles?published=false")
             .end((error, res) => {
               error.message.should.containEql("Unauthorized")
               res.body.message.should.containEql("published=true")
@@ -249,7 +249,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles/5086df098523e60002000012")
+            .get("http://localhost:5001/articles/5086df098523e60002000012")
             .set({ "X-Access-Token": token })
             .end((error, res) => {
               if (error) {
@@ -280,7 +280,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles/5086df098523e60002000012")
+            .get("http://localhost:5001/articles/5086df098523e60002000012")
             .set({ "X-Access-Token": token })
             .end((error, res) => {
               if (error) {
@@ -309,7 +309,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .put("http://localhost:5000/articles/5086df098523e60002000012")
+            .put("http://localhost:5001/articles/5086df098523e60002000012")
             .send({
               title: "Hellow Wrld",
               author_id: "5086df098523e60002000012",
@@ -343,7 +343,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .del("http://localhost:5000/articles/5086df098523e60002000012")
+            .del("http://localhost:5001/articles/5086df098523e60002000012")
             .set({ "X-Access-Token": token })
             .end((error, _res) => {
               if (error) {
