@@ -32,4 +32,5 @@ fixturize = (collection, data) ->
   @db.listCollections({}).toArray (err, collections) =>
     return callback() if collections.length is 0
     cb = _.after collections.length, callback
-    @db.collection(col.name).drop(cb) for col in collections
+    for col in collections
+      @db.collection(col.name).deleteMany {}, cb

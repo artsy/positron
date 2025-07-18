@@ -6,4 +6,4 @@ trap "exit" INT
 
 jest \
   $@ \
-  --maxWorkers=2 --detectOpenHandles --forceExit
+  --runInBand --detectOpenHandles --forceExit
