@@ -267,6 +267,7 @@ ImageCollectionSection = (->
   artwork_id: @string().objectid()
   auction_id: @string().objectid()
   author_id: @string().objectid()
+  author_ids: @string().objectid()
   biography_for_artist_id: @string().objectid()
   channel_id: @string().objectid()
   count: @boolean().default(false)
