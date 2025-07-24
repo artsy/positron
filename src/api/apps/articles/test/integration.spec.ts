@@ -12,6 +12,9 @@ describe("articles endpoints", () => {
   let user
   let server
   let token
+  const TEST_PORT = process.env.TEST_PORT || 5001
+  const BASE_URL = `http://localhost:${TEST_PORT}`
+
   beforeEach(done => {
     empty(() => {
       token = fixtures().users.access_token
@@ -20,7 +23,7 @@ describe("articles endpoints", () => {
           done(err)
         }
         user = u
-        server = app.listen(5000, () => done())
+        server = app.listen(TEST_PORT, () => done())
       })
     })
   })
@@ -42,19 +45,17 @@ describe("articles endpoints", () => {
           if (err) {
             done(err)
           }
-          request
-            .get("http://localhost:5000/articles?count=true")
-            .end((error, res) => {
-              if (error) {
-                done(error)
-              }
-              res.body.total.should.equal(3)
-              res.body.count.should.equal(2)
-              res.body.results[0].title.should.equal(
-                "Flowers on Flowers The Sequel"
-              )
-              done()
-            })
+          request.get(`${BASE_URL}/articles?count=true`).end((error, res) => {
+            if (error) {
+              done(error)
+            }
+            res.body.total.should.equal(3)
+            res.body.count.should.equal(2)
+            res.body.results[0].title.should.equal(
+              "Flowers on Flowers The Sequel"
+            )
+            done()
+          })
         }
       )))
 
@@ -83,7 +84,7 @@ describe("articles endpoints", () => {
 
     it("does not allow featuring", done => {
       request
-        .post("http://localhost:5000/articles")
+        .post(`${BASE_URL}/articles`)
         .set({ "X-Access-Token": normieToken })
         .send({ featured: true })
         .end((err, res) => {
@@ -109,7 +110,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles/5086df098523e60002000012")
+            .get(`${BASE_URL}/articles/5086df098523e60002000012`)
             .end((error, _res) => {
               if (error) {
                 done(error)
@@ -124,7 +125,7 @@ describe("articles endpoints", () => {
   describe("as a channel member", () => {
     it("creates articles", done => {
       request
-        .post("http://localhost:5000/articles")
+        .post(`${BASE_URL}/articles`)
         .set({ "X-Access-Token": token })
         .send({
           title: "Hi",
@@ -154,7 +155,7 @@ describe("articles endpoints", () => {
           }
           request
             .get(
-              `http://localhost:5000/articles?author_id=${
+              `${BASE_URL}/articles?author_id=${
                 user._id
               }&published=true&count=true`
             )
@@ -169,6 +170,168 @@ describe("articles endpoints", () => {
                 "Flowers on Flowers The Sequel"
               )
               done()
+            })
+        }
+      )
+    })
+
+    it("handles ObjectId string compatibility for author queries", done => {
+      const targetAuthorId = new ObjectId("6878fe6c9710aed1770fc57f")
+      const targetArticleId = new ObjectId("6878fe6c9710aed1770fc589")
+
+      // Create an article with the exact data from the browser
+      fabricate(
+        "articles",
+        [
+          {
+            _id: targetArticleId,
+            title: "Latin American Art: A Growing Global Influence",
+            author_id: targetAuthorId,
+            author_ids: [targetAuthorId], // This is the key difference!
+            author: {
+              name: "Emma Rodriguez",
+              id: targetAuthorId,
+            },
+            published: true,
+          },
+          {
+            title: "Different Article",
+            author_id: user._id,
+            published: true,
+          },
+        ],
+        (err, articles) => {
+          if (err) {
+            done(err)
+          }
+
+          console.log(
+            "Created articles:",
+            articles.map(a => ({
+              _id: a._id,
+              title: a.title,
+              author_id: a.author_id,
+              author_ids: a.author_ids,
+            }))
+          )
+
+          // Test the exact browser query with author_id (using string version of ObjectId)
+          request
+            .get(
+              `${BASE_URL}/articles?published=true&count=true&author_id=6878fe6c9710aed1770fc57f`
+            )
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
+              }
+              console.log(
+                "author_id query results:",
+                res.body.results.map(a => ({
+                  _id: a._id,
+                  title: a.title,
+                  author_id: a.author_id,
+                  author_ids: a.author_ids,
+                }))
+              )
+
+              // Test with author_ids (using string version of ObjectId)
+              request
+                .get(
+                  `${BASE_URL}/articles?published=true&count=true&author_ids=6878fe6c9710aed1770fc57f`
+                )
+                .end((error, res) => {
+                  if (error) {
+                    done(error)
+                  }
+                  console.log(
+                    "author_ids query results:",
+                    res.body.results.map(a => ({
+                      _id: a._id,
+                      title: a.title,
+                      author_id: a.author_id,
+                      author_ids: a.author_ids,
+                    }))
+                  )
+
+                  done()
+                })
+            })
+        }
+      )
+    })
+
+    it("gets a list of articles by author_ids (array inclusion)", done => {
+      const authorId = new ObjectId()
+      const coAuthorId = new ObjectId()
+      const thirdAuthorId = new ObjectId()
+      fabricate(
+        "articles",
+        [
+          {
+            title: "Multi Author Article 1",
+            author_ids: [authorId, coAuthorId],
+            published: true,
+          },
+          {
+            title: "Multi Author Article 2",
+            author_ids: [authorId],
+            published: true,
+          },
+          {
+            title: "Different Author Article",
+            author_ids: [coAuthorId],
+            published: true,
+          },
+          {
+            title: "Three Author Article",
+            author_ids: [thirdAuthorId, authorId, coAuthorId], // authorId is not first in array
+            published: true,
+          },
+          {
+            title: "Single Author Article",
+            author_id: user._id,
+            published: true,
+          },
+        ],
+        (err, _articles) => {
+          if (err) {
+            done(err)
+          }
+          // Test querying for authorId - should find articles where authorId is anywhere in the author_ids array
+          request
+            .get(
+              `${BASE_URL}/articles?author_ids=${authorId}&published=true&count=true`
+            )
+            .set({ "X-Access-Token": token })
+            .end((error, res) => {
+              if (error) {
+                done(error)
+              }
+              res.body.total.should.equal(5)
+              res.body.count.should.equal(3) // Should find 3 articles with authorId in author_ids array
+              res.body.results.length.should.equal(3)
+              const titles = res.body.results.map(article => article.title)
+              titles.should.containEql("Multi Author Article 1")
+              titles.should.containEql("Multi Author Article 2")
+              titles.should.containEql("Three Author Article") // This will fail with direct assignment if authorId is not first
+
+              // Test querying for thirdAuthorId - should find article where it's first in the array
+              request
+                .get(
+                  `${BASE_URL}/articles?author_ids=${thirdAuthorId}&published=true&count=true`
+                )
+                .end((error, res) => {
+                  if (error) {
+                    done(error)
+                  }
+                  res.body.total.should.equal(5)
+                  res.body.count.should.equal(1)
+                  res.body.results.length.should.equal(1)
+                  res.body.results[0].title.should.equal("Three Author Article")
+
+                  done()
+                })
             })
         }
       )
@@ -190,7 +353,7 @@ describe("articles endpoints", () => {
           }
           request
             .get(
-              "http://localhost:5000/articles?channel_id=5086df098523e60002000012&published=true&count=true"
+              `${BASE_URL}/articles?channel_id=5086df098523e60002000012&published=true&count=true`
             )
             .set({ "X-Access-Token": token })
             .end((error, res) => {
@@ -219,7 +382,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles?published=false")
+            .get(`${BASE_URL}/articles?published=false`)
             .end((error, res) => {
               error.message.should.containEql("Unauthorized")
               res.body.message.should.containEql("published=true")
@@ -249,7 +412,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles/5086df098523e60002000012")
+            .get(`${BASE_URL}/articles/5086df098523e60002000012`)
             .set({ "X-Access-Token": token })
             .end((error, res) => {
               if (error) {
@@ -280,7 +443,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get("http://localhost:5000/articles/5086df098523e60002000012")
+            .get(`${BASE_URL}/articles/5086df098523e60002000012`)
             .set({ "X-Access-Token": token })
             .end((error, res) => {
               if (error) {
@@ -309,7 +472,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .put("http://localhost:5000/articles/5086df098523e60002000012")
+            .put(`${BASE_URL}/articles/5086df098523e60002000012`)
             .send({
               title: "Hellow Wrld",
               author_id: "5086df098523e60002000012",
@@ -343,7 +506,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .del("http://localhost:5000/articles/5086df098523e60002000012")
+            .del(`${BASE_URL}/articles/5086df098523e60002000012`)
             .set({ "X-Access-Token": token })
             .end((error, _res) => {
               if (error) {
