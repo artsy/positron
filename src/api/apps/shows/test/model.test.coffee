@@ -10,7 +10,7 @@ describe 'Show', ->
 
   before (done) ->
     app.use '/__gravity', gravityServer
-    @server = app.listen 5000, ->
+    @server = app.listen 5001, ->
       done()
 
   after ->
