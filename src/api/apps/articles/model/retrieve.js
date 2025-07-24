@@ -73,7 +73,7 @@ export const toQuery = input => {
     query.tracking_tags = { $in: input.tracking_tags }
   }
   if (input.author_ids) {
-    query.author_ids = { $in: input.author_ids }
+    query.author_ids = { $in: [input.author_ids] }
   }
 
   // Convert query for super article for article
