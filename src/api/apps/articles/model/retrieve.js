@@ -72,8 +72,32 @@ export const toQuery = input => {
   if (input.tracking_tags) {
     query.tracking_tags = { $in: input.tracking_tags }
   }
+
+  // Handle author_id field type conversion (ObjectId from schema vs string in DB)
+  if (input.author_id) {
+    query.$or = query.$or || []
+    query.$or.push(
+      { author_id: input.author_id }, // ObjectId version (from schema conversion)
+      { author_id: input.author_id.toString() } // String version
+    )
+    delete query.author_id // Remove the direct assignment
+  }
+
   if (input.author_ids) {
-    query.author_ids = { $in: input.author_ids }
+    // The schema converts string to ObjectId, but the data might be stored as strings
+    // We need to query for both ObjectId and string versions
+    const authorIdsArray = Array.isArray(input.author_ids)
+      ? input.author_ids
+      : [input.author_ids]
+
+    // Create array with both string and ObjectId versions for compatibility
+    const queryArray = []
+    authorIdsArray.forEach(id => {
+      queryArray.push(id) // ObjectId version (from schema conversion)
+      queryArray.push(id.toString()) // String version
+    })
+
+    query.author_ids = { $in: queryArray }
   }
 
   // Convert query for super article for article
