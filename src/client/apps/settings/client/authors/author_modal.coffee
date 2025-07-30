@@ -73,6 +73,15 @@ module.exports = AuthorModal = React.createClass
                 name: 'twitter_handle'
                 onChange: @onInputChange
               }
+            div {className: 'field-group'},
+              label {}, 'Role'
+              input {
+                className: 'bordered-input author-edit__role'
+                placeholder: 'Enter role here...'
+                value: @state.author?.role or ''
+                name: 'role'
+                onChange: @onInputChange
+              }
           div {className: 'fields-right'},
             label {}, 'Bio'
             textarea {

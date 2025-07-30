@@ -7,6 +7,7 @@ module.exports = (offset = 0) ->
       twitter_handle
       id
       image_url
+      role
     }
   }
   """
