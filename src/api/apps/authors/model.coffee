@@ -18,6 +18,7 @@ Joi = require '../../lib/joi'
   bio: @string().allow('', null).default('')
   image_url: @string().allow('', null).default('')
   twitter_handle: @string().allow('', null).default('')
+  instagram_handle: @string().allow('', null).default('')
   role: @string().allow('', null).default('')
 ).call Joi
 

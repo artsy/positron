@@ -74,6 +74,18 @@ module.exports = AuthorModal = React.createClass
                 onChange: @onInputChange
               }
             div {className: 'field-group'},
+              label {}, 'Instagram Handle'
+              div {
+                className: 'author-edit__instagram-at'
+              }, '@'
+              input {
+                className: 'bordered-input author-edit__instagram'
+                placeholder: 'Enter Instagram handle here...'
+                value: @state.author?.instagram_handle or ''
+                name: 'instagram_handle'
+                onChange: @onInputChange
+              }
+            div {className: 'field-group'},
               label {}, 'Role'
               input {
                 className: 'bordered-input author-edit__role'
