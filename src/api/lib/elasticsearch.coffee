@@ -1,5 +1,5 @@
 elasticsearch = require('elasticsearch')
-{ ELASTICSEARCH_URL, ELASTICSEARCH_INDEX_SUFFIX } = process.env
+{ ELASTICSEARCH_URL, ELASTICSEARCH_INDEX_SUFFIX, USE_OPENSEARCH } = process.env
 
 client = new elasticsearch.Client
           host: ELASTICSEARCH_URL
@@ -10,3 +10,4 @@ client = new elasticsearch.Client
 module.exports =
   index: 'articles_' + (ELASTICSEARCH_INDEX_SUFFIX or 'production')
   client: client
+  isOpenSearch: USE_OPENSEARCH == 'true'
