@@ -5,8 +5,10 @@ module.exports = (offset = 0) ->
       name
       bio
       twitter_handle
+      instagram_handle
       id
       image_url
+      role
     }
   }
   """
