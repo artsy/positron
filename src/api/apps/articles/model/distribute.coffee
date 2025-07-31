@@ -63,7 +63,7 @@ moment = require 'moment'
 @removeFromSearch = (id) ->
   search.client.delete(
     index: search.index
-    type: 'article'
+    type: '_doc'
     id: id
   , (error, response) ->
     console.log(error) if error
