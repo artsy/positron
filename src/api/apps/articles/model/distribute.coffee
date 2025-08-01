@@ -61,11 +61,14 @@ moment = require 'moment'
   )
 
 @removeFromSearch = (id) ->
-  search.client.delete(
+  deleteParams =
     index: search.index
-    type: 'article'
     id: id
-  , (error, response) ->
+
+  # Only include type parameter for Elasticsearch
+  deleteParams.type = if search.isOpenSearch then '_doc' else 'article'
+
+  search.client.delete(deleteParams, (error, response) ->
     console.log(error) if error
   )
 
