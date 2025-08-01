@@ -7,7 +7,7 @@ services:
     command: ["yarn", "dev"]
     environment:
       - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron
-      - ELASTICSEARCH_URL=http://positron-elasticsearch:9200
+      - OPENSEARCH_URL=http://positron-opensearch:9200
       - ELASTICSEARCH_INDEX_SUFFIX=development
       # SALT is an oss value. The '$' is escaped.
       - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
@@ -16,10 +16,10 @@ services:
       - ../.env
     depends_on:
       - positron-mongodb
-      - positron-elasticsearch
+      - positron-opensearch
     ports:
       - 3005:3005
-  positron-elasticsearch:
+  positron-opensearch:
     image: opensearchproject/opensearch:1.3.20
     environment:
       - discovery.type=single-node
