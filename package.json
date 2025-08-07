@@ -227,6 +227,7 @@
     "react-18": "npm:react@18.3.1",
     "react-addons-test-utils": "15.4.2",
     "react-dom-18": "npm:react-dom@18.3.1",
+    "@artsy/palette-v2": "npm:@artsy/palette@latest",
     "react-test-renderer": "16.8.3",
     "react-transform-hmr": "1.0.4",
     "redux-mock-store": "1.4.0",

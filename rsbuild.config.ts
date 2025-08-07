@@ -18,6 +18,7 @@ export default defineConfig({
         alias: {
           react: "react-18",
           "react-dom": "react-dom-18",
+          "@artsy/palette": "@artsy/palette-v2",
         },
       },
       output: {

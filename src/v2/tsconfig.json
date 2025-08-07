@@ -3,12 +3,15 @@
   "compilerOptions": {
     "baseUrl": ".",
     "jsx": "react-jsx",
+    "typeRoots": ["../../node_modules/@types", "../../node_modules/@artsy/palette-v2/dist"],
     "paths": {
       "reaction/*": ["../../node_modules/@artsy/reaction/dist/*"],
       "react": ["../../node_modules/react-18"],
       "react-dom": ["../../node_modules/react-dom-18"],
       "react/jsx-runtime": ["../../node_modules/react-18/jsx-runtime"],
-      "react/jsx-dev-runtime": ["../../node_modules/react-18/jsx-dev-runtime"]
+      "react/jsx-dev-runtime": ["../../node_modules/react-18/jsx-dev-runtime"],
+      "@artsy/palette": ["../../node_modules/@artsy/palette-v2"],
+      "@artsy/palette/*": ["../../node_modules/@artsy/palette-v2/*"]
     }
   },
   "include": ["./**/*"],
