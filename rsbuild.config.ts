@@ -5,22 +5,32 @@ import { pluginAssetsRetry } from "@rsbuild/plugin-assets-retry"
 import { pluginNodePolyfill } from "@rsbuild/plugin-node-polyfill"
 import { pluginReact } from "@rsbuild/plugin-react"
 
-loadEnvs(".env.shared", ".env")
+// loadEnvs(".env.shared", ".env")
 
 export default defineConfig({
+  root: "./src/v2",
   environments: {
     client: {
       plugins: [pluginAssetsRetry()],
       source: {
         entry: {
-          index: "./src/v2/client.tsx",
+          index: "./client.tsx",
         },
         alias: {
           react: "react-18",
           "react-dom": "react-dom-18",
-          "@artsy/palette": "@artsy/palette-v2",
+          "@artsy/icons": path.resolve(
+            __dirname,
+            "../..",
+            "node_modules",
+            "@artsy/icons/dist/web"
+          ),
         },
+        tsconfigPath: "./tsconfig.json",
       },
+      // resolve: {
+      //   aliasStrategy: "prefer-tsconfig",
+      // },
       output: {
         target: "web",
         manifest: true,

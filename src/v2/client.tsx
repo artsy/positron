@@ -1,14 +1,22 @@
-import { graphql, useFragment } from "react-relay"
+import "regenerator-runtime/runtime"
+import { App } from "App"
+import { createRoot } from "react-dom/client"
 
-export const Foo = () => {
-  const data = useFragment(FRAGMENT, null)
-  return <div>hey now</div>
-}
+// Render your React component instead
+const root = createRoot(document.getElementById("root"))
+root.render(<App />)
 
-const FRAGMENT = graphql`
-  fragment client on RootQueryType {
-    article(id: "hi") {
-      id
-    }
-  }
-`
+// import { graphql, useFragment } from "react-relay"
+
+// export const Foo = () => {
+//   const data = useFragment(FRAGMENT, null)
+//   return <div>hey now</div>
+// }
+
+// const FRAGMENT = graphql`
+//   fragment client on RootQueryType {
+//     article(id: "hi") {
+//       id
+//     }
+//   }
+// `

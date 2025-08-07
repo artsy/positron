@@ -18,6 +18,7 @@ dump.rdb
 
 # V2
 /dist
+/src/v2/dist
 
 /public
 /src/client/public/assets

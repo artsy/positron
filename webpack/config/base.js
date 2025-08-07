@@ -15,9 +15,33 @@ const config = {
     path: path.resolve(process.cwd(), "public/assets"),
     publicPath: "/assets",
     sourceMapFilename: "[file].map?[contenthash]",
+    globalObject: "this",
   },
   module: {
     rules: [
+      {
+        test: /\.js$/,
+        include: /node_modules\/es-toolkit/,
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              presets: [
+                ["@babel/preset-env", { 
+                  targets: { browsers: ["last 2 versions"] },
+                  useBuiltIns: "usage",
+                  modules: "commonjs"
+                }]
+              ],
+              plugins: [
+                "@babel/plugin-proposal-nullish-coalescing-operator",
+                "@babel/plugin-proposal-optional-chaining"
+              ],
+              cacheDirectory: true,
+            },
+          },
+        ],
+      },
       {
         test: /\.coffee$/,
         include: /src/,
@@ -88,6 +112,20 @@ const config = {
     }),
   ],
   resolve: {
+    alias: {
+      "@artsy/icons": path.resolve(
+        __dirname,
+        "../..",
+        "node_modules",
+        "@artsy/icons/dist/web"
+      ),
+      "es-toolkit": path.resolve(
+        __dirname,
+        "../..",
+        "node_modules",
+        "es-toolkit/dist/index.js"
+      ),
+    },
     extensions: [
       ".mjs",
       ".coffee",
