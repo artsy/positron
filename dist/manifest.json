@@ -1,0 +1,22 @@
+{
+  "allFiles": [
+    "/static/js/index.js",
+    "/static/js/vendors-node_modules_react-18_jsx-dev-runtime_js.js",
+    "/static/js/index.js.map",
+    "/static/js/vendors-node_modules_react-18_jsx-dev-runtime_js.js.map"
+  ],
+  "entries": {
+    "index": {
+      "assets": [
+        "static/js/vendors-node_modules_react-18_jsx-dev-runtime_js.js.map",
+        "static/js/index.js.map"
+      ],
+      "initial": {
+        "js": [
+          "/static/js/vendors-node_modules_react-18_jsx-dev-runtime_js.js",
+          "/static/js/index.js"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "jsx": "react-jsx",
+    "paths": {
+      "reaction/*": ["../../node_modules/@artsy/reaction/dist/*"],
+      "react": ["../../node_modules/react-18"],
+      "react-dom": ["../../node_modules/react-dom-18"],
+      "react/jsx-runtime": ["../../node_modules/react-18/jsx-runtime"],
+      "react/jsx-dev-runtime": ["../../node_modules/react-18/jsx-dev-runtime"]
+    }
+  },
+  "include": ["./**/*"],
+  "exclude": []
+}

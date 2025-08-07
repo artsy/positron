@@ -18,6 +18,6 @@ if which detect-secrets > /dev/null; test $? != 0; then
   echo "${HELP}"
   exit 1
 else
-  detect-secrets-hook --baseline .secrets.baseline $(git diff --staged --name-only)
+  detect-secrets-hook --baseline .secrets.baseline --exclude-files '^dist/.*' $(git diff --staged --name-only)
 fi
 echo "${GREEN}No secrets detected!${NO_COLOR}"

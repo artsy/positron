@@ -19,5 +19,6 @@
     "strictNullChecks": true,
     "target": "es2016"
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": ["./src/v2"]
 }
