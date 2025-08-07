@@ -545,9 +545,10 @@ describe("Article Persistence", () => {
           if (err) {
             done(err)
           }
-          // @ts-ignore
 
-          ;(article.fair_ids != null).should.not.be.ok
+          const output = article.fair_ids != null
+          // @ts-ignore
+          output.should.not.be.ok
           done()
         }
       ))

@@ -27,9 +27,9 @@ export default defineConfig({
           async_hooks: "async_hooks", // Required because getAsyncStorage isn't using async import()
         },
       },
-      tools: {
-        htmlPlugin: false,
-      },
+      // tools: {
+      //   htmlPlugin: false,
+      // },
     },
   },
 
@@ -70,8 +70,8 @@ export default defineConfig({
               "@swc/plugin-relay",
               {
                 // Must be fully-resolved absolute path
-                rootDir: path.resolve(process.cwd(), "src"),
-                artifactDirectory: "__generated__",
+                rootDir: path.resolve(process.cwd(), "src/v2"),
+                artifactDirectory: "z__generated__",
                 language: "typescript",
               },
             ],

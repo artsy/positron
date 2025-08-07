@@ -94,8 +94,9 @@ describe("Save", () => {
           if (err) {
             done(err)
           }
+          const output = article.published_at === null
           // @ts-ignore
-          ;(article.published_at === null).should.be.true()
+          output.should.be.true()
           done()
         }
       ))

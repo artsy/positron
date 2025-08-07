@@ -16,6 +16,9 @@ dump.rdb
 .env*
 .cache
 
+# V2
+/dist
+
 /public
 /src/client/public/assets
 /node_modules
