@@ -59,7 +59,7 @@ The [articles sitemap](https://www.artsy.net/sitemap-articles-2018.xml) is gener
 
 Changes to the sitemap itself are made in Ember via the [ArticleSitemapJob](https://github.com/artsy/ember/blob/main/src/ember/jobs/sitemaps/article_sitemap_job.py).
 
-If additional fields are added to the article sitemap, we must also fetch the new field from Positron via [Fulcrum's PositronExtracts](https://github.com/artsy/fulcrum/blob/main/lib/fulcrum/extract/positron_extracts.rb).
+If additional fields are added to the article sitemap, we must also fetch the new field from Positron via [Degas's PositronExtracts](https://github.com/artsy/degas/blob/main/config/sources/positron.yaml).
 
 ### News sitemap
 
