@@ -66,7 +66,7 @@ moment = require 'moment'
     id: id
 
   # Only include type parameter for Elasticsearch
-  deleteParams.type = if search.isOpenSearch then '_doc' else 'article'
+  deleteParams.type = '_doc'
 
   search.client.delete(deleteParams, (error, response) ->
     console.log(error) if error
