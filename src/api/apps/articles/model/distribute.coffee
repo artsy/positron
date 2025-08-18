@@ -51,6 +51,8 @@ moment = require 'moment'
       author: article.author and article.author.name or ''
       featured: article.featured
       tags: tags
+      # indexed as alternate_names since Gravity already searches against alternate_names in both queries
+      alternate_names: article.keywords or []
       body: sections and stripHtmlTags(sections.join(' ')) or ''
       image_url: crop(article.thumbnail_image, { width: 70, height: 70 })
       search_boost: new Article(cloneDeep article).searchBoost()

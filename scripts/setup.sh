@@ -12,10 +12,11 @@ NO_COLOR=$(tput sgr0)
 echo "Installing project dependencies from Brewfile..."
 brew bundle
 
-if [ ! -z $NVM_DIR ]; then # skip if nvm is not available
-  echo "Installing Node..."
-  source ~/.nvm/nvm.sh
-  nvm install
+if command -v asdf >/dev/null; then
+  echo "Installing language dependencies with asdf"
+  asdf install
+else
+  echo "Skipping language dependencies installation (asdf not found)"
 fi
 
 echo "Installing dependencies..."
@@ -36,4 +37,4 @@ fi
 
 echo "
 ${GREEN}Setup complete!
-To run the project execute: nvm use && yarn start${NO_COLOR}"
+To run the project execute: yarn start${NO_COLOR}"
