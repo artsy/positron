@@ -589,6 +589,50 @@ describe("Save", () => {
       })
     })
 
+    it("passes article keywords as alternate_names to indexForSearch", done => {
+      const articleWithKeywords = {
+        indexable: true,
+        published: true,
+        keywords: ["art", "contemporary", "painting", "modern"],
+        title: "Test Article",
+        slug: "test-article",
+      }
+
+      Save.sanitizeAndSave(err => {
+        if (err) {
+          done(err)
+        }
+        indexForSearch.callCount.should.eql(1)
+        const callArgs = indexForSearch.getCall(0).args
+        callArgs[0].should.have.property("keywords")
+        callArgs[0].keywords.should.eql([
+          "art",
+          "contemporary",
+          "painting",
+          "modern",
+        ])
+        done()
+      })(null, articleWithKeywords)
+    })
+
+    it("handles articles with null/undefined keywords gracefully", done => {
+      const articleWithoutKeywords = {
+        indexable: true,
+        published: true,
+        keywords: null,
+        title: "Test Article",
+        slug: "test-article",
+      }
+
+      Save.sanitizeAndSave(err => {
+        if (err) {
+          done(err)
+        }
+        indexForSearch.callCount.should.eql(1)
+        done()
+      })(null, articleWithoutKeywords)
+    })
+
     it("saves email metadata", done =>
       Save.sanitizeAndSave((err, article) => {
         if (err) {
