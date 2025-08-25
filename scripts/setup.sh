@@ -12,11 +12,11 @@ NO_COLOR=$(tput sgr0)
 echo "Installing project dependencies from Brewfile..."
 brew bundle
 
-if command -v asdf >/dev/null; then
-  echo "Installing language dependencies with asdf"
-  asdf install
+if command -v mise >/dev/null; then
+  echo "Installing language dependencies with mise"
+  mise install
 else
-  echo "Skipping language dependencies installation (asdf not found)"
+  echo "Skipping language dependencies installation (mise not found)"
 fi
 
 echo "Installing dependencies..."
