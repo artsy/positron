@@ -10,20 +10,14 @@ module.exports = AuthorModal = React.createClass
 
   getInitialState: ->
     author: @props.author
-    remainingChars: 200
 
   componentWillReceiveProps: (nextProps) ->
     @setState author: nextProps.author
 
   onInputChange: (e) ->
     author = _.extend {}, @state.author, "#{e.target.name}": e.target.value
-    if e.target.name is 'bio'
-      remainingChars = 200 - e.target.value.length
-    else
-      remainingChars = @state.remainingChars
     @setState
       author: author
-      remainingChars: remainingChars
 
   onImageChange: (src) ->
     author = _.extend {}, @state.author, image_url: src
@@ -100,14 +94,11 @@ module.exports = AuthorModal = React.createClass
               className: 'author-edit__bio bordered-input'
               placeholder: 'Write brief biography...'
               onChange: @onInputChange
-              maxLength: 200
               value: @state.author?.bio or ''
               name: 'bio'
             }
             div {className: 'author-edit__bio-footer'},
               div {className: 'supports-markdown'}
-              div {className: 'author-edit__chars'},
-                @state.remainingChars.toString() + '/200'
         div {className: 'fields-full'},
           button {
             className: 'author-edit__button avant-garde-button avant-garde-button-black fields-left'
