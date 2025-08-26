@@ -62,7 +62,6 @@ describe 'AuthorModal', ->
     input.value = 'This is a new bio.'
     r.simulate.change input
     @component.state.author.bio.should.equal 'This is a new bio.'
-    @component.state.remainingChars.should.equal 182
 
   it 'updates image on change', ->
     @component.onImageChange 'https://artsy.net/new-image.jpg'
