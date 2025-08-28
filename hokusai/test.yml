@@ -22,6 +22,7 @@ services:
       - plugins.security.disabled=true
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Jux8Zu5tXMHjq$q3n$9S # pragma: allowlist secret
     ports:
       - "9200:9200"
   positron-mongodb:
