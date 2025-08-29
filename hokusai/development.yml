@@ -20,12 +20,13 @@ services:
     ports:
       - 3005:3005
   positron-opensearch:
-    image: opensearchproject/opensearch:1.3.20
+    image: opensearchproject/opensearch:2.17.0
     environment:
       - discovery.type=single-node
       - plugins.security.disabled=true
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Jux8Zu5tXMHjq$q3n$9S # pragma: allowlist secret
     ports:
       - 9300:9300
       - 9200:9200
