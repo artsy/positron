@@ -26,7 +26,7 @@ services:
       - plugins.security.disabled=true
       - bootstrap.memory_lock=true
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
-      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=Jux8Zu5tXMHjq$q3n$9S # pragma: allowlist secret
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD="${OPENSEARCH_INITIAL_ADMIN_PASSWORD}"
     ports:
       - 9300:9300
       - 9200:9200
