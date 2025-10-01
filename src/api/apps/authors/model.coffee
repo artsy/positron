@@ -79,12 +79,10 @@ Joi = require '../../lib/joi'
   Joi.validate input, @schema, (err, input) =>
     return callback err if err
 
-    # Generate slug from name if not provided
     generateSlug = (name, existingSlug, cb) =>
       baseSlug = if existingSlug then existingSlug else _s.slugify(name)
       return cb(null, baseSlug) unless name and baseSlug
 
-      # Check for slug uniqueness
       query = { slug: baseSlug }
       query._id = { $ne: input.id } if input.id
 
@@ -92,7 +90,6 @@ Joi = require '../../lib/joi'
         return cb(err) if err
 
         if existingAuthor
-          # Add a counter suffix to make it unique
           counter = 1
           checkUniqueSlug = (slugWithCounter) ->
             uniqueQuery = { slug: slugWithCounter }
