@@ -75,39 +75,35 @@ Joi = require '../../lib/joi'
 #
 # Persistence
 #
+generateSlug = (name, existingSlug, excludeId, callback) ->
+  baseSlug = if existingSlug then existingSlug else _s.slugify(name)
+  return callback(null, baseSlug) unless name and baseSlug
+
+  query = { slug: { $regex: ///^#{baseSlug}(-\d+)?$/// } }
+  query._id = { $ne: excludeId } if excludeId
+
+  db.collection("authors").find(query).toArray (err, existingAuthors) ->
+    return callback(err) if err
+
+    return callback(null, baseSlug) if existingAuthors.length is 0
+
+    existingSlugs = existingAuthors.map((a) -> a.slug)
+    return callback(null, baseSlug) unless baseSlug in existingSlugs
+
+    maxCounter = 0
+    for slug in existingSlugs
+      match = slug.match(///^#{baseSlug}-(\d+)$///)
+      if match
+        counter = parseInt(match[1], 10)
+        maxCounter = counter if counter > maxCounter
+
+    callback(null, "#{baseSlug}-#{maxCounter + 1}")
+
 @save = (input, callback) ->
   Joi.validate input, @schema, (err, input) =>
     return callback err if err
 
-    generateSlug = (name, existingSlug, cb) =>
-      baseSlug = if existingSlug then existingSlug else _s.slugify(name)
-      return cb(null, baseSlug) unless name and baseSlug
-
-      query = { slug: baseSlug }
-      query._id = { $ne: input.id } if input.id
-
-      db.collection("authors").findOne query, (err, existingAuthor) ->
-        return cb(err) if err
-
-        if existingAuthor
-          counter = 1
-          checkUniqueSlug = (slugWithCounter) ->
-            uniqueQuery = { slug: slugWithCounter }
-            uniqueQuery._id = { $ne: input.id } if input.id
-
-            db.collection("authors").findOne uniqueQuery, (err, found) ->
-              return cb(err) if err
-              if found
-                counter++
-                checkUniqueSlug("#{baseSlug}-#{counter}")
-              else
-                cb(null, slugWithCounter)
-
-          checkUniqueSlug("#{baseSlug}-#{counter}")
-        else
-          cb(null, baseSlug)
-
-    generateSlug input.name, input.slug, (err, slug) ->
+    generateSlug input.name, input.slug, input.id, (err, slug) =>
       return callback(err) if err
 
       data = extend omit(input, 'id'),

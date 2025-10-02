@@ -4,51 +4,13 @@
  * Usage: node scripts/backfill_author_slugs.js
  */
 
-const _s = require("underscore.string")
+const Author = require("../src/api/apps/authors/model")
 const db = require("../src/api/lib/db")
-
-const generateUniqueSlug = async (name, existingSlugs, authorId = null) => {
-  let baseSlug = _s.slugify(name)
-
-  if (!baseSlug) {
-    console.warn(`Warning: Could not generate slug for name: "${name}"`)
-    return null
-  }
-
-  // Check if base slug is unique
-  const query = { slug: baseSlug }
-  if (authorId) {
-    query._id = { $ne: authorId }
-  }
-
-  const existingAuthor = await db.collection("authors").findOne(query)
-
-  if (!existingAuthor && !existingSlugs.has(baseSlug)) {
-    return baseSlug
-  }
-
-  // Add counter suffix to make it unique
-  let counter = 1
-  let slugWithCounter = `${baseSlug}-${counter}`
-
-  while (
-    existingSlugs.has(slugWithCounter) ||
-    (await db
-      .collection("authors")
-      .findOne({ slug: slugWithCounter, _id: { $ne: authorId } }))
-  ) {
-    counter++
-    slugWithCounter = `${baseSlug}-${counter}`
-  }
-
-  return slugWithCounter
-}
 
 const backfillAuthorSlugs = async () => {
   try {
     console.log("Starting author slug backfill...")
 
-    // Get all authors without slugs
     const authors = await db
       .collection("authors")
       .find({
@@ -63,9 +25,6 @@ const backfillAuthorSlugs = async () => {
       return
     }
 
-    // Track slugs we've assigned in this run to avoid duplicates
-    const assignedSlugs = new Set()
-
     let updated = 0
     let skipped = 0
 
@@ -76,28 +35,36 @@ const backfillAuthorSlugs = async () => {
         continue
       }
 
-      const slug = await generateUniqueSlug(
-        author.name,
-        assignedSlugs,
-        author._id
-      )
+      await new Promise((resolve, reject) => {
+        const input = {
+          id: author._id.toString(),
+          name: author.name,
+          bio: author.bio,
+          image_url: author.image_url,
+          twitter_handle: author.twitter_handle,
+          instagram_handle: author.instagram_handle,
+          role: author.role,
+        }
 
-      if (!slug) {
-        console.warn(`Skipping author ${author._id} - could not generate slug`)
-        skipped++
-        continue
-      }
-
-      assignedSlugs.add(slug)
-
-      await db
-        .collection("authors")
-        .updateOne({ _id: author._id }, { $set: { slug: slug } })
-
-      updated++
-      console.log(
-        `✓ Updated author "${author.name}" (${author._id}) with slug: "${slug}"`
-      )
+        Author.save(input, (err, savedAuthor) => {
+          if (err) {
+            console.error(
+              `✗ Error saving author "${author.name}" (${author._id}):`,
+              err
+            )
+            skipped++
+            reject(err)
+          } else {
+            updated++
+            console.log(
+              `✓ Updated author "${author.name}" (${author._id}) with slug: "${
+                savedAuthor.slug
+              }"`
+            )
+            resolve()
+          }
+        })
+      })
     }
 
     console.log("\n=== Backfill Complete ===")
@@ -105,7 +72,6 @@ const backfillAuthorSlugs = async () => {
     console.log(`Authors skipped: ${skipped}`)
     console.log(`Total processed: ${authors.length}`)
 
-    // Create index on slug field for better query performance
     console.log("\nCreating index on authors.slug...")
     await db
       .collection("authors")
@@ -120,7 +86,6 @@ const backfillAuthorSlugs = async () => {
   }
 }
 
-// Run the migration
 backfillAuthorSlugs()
   .then(() => {
     console.log("\nMigration successful!")

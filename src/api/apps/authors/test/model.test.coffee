@@ -45,6 +45,12 @@ describe 'Author', ->
           author._id.toString().should.equal '5086df098523e60002000018'
           done()
 
+    it 'finds the author by name', (done) ->
+      fabricate 'authors', { name: 'Kana Abe' }, ->
+        Author.find 'Kana Abe', (err, author) ->
+          author.name.should.equal 'Kana Abe'
+          done()
+
     it 'finds the author by slug', (done) ->
       fabricate 'authors', { name: 'Kana Abe', slug: 'kana-abe' }, ->
         Author.find 'kana-abe', (err, author) ->
