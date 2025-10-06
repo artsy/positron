@@ -36,7 +36,10 @@ Joi = require '../../lib/joi'
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { slug: id }
+  if ObjectId.isValid(id)
+    query = { _id: new ObjectId(id) }
+  else
+    query = { $or: [{ slug: id }, { name: id }] }
   db.collection("authors").findOne query, callback
 
 @where = (input, callback) =>
