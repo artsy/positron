@@ -88,7 +88,7 @@ const backfillAuthorSlugs = async () => {
 
 backfillAuthorSlugs()
   .then(() => {
-    console.log("\nMigration successful!")
+    console.log("\nMigration successful!!")
     process.exit(0)
   })
   .catch(error => {
