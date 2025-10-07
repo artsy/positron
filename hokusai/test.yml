@@ -5,27 +5,25 @@ services:
 {% include 'templates/docker-compose-service.yml.j2' %}
     environment:
       - CI=true
-      - OPENSEARCH_URL=http://positron-opensearch:9200
-      - ELASTICSEARCH_INDEX_SUFFIX=test
+      - FORCE_COLOR=1
+      - PYTHONUNBUFFERED=1
+      - NODE_ENV=test
       - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
       # SALT is an oss value. The '$' is escaped.
       - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
-      - USE_OPENSEARCH=true
     env_file: ../.env.test
     depends_on:
       - positron-mongodb
       - positron-opensearch
   positron-opensearch:
-    image: opensearchproject/opensearch:1.3.20
+    image: opensearchproject/opensearch:2.17.0
     environment:
-      - discovery.type=single-node
-      - plugins.security.disabled=true
-      - bootstrap.memory_lock=true
+      - "discovery.type=single-node"
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      - "DISABLE_SECURITY_PLUGIN=true"
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
   positron-mongodb:
     image: mongo:7.0
-    ports:
-      - "27017:27017"
     command: ["--quiet"]
