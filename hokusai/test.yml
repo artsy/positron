@@ -1,11 +1,13 @@
 version: "2"
 services:
   positron:
-    command: ["yarn", "test"]
-    tty: true
+    command: ["sh", "-c", "yarn test 2>&1 | cat"]
 {% include 'templates/docker-compose-service.yml.j2' %}
     environment:
       - CI=true
+      - FORCE_COLOR=1
+      - PYTHONUNBUFFERED=1
+      - NODE_ENV=test
       - MONGOHQ_URL=mongodb://positron-mongodb:27017/positron-test
       # SALT is an oss value. The '$' is escaped.
       - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
@@ -18,9 +20,9 @@ services:
   positron-opensearch:
     image: opensearchproject/opensearch:2.17.0
     environment:
-      - discovery.type=single-node
-      - plugins.security.disabled=true
-      - bootstrap.memory_lock=true
+      - "discovery.type=single-node"
+      - "DISABLE_INSTALL_DEMO_CONFIG=true"
+      - "DISABLE_SECURITY_PLUGIN=true"
       - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m"
     ports:
       - "9200:9200"
