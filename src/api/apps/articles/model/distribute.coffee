@@ -9,7 +9,7 @@
 } = process.env
 _ = require 'underscore'
 Backbone = require 'backbone'
-search = require '../../../lib/elasticsearch'
+search = require '../../../lib/search'
 async = require 'async'
 debug = require('debug') 'api'
 request = require 'superagent'
@@ -58,7 +58,7 @@ moment = require 'moment'
       search_boost: new Article(cloneDeep article).searchBoost()
       type: 'article'
     , (error, response) ->
-      console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
+      console.log('SearchIndexingError: Article ' + article.id + ' : ' + error) if error
       cb()
   )
 
@@ -67,7 +67,7 @@ moment = require 'moment'
     index: search.index
     id: id
 
-  # Only include type parameter for Elasticsearch
+  # Only include type parameter for search engines
   deleteParams.type = if search.isOpenSearch then '_doc' else 'article'
 
   search.client.delete(deleteParams, (error, response) ->

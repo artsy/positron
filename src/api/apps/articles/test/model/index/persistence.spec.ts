@@ -11,7 +11,7 @@ const rewire = require("rewire")
 const Article = rewire("../../../model/index.js")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const search = require("../../../../../lib/elasticsearch.coffee")
+const search = require("../../../../../lib/search.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 import sinon from "sinon"
 const Channel = require("../../../../channels/model.coffee")
@@ -794,7 +794,7 @@ describe("Article Persistence", () => {
         }
       ))
 
-    it("indexes the article in elasticsearch on save", done =>
+    it("indexes the article in search on save", done =>
       Article.save(
         {
           author_id: "5086df098523e60002000018",
