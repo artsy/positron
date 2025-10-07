@@ -1,7 +1,7 @@
 version: "2"
 services:
   positron:
-    command: ["sh", "-c", "yarn test 2>&1 | cat"]
+    command: ["yarn", "test"]
 {% include 'templates/docker-compose-service.yml.j2' %}
     environment:
       - CI=true
@@ -13,10 +13,8 @@ services:
       - SALT=$$2a$$10$$PJrPMBadu1NPdmnshBgFbe
     env_file: ../.env.test
     depends_on:
-      positron-mongodb:
-        condition: service_healthy
-      positron-opensearch:
-        condition: service_started
+      - positron-mongodb
+      - positron-opensearch
   positron-opensearch:
     image: opensearchproject/opensearch:2.17.0
     environment:
@@ -29,8 +27,3 @@ services:
   positron-mongodb:
     image: mongo:7.0
     command: ["--quiet"]
-    healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
