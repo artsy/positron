@@ -82,7 +82,7 @@
     "dotenv": "8.2.0",
     "draft-convert": "2.0.0",
     "draft-js": "0.10.4",
-    "elasticsearch": "11.0.1",
+    "@elastic/elasticsearch": "7.13.0",
     "express": "4.15.2",
     "express-force-ssl": "0.3.2",
     "express-graphql": "0.5.4",

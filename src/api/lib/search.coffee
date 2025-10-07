@@ -1,8 +1,8 @@
-elasticsearch = require('elasticsearch')
+elasticsearch = require('@elastic/elasticsearch')
 { SEARCH_URL, SEARCH_INDEX_SUFFIX } = process.env
 
 client = new elasticsearch.Client
-          host: SEARCH_URL
+          node: SEARCH_URL
           maxRetries: 2
           keepAlive: true
           maxSockets: 10
