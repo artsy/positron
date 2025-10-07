@@ -1,5 +1,5 @@
 import { index } from "../routes"
-const search = require("api/lib/search.coffee")
+const searchService = require("api/lib/search.coffee")
 
 jest.mock("api/lib/search.coffee", () => ({
   client: { search: jest.fn() },
@@ -13,9 +13,7 @@ describe("Search route", () => {
   }
   const res = { send: jest.fn() }
   const next = jest.fn()
-  const {
-    client: { search },
-  } = search
+  const { search } = searchService.client
 
   beforeEach(() => {
     search.mockReset()
