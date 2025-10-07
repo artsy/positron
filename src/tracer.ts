@@ -21,7 +21,7 @@ export function init() {
   })
 
   tracer.use("elasticsearch", {
-    service: `${ddServicePrefix}.elasticsearch`,
+    service: `${ddServicePrefix}.search`,
   })
 
   tracer.use("http", {

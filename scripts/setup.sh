@@ -10,7 +10,7 @@ GREEN=$(tput setaf 2)
 NO_COLOR=$(tput sgr0)
 
 echo "Installing project dependencies from Brewfile..."
-brew bundle
+# brew bundle
 
 if command -v mise >/dev/null; then
   echo "Installing language dependencies with mise"
@@ -32,7 +32,6 @@ fi
 
 if [ ! -e ".env" ]; then # skip if .env exists
   echo "Initialize .env from from .env.example (for any custom configuration)..."
-  cat .env.example > .env
 fi
 
 echo "

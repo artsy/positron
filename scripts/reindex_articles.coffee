@@ -4,7 +4,7 @@ path = require 'path'
 { indexForSearch } = Save = require '../src/api/apps/articles/model/distribute'
 Article = require '../src/api/apps/articles/model/index.js'
 ArticleModel = require '../src/api/models/article.coffee'
-search = require '../src/api/lib/elasticsearch'
+search = require '../src/api/lib/search'
 asyncLib = require 'async'
 { cloneDeep } = require 'lodash'
 
@@ -18,11 +18,11 @@ console.log('Starting article reindexing process...')
 console.log('Environment:', process.env.NODE_ENV || 'development')
 console.log('MongoDB URL:', process.env.MONGOHQ_URL ? 'Configured' : 'NOT CONFIGURED')
 
-# Log Elasticsearch configuration
-console.log('Elasticsearch Configuration:')
+# Log Search configuration
+console.log('Search Configuration:')
 console.log('  - URL:', process.env.ELASTICSEARCH_URL || process.env.OPENSEARCH_URL || 'NOT CONFIGURED')
 console.log('  - Index Name:', search.index)
-console.log('  - Index Suffix:', process.env.ELASTICSEARCH_INDEX_SUFFIX || 'production')
+console.log('  - Index Suffix:', process.env.SEARCH_INDEX_SUFFIX || 'production')
 console.log('  - Using OpenSearch:', search.isOpenSearch ? 'Yes' : 'No')
 
 main = ->
@@ -98,7 +98,7 @@ indexWorker = (article, cb) ->
     console.log('  - Processing article:', article._id)
     articlePresent = Article.present(article)
     console.log('  - Article presented successfully')
-    console.log('  - Indexing to Elasticsearch:')
+    console.log('  - Indexing to Search:')
     console.log('    * Document ID:', article.id?.toString() || article._id?.toString())
     console.log('    * Index Name:', search.index)
 
@@ -107,7 +107,7 @@ indexWorker = (article, cb) ->
         console.error('  - Error in indexForSearch:', err)
         cb(err)
       else
-        console.log('  - ✓ Article indexed on Elasticsearch:', article.id or article._id)
+        console.log('  - ✓ Article indexed on Search:', article.id or article._id)
         console.log('    * Index:', search.index)
         console.log('    * Document ID:', article.id?.toString() || article._id?.toString())
         cb()
