@@ -4,9 +4,7 @@
  * Usage: yarn task scripts/backfill_author_slugs.js
  */
 
-require("node-env-file")(require("path").resolve(__dirname, "../.env.shared"))
-require("coffeescript/register")
-const Author = require("../src/api/apps/authors/model.coffee")
+const Author = require("../src/api/apps/authors/model")
 const db = require("../src/api/lib/db")
 
 const backfillAuthorSlugs = async () => {
