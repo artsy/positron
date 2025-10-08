@@ -4,7 +4,9 @@
  * Usage: node scripts/backfill_author_slugs.js
  */
 
-const Author = require("../src/api/apps/authors/model")
+require("node-env-file")(require("path").resolve(__dirname, "../.env.shared"))
+require("coffeescript/register")
+const Author = require("../src/api/apps/authors/model.coffee")
 const db = require("../src/api/lib/db")
 
 const backfillAuthorSlugs = async () => {
