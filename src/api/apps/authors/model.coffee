@@ -3,6 +3,7 @@
 #
 
 { extend, omit } = require 'underscore'
+_s = require 'underscore.string'
 db = require '../../lib/db'
 async = require 'async'
 Joi = require '../../lib/joi'
@@ -20,6 +21,7 @@ Joi = require '../../lib/joi'
   twitter_handle: @string().allow('', null).default('')
   instagram_handle: @string().allow('', null).default('')
   role: @string().allow('', null).default('')
+  slug: @string().allow('', null)
 ).call Joi
 
 @querySchema = (->
@@ -34,7 +36,10 @@ Joi = require '../../lib/joi'
 # Retrieval
 #
 @find = (id, callback) ->
-  query = if ObjectId.isValid(id) then { _id: new ObjectId(id) } else { name: id }
+  if ObjectId.isValid(id)
+    query = { _id: new ObjectId(id) }
+  else
+    query = { $or: [{ slug: id }, { name: id }] }
   db.collection("authors").findOne query, callback
 
 @where = (input, callback) =>
@@ -73,17 +78,47 @@ Joi = require '../../lib/joi'
 #
 # Persistence
 #
+generateSlug = (name, existingSlug, excludeId, callback) ->
+  baseSlug = if existingSlug then existingSlug else _s.slugify(name)
+  return callback(null, baseSlug) unless name and baseSlug
+
+  query = { slug: { $regex: ///^#{baseSlug}(-\d+)?$/// } }
+  query._id = { $ne: excludeId } if excludeId
+
+  db.collection("authors").find(query).toArray (err, existingAuthors) ->
+    return callback(err) if err
+
+    return callback(null, baseSlug) if existingAuthors.length is 0
+
+    existingSlugs = existingAuthors.map((a) -> a.slug)
+    return callback(null, baseSlug) unless baseSlug in existingSlugs
+
+    maxCounter = 0
+    for slug in existingSlugs
+      match = slug.match(///^#{baseSlug}-(\d+)$///)
+      if match
+        counter = parseInt(match[1], 10)
+        maxCounter = counter if counter > maxCounter
+
+    callback(null, "#{baseSlug}-#{maxCounter + 1}")
+
 @save = (input, callback) ->
   Joi.validate input, @schema, (err, input) =>
     return callback err if err
-    data = extend omit(input, 'id'),
-      _id: input.id
-    if data._id
-      db.collection("authors").updateOne { _id: data._id }, { $set: data }, (err, res) ->
-        db.collection("authors").findOne { _id: data._id }, callback
-    else
-      db.collection("authors").insertOne data, (err, res) ->
-        db.collection("authors").findOne { _id: res.insertedId }, callback
+
+    generateSlug input.name, input.slug, input.id, (err, slug) =>
+      return callback(err) if err
+
+      data = extend omit(input, 'id'),
+        _id: input.id
+        slug: slug
+
+      if data._id
+        db.collection("authors").updateOne { _id: data._id }, { $set: data }, (err, res) ->
+          db.collection("authors").findOne { _id: data._id }, callback
+      else
+        db.collection("authors").insertOne data, (err, res) ->
+          db.collection("authors").findOne { _id: res.insertedId }, callback
 
 @destroy = (id, callback) ->
   db.collection("authors").removeOne { _id: new ObjectId(id) }, callback

@@ -51,6 +51,13 @@ describe 'Author', ->
           author.name.should.equal 'Kana Abe'
           done()
 
+    it 'finds the author by slug', (done) ->
+      fabricate 'authors', { name: 'Kana Abe', slug: 'kana-abe' }, ->
+        Author.find 'kana-abe', (err, author) ->
+          author.name.should.equal 'Kana Abe'
+          author.slug.should.equal 'kana-abe'
+          done()
+
   describe '#save', ->
 
     it 'saves valid author input data', (done) ->
@@ -70,6 +77,30 @@ describe 'Author', ->
         db.collection('authors').count (err, count) ->
           count.should.equal 11
           done()
+
+    it 'automatically generates slug from name', (done) ->
+      Author.save {
+        name: 'Jane Doe'
+      }, (err, author) ->
+        author.slug.should.equal 'jane-doe'
+        done()
+
+    it 'ensures slug uniqueness by adding counter suffix', (done) ->
+      Author.save { name: 'John Smith' }, (err, author1) ->
+        author1.slug.should.equal 'john-smith'
+        Author.save { name: 'John Smith' }, (err, author2) ->
+          author2.slug.should.equal 'john-smith-1'
+          Author.save { name: 'John Smith' }, (err, author3) ->
+            author3.slug.should.equal 'john-smith-2'
+            done()
+
+    it 'preserves custom slug if provided', (done) ->
+      Author.save {
+        name: 'Custom Author'
+        slug: 'my-custom-slug'
+      }, (err, author) ->
+        author.slug.should.equal 'my-custom-slug'
+        done()
 
     it 'can return a validation error', (done) ->
       Author.save {
