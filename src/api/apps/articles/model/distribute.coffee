@@ -58,7 +58,7 @@ moment = require 'moment'
       search_boost: new Article(cloneDeep article).searchBoost()
       type: 'article'
     , (error, response) ->
-      console.log('ElasticsearchIndexingError: Article ' + article.id + ' : ' + error) if error
+      console.log('SearchIndexingError: Article ' + article.id + ' : ' + error) if error
       cb()
   )
 

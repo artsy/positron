@@ -794,7 +794,7 @@ describe("Article Persistence", () => {
         }
       ))
 
-    it("indexes the article in elasticsearch on save", done =>
+    it("indexes the article for search on save", done =>
       Article.save(
         {
           author_id: "5086df098523e60002000018",

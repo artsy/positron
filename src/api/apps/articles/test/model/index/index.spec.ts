@@ -146,7 +146,7 @@ describe("Article", () => {
       }))
 
     // Temporarily skip due to ES connectivity issues in CI
-    it.skip("removes the article from elasticsearch", done =>
+    it.skip("removes the article from search", done =>
       fabricate(
         "articles",
         { _id: new ObjectId("5086df098523e60002000019"), title: "quux" },
