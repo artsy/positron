@@ -20,10 +20,9 @@ console.log('MongoDB URL:', process.env.MONGOHQ_URL ? 'Configured' : 'NOT CONFIG
 
 # Log Elasticsearch configuration
 console.log('Elasticsearch Configuration:')
-console.log('  - URL:', process.env.ELASTICSEARCH_URL || process.env.OPENSEARCH_URL || 'NOT CONFIGURED')
+console.log('  - URL:', process.env.SEARCH_URL || process.env.SEARCH_URL || 'NOT CONFIGURED')
 console.log('  - Index Name:', search.index)
-console.log('  - Index Suffix:', process.env.ELASTICSEARCH_INDEX_SUFFIX || 'production')
-console.log('  - Using OpenSearch:', search.isOpenSearch ? 'Yes' : 'No')
+console.log('  - Index Suffix:', process.env.SEARCH_INDEX_SUFFIX || 'production')
 
 main = ->
   startTime = Date.now()
