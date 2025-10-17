@@ -11,7 +11,7 @@ const rewire = require("rewire")
 const Article = rewire("../../../model/index.js")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const search = require("../../../../../lib/elasticsearch.coffee")
+const search = require("../../../../../lib/search_client.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 import sinon from "sinon"
 const Channel = require("../../../../channels/model.coffee")

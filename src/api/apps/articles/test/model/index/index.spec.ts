@@ -12,7 +12,7 @@ const {
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const Article = rewire("../../../model/index.js")
-const search = require("../../../../../lib/elasticsearch.coffee")
+const search = require("../../../../../lib/search_client.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 
 process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS = "true"

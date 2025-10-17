@@ -9,7 +9,7 @@
 } = process.env
 _ = require 'underscore'
 Backbone = require 'backbone'
-search = require '../../../lib/elasticsearch'
+search = require '../../../lib/search_client'
 async = require 'async'
 debug = require('debug') 'api'
 request = require 'superagent'
