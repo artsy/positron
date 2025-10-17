@@ -9,7 +9,7 @@ const {
 } = require("../../../../../test/helpers/db.coffee")
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
-const search = require("../../../../../lib/elasticsearch.coffee")
+const search = require("../../../../../lib/search_client.coffee")
 
 describe("Article Retrieval", () => {
   let server

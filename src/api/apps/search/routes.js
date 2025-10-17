@@ -1,5 +1,5 @@
 import _ from "underscore"
-import search from "api/lib/elasticsearch.coffee"
+import search from "api/lib/search_client.coffee"
 import { matchAll } from "api/apps/search/queries"
 const { NODE_ENV } = process.env
 

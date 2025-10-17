@@ -47,7 +47,6 @@ describe("Save", () => {
       Distribute.__set__("search", {
         client: searchStub,
         index: "test-index",
-        isOpenSearch: true,
       })
     }
 
