@@ -71,7 +71,7 @@ If you are using Hokusai dev, edit the database as mentioned in this step, then 
 
 `COMMIT_HASH=$(git rev-parse --short HEAD) hokusai dev start`
 
-This starts a new Docker Compose stack that boots MongoDB, ElasticSearch and Positron. Changes made to source-code are _not_ automatically reloaded. To shut down, press `ctrl+c` or execute `hokusai dev stop`.
+This starts a new Docker Compose stack that boots MongoDB, OpenSearch and Positron. Changes made to source-code are _not_ automatically reloaded. To shut down, press `ctrl+c` or execute `hokusai dev stop`.
 
 Positron should now be running at [http://localhost:3005/](http://localhost:3005/), open a browser and navigate to it. That will redirect you to staging, login as an Artsy administrator and it will redirect you to `http://localhost:3005` logged into Writer.
 

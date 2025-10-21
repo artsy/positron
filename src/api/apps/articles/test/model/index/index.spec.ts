@@ -12,7 +12,7 @@ const {
 const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const Article = rewire("../../../model/index.js")
-const search = require("../../../../../lib/elasticsearch.coffee")
+const search = require("../../../../../lib/search_client.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 
 process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS = "true"
@@ -146,7 +146,7 @@ describe("Article", () => {
       }))
 
     // Temporarily skip due to ES connectivity issues in CI
-    it.skip("removes the article from elasticsearch", done =>
+    it.skip("removes the article from search", done =>
       fabricate(
         "articles",
         { _id: new ObjectId("5086df098523e60002000019"), title: "quux" },
