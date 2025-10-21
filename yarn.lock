@@ -7049,13 +7049,6 @@ forever@0.15.3:
     utile "~0.2.1"
     winston "~0.8.1"
 
-fork-ts-checker-notifier-webpack-plugin@0.4.0:
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/fork-ts-checker-notifier-webpack-plugin/-/fork-ts-checker-notifier-webpack-plugin-0.4.0.tgz#a5e34dfc7efc87915be8e996fad4b3c06fec3ed3"
-  integrity sha512-v0mt/9FLGbsbeplA68HaXj1s+ydEJkEWYs+NjtZs9r20UdrzmONzOQIkwhhk+k2Xv9RWypXdFFezC3uFphJ68Q==
-  dependencies:
-    node-notifier "^5.1.2"
-
 form-data@1.0.0-rc3:
   version "1.0.0-rc3"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-1.0.0-rc3.tgz#d35bc62e7fbc2937ae78f948aaa0d38d90607577"
