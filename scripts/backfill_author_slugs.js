@@ -1,7 +1,7 @@
 /**
  * Migration script to populate slugs for all existing authors
  *
- * Usage: node scripts/backfill_author_slugs.js
+ * Usage: yarn task scripts/backfill_author_slugs.js
  */
 
 const Author = require("../src/api/apps/authors/model")

@@ -6,7 +6,7 @@ set -e -x
 
 yarn clean
 
-NODE_ENV=production node --max_old_space_size=8192 node_modules/.bin/webpack --config ./webpack
+NODE_ENV=production node --max_old_space_size=4096 node_modules/.bin/webpack --config ./webpack
 stylus \
   $(find src/client/assets -name '*.styl') \
   --compress \
