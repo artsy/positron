@@ -66,6 +66,7 @@ workflows:
           <<: *not_staging_or_release
           name: type-check
           pkg-manager: yarn
+          override-ci-command: "yarn install --frozen-lockfile --ignore-scripts"
           yarn-run: type-check
           version: 22.5.1
 

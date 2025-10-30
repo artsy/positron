@@ -20,7 +20,7 @@ else
 fi
 
 echo "Installing dependencies..."
-yarn install || (npm install --global yarn@latest && yarn install)
+yarn install --ignore-scripts || (npm install --global yarn@latest && yarn install --ignore-scripts)
 
 echo "Download .env.shared (for common local dev config)..."
 if ! aws s3 cp s3://artsy-citadel/positron/.env.shared ./; then
