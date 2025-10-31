@@ -19,7 +19,7 @@ USER deploy
 
 # Install the packages
 COPY --chown=deploy:deploy package.json yarn.lock ./
-RUN yarn install --frozen-lockfile && yarn cache clean
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn cache clean
 
 # Copy application code
 COPY --chown=deploy:deploy . ./
