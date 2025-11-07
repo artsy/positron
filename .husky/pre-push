@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Load mise if available
+if command -v mise >/dev/null 2>&1; then
+  eval "$(mise activate bash --shims)"
+elif [ -f "$HOME/.local/bin/mise" ]; then
+  eval "$($HOME/.local/bin/mise activate bash --shims)"
+fi
+
+npm run -s prepush
