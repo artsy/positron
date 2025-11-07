@@ -5,7 +5,7 @@ import React from "react"
 import { Provider } from "react-redux"
 import Waypoint from "react-waypoint"
 import configureStore from "redux-mock-store"
-import ArticleList, { ArticlesList } from "../articles_list"
+import ArticleList, { ArticlesList, ARTICLE_PAGE_LIMIT } from "../articles_list"
 import { ArticlesListEmpty } from "../articles_list_empty"
 import { ArticlesListHeader } from "../articles_list_header"
 require("typeahead.js")
@@ -273,18 +273,18 @@ describe("ArticleList", () => {
       expect(instance.setState.mock.calls[0][0].articles.length).toBe(6)
     })
 
-    it("sets hasMoreArticles to true when 10 or more articles returned", () => {
+    it("sets hasMoreArticles to true when ARTICLE_PAGE_LIMIT or more articles returned", () => {
       const instance = getWrapper()
         .find(ArticlesList)
         .instance() as ArticlesList
       instance.setState = jest.fn()
-      const tenArticles = Array(10).fill(props.articles[0])
+      const tenArticles = Array(ARTICLE_PAGE_LIMIT).fill(props.articles[0])
       instance.appendMore(tenArticles as ArticleData[])
       // @ts-ignore
       expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(true)
     })
 
-    it("sets hasMoreArticles to false when fewer than 10 articles returned", () => {
+    it("sets hasMoreArticles to false when fewer than ARTICLE_PAGE_LIMIT articles returned", () => {
       const instance = getWrapper()
         .find(ArticlesList)
         .instance() as ArticlesList
@@ -330,7 +330,8 @@ describe("ArticleList", () => {
       articles(
       published: true,
       offset: 0,
-      channel_id: \"test-channel\"
+      channel_id: \"test-channel\",
+      limit: 10,
     ){
         thumbnail_image
         thumbnail_title
@@ -362,7 +363,8 @@ describe("ArticleList", () => {
       articles(
       published: false,
       offset: 0,
-      channel_id: \"test-channel\"
+      channel_id: \"test-channel\",
+      limit: 10,
     ){
         thumbnail_image
         thumbnail_title
@@ -443,12 +445,12 @@ describe("ArticleList", () => {
       expect(fetchFeedSpy).not.toBeCalled()
     })
 
-    it("stops loading more when API returns fewer than 10 articles", () => {
+    it("stops loading more when API returns fewer than ARTICLE_PAGE_LIMIT articles", () => {
       const instance = getWrapper()
         .find(ArticlesList)
         .instance() as ArticlesList
 
-      // Simulate API returning only 3 articles (fewer than 10)
+      // Simulate API returning only 3 articles (fewer than ARTICLE_PAGE_LIMIT)
       const fewArticles = articles.slice(0, 3)
       instance.appendMore(fewArticles as ArticleData[])
 

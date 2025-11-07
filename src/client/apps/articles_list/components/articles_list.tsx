@@ -35,7 +35,7 @@ interface ArticlesListState {
   hasMoreArticles: boolean
 }
 
-const ARTICLE_PAGE_LIMIT = 10
+export const ARTICLE_PAGE_LIMIT = 10
 
 export class ArticlesList extends Component<
   ArticlesListProps,
