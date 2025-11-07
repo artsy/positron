@@ -216,6 +216,7 @@ describe("ArticleList", () => {
           articles: [],
           isLoading: true,
           isPublished: false,
+          hasMoreArticles: true,
           offset: 0,
         },
         instance.fetchFeed
