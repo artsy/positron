@@ -104,6 +104,12 @@ describe("ArticleList", () => {
     ).toContain("Game of Thrones")
   })
 
+  it("initializes with hasMoreArticles set to true", () => {
+    const component = getWrapper()
+    const instance = component.find(ArticlesList).instance() as ArticlesList
+    expect(instance.state.hasMoreArticles).toBe(true)
+  })
+
   it("renders a link to /edit", () => {
     const component = getWrapper()
     expect(
@@ -187,6 +193,28 @@ describe("ArticleList", () => {
 
       expect(instance.fetchFeed).toBeCalled()
     })
+
+    it("does not load more when hasMoreArticles is false", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState({ hasMoreArticles: false })
+      instance.fetchFeed = jest.fn()
+      instance.canLoadMore()
+
+      expect(instance.fetchFeed).not.toBeCalled()
+    })
+
+    it("does not load more when already loading", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState({ isLoading: true })
+      instance.fetchFeed = jest.fn()
+      instance.canLoadMore()
+
+      expect(instance.fetchFeed).not.toBeCalled()
+    })
   })
 
   describe("#setResults", () => {
@@ -243,6 +271,38 @@ describe("ArticleList", () => {
       instance.appendMore(props.articles as ArticleData[])
       // @ts-ignore
       expect(instance.setState.mock.calls[0][0].articles.length).toBe(6)
+    })
+
+    it("sets hasMoreArticles to true when 10 or more articles returned", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState = jest.fn()
+      const tenArticles = Array(10).fill(props.articles[0])
+      instance.appendMore(tenArticles as ArticleData[])
+      // @ts-ignore
+      expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(true)
+    })
+
+    it("sets hasMoreArticles to false when fewer than 10 articles returned", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState = jest.fn()
+      const fewArticles = [props.articles[0], props.articles[1]]
+      instance.appendMore(fewArticles as ArticleData[])
+      // @ts-ignore
+      expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(false)
+    })
+
+    it("sets hasMoreArticles to false when no articles returned", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState = jest.fn()
+      instance.appendMore([])
+      // @ts-ignore
+      expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(false)
     })
   })
 
@@ -360,6 +420,47 @@ describe("ArticleList", () => {
 
       end.mock.calls[0][0](null, { body: { data: { articles } } })
       expect(instance.appendMore).toBeCalledWith(articles)
+    })
+  })
+
+  describe("infinite pagination prevention", () => {
+    it("prevents multiple fetchFeed calls when no more articles exist", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      const fetchFeedSpy = jest.fn()
+      instance.fetchFeed = fetchFeedSpy
+
+      // Simulate reaching end of articles
+      instance.setState({ hasMoreArticles: false })
+
+      // Try to load more multiple times
+      instance.canLoadMore()
+      instance.canLoadMore()
+      instance.canLoadMore()
+
+      // fetchFeed should never be called
+      expect(fetchFeedSpy).not.toBeCalled()
+    })
+
+    it("stops loading more when API returns fewer than 10 articles", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+
+      // Simulate API returning only 3 articles (fewer than 10)
+      const fewArticles = articles.slice(0, 3)
+      instance.appendMore(fewArticles as ArticleData[])
+
+      // hasMoreArticles should be false
+      expect(instance.state.hasMoreArticles).toBe(false)
+
+      // Attempting to load more should not fetch
+      const fetchFeedSpy = jest.fn()
+      instance.fetchFeed = fetchFeedSpy
+      instance.canLoadMore()
+
+      expect(fetchFeedSpy).not.toBeCalled()
     })
   })
 })
