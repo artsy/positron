@@ -35,6 +35,8 @@ interface ArticlesListState {
   hasMoreArticles: boolean
 }
 
+const ARTICLE_PAGE_LIMIT = 10
+
 export class ArticlesList extends Component<
   ArticlesListProps,
   ArticlesListState
@@ -93,7 +95,7 @@ export class ArticlesList extends Component<
   appendMore = (results: ArticleData[]) => {
     const articles = this.state.articles.concat(results)
     // If we get fewer than 10 results, we've reached the end
-    const hasMoreArticles = results.length >= 10
+    const hasMoreArticles = results.length >= ARTICLE_PAGE_LIMIT
     this.setState({ articles, isLoading: false, hasMoreArticles })
   }
 
@@ -103,7 +105,8 @@ export class ArticlesList extends Component<
     const query = ArticlesListQuery(`
       published: ${isPublished},
       offset: ${offset},
-      channel_id: "${channel.id}"
+      channel_id: "${channel.id}",
+      limit: ${ARTICLE_PAGE_LIMIT},
     `)
 
     request
