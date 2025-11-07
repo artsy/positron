@@ -32,6 +32,7 @@ interface ArticlesListState {
   isLoading: boolean
   isPublished: boolean
   offset: number
+  hasMoreArticles: boolean
 }
 
 export class ArticlesList extends Component<
@@ -48,6 +49,7 @@ export class ArticlesList extends Component<
       isLoading: false,
       isPublished: props.published,
       offset: 0,
+      hasMoreArticles: true,
     }
 
     this.debouncedCanLoadMore = debounce(this.canLoadMore, 300)
@@ -59,9 +61,13 @@ export class ArticlesList extends Component<
   }
 
   canLoadMore = () => {
-    const { offset } = this.state
+    const { offset, hasMoreArticles, isLoading } = this.state
     // TODO: remove jQuery
     if ($(".filter-search__input").val()) {
+      return
+    }
+    // Don't load more if already loading or no more articles exist
+    if (isLoading || !hasMoreArticles) {
       return
     }
     this.setState({ isLoading: true, offset: offset + 10 }, this.fetchFeed)
@@ -73,14 +79,22 @@ export class ArticlesList extends Component<
 
   setPublished = (isPublished: boolean) => {
     this.setState(
-      { isPublished, offset: 0, isLoading: true, articles: [] },
+      {
+        isPublished,
+        offset: 0,
+        isLoading: true,
+        articles: [],
+        hasMoreArticles: true,
+      },
       this.fetchFeed
     )
   }
 
   appendMore = (results: ArticleData[]) => {
     const articles = this.state.articles.concat(results)
-    this.setState({ articles, isLoading: false })
+    // If we get fewer than 10 results, we've reached the end
+    const hasMoreArticles = results.length >= 10
+    this.setState({ articles, isLoading: false, hasMoreArticles })
   }
 
   fetchFeed = () => {
@@ -98,7 +112,9 @@ export class ArticlesList extends Component<
       .send({ query })
       .end((err, res) => {
         if (err) {
-          return new Error(err)
+          console.error("Error fetching articles:", err)
+          this.setState({ isLoading: false })
+          return
         }
         this.appendMore(res.body.data.articles)
       })
