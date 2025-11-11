@@ -5,7 +5,7 @@ import React from "react"
 import { Provider } from "react-redux"
 import Waypoint from "react-waypoint"
 import configureStore from "redux-mock-store"
-import ArticleList, { ArticlesList } from "../articles_list"
+import ArticleList, { ArticlesList, ARTICLE_PAGE_LIMIT } from "../articles_list"
 import { ArticlesListEmpty } from "../articles_list_empty"
 import { ArticlesListHeader } from "../articles_list_header"
 require("typeahead.js")
@@ -104,6 +104,12 @@ describe("ArticleList", () => {
     ).toContain("Game of Thrones")
   })
 
+  it("initializes with hasMoreArticles set to true", () => {
+    const component = getWrapper()
+    const instance = component.find(ArticlesList).instance() as ArticlesList
+    expect(instance.state.hasMoreArticles).toBe(true)
+  })
+
   it("renders a link to /edit", () => {
     const component = getWrapper()
     expect(
@@ -187,6 +193,28 @@ describe("ArticleList", () => {
 
       expect(instance.fetchFeed).toBeCalled()
     })
+
+    it("does not load more when hasMoreArticles is false", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState({ hasMoreArticles: false })
+      instance.fetchFeed = jest.fn()
+      instance.canLoadMore()
+
+      expect(instance.fetchFeed).not.toBeCalled()
+    })
+
+    it("does not load more when already loading", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState({ isLoading: true })
+      instance.fetchFeed = jest.fn()
+      instance.canLoadMore()
+
+      expect(instance.fetchFeed).not.toBeCalled()
+    })
   })
 
   describe("#setResults", () => {
@@ -216,6 +244,7 @@ describe("ArticleList", () => {
           articles: [],
           isLoading: true,
           isPublished: false,
+          hasMoreArticles: true,
           offset: 0,
         },
         instance.fetchFeed
@@ -243,6 +272,38 @@ describe("ArticleList", () => {
       // @ts-ignore
       expect(instance.setState.mock.calls[0][0].articles.length).toBe(6)
     })
+
+    it("sets hasMoreArticles to true when ARTICLE_PAGE_LIMIT or more articles returned", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState = jest.fn()
+      const tenArticles = Array(ARTICLE_PAGE_LIMIT).fill(props.articles[0])
+      instance.appendMore(tenArticles as ArticleData[])
+      // @ts-ignore
+      expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(true)
+    })
+
+    it("sets hasMoreArticles to false when fewer than ARTICLE_PAGE_LIMIT articles returned", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState = jest.fn()
+      const fewArticles = [props.articles[0], props.articles[1]]
+      instance.appendMore(fewArticles as ArticleData[])
+      // @ts-ignore
+      expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(false)
+    })
+
+    it("sets hasMoreArticles to false when no articles returned", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      instance.setState = jest.fn()
+      instance.appendMore([])
+      // @ts-ignore
+      expect(instance.setState.mock.calls[0][0].hasMoreArticles).toBe(false)
+    })
   })
 
   describe("#fetchFeed", () => {
@@ -269,7 +330,8 @@ describe("ArticleList", () => {
       articles(
       published: true,
       offset: 0,
-      channel_id: \"test-channel\"
+      channel_id: \"test-channel\",
+      limit: 10,
     ){
         thumbnail_image
         thumbnail_title
@@ -301,7 +363,8 @@ describe("ArticleList", () => {
       articles(
       published: false,
       offset: 0,
-      channel_id: \"test-channel\"
+      channel_id: \"test-channel\",
+      limit: 10,
     ){
         thumbnail_image
         thumbnail_title
@@ -359,6 +422,47 @@ describe("ArticleList", () => {
 
       end.mock.calls[0][0](null, { body: { data: { articles } } })
       expect(instance.appendMore).toBeCalledWith(articles)
+    })
+  })
+
+  describe("infinite pagination prevention", () => {
+    it("prevents multiple fetchFeed calls when no more articles exist", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+      const fetchFeedSpy = jest.fn()
+      instance.fetchFeed = fetchFeedSpy
+
+      // Simulate reaching end of articles
+      instance.setState({ hasMoreArticles: false })
+
+      // Try to load more multiple times
+      instance.canLoadMore()
+      instance.canLoadMore()
+      instance.canLoadMore()
+
+      // fetchFeed should never be called
+      expect(fetchFeedSpy).not.toBeCalled()
+    })
+
+    it("stops loading more when API returns fewer than ARTICLE_PAGE_LIMIT articles", () => {
+      const instance = getWrapper()
+        .find(ArticlesList)
+        .instance() as ArticlesList
+
+      // Simulate API returning only 3 articles (fewer than ARTICLE_PAGE_LIMIT)
+      const fewArticles = articles.slice(0, 3)
+      instance.appendMore(fewArticles as ArticleData[])
+
+      // hasMoreArticles should be false
+      expect(instance.state.hasMoreArticles).toBe(false)
+
+      // Attempting to load more should not fetch
+      const fetchFeedSpy = jest.fn()
+      instance.fetchFeed = fetchFeedSpy
+      instance.canLoadMore()
+
+      expect(fetchFeedSpy).not.toBeCalled()
     })
   })
 })
