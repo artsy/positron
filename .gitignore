@@ -30,7 +30,7 @@ Brewfile.lock.json
 # Playwright MCP
 .playwright-mcp/
 
-# Husky internal scripts
+# Husky internal scriptss
 .husky/_/
 
 # Do not ignore
