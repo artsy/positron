@@ -66,11 +66,13 @@ describe 'Author', ->
         image_url: 'https://artsy-media/owen.jpg'
         twitter_handle: '@owendodd'
         bio: 'Designer based in NYC'
+        website: 'https://owendodd.com'
       }, (err, author) ->
         author.name.should.equal 'Owen Dodd'
         author.image_url.should.equal 'https://artsy-media/owen.jpg'
         author.twitter_handle.should.equal '@owendodd'
         author.bio.should.equal 'Designer based in NYC'
+        author.website.should.equal 'https://owendodd.com'
         Author.save { id: author._id.toString(), name: 'Jane Doe'}, (err, updatedAuthor) ->
           updatedAuthor._id.toString().should.equal author._id.toString()
           updatedAuthor.name.should.equal 'Jane Doe'
