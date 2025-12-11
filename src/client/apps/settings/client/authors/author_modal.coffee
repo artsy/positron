@@ -80,6 +80,15 @@ module.exports = AuthorModal = React.createClass
                 onChange: @onInputChange
               }
             div {className: 'field-group'},
+              label {}, 'Personal Website'
+              input {
+                className: 'bordered-input author-edit__website'
+                placeholder: 'Enter website URL here...'
+                value: @state.author?.website or ''
+                name: 'website'
+                onChange: @onInputChange
+              }
+            div {className: 'field-group'},
               label {}, 'Role'
               input {
                 className: 'bordered-input author-edit__role'

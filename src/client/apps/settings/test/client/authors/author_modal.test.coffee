@@ -63,6 +63,12 @@ describe 'AuthorModal', ->
     r.simulate.change input
     @component.state.author.bio.should.equal 'This is a new bio.'
 
+  it 'updates website state on input changes', ->
+    input = r.find @component, 'author-edit__website'
+    input.value = 'https://example.com'
+    r.simulate.change input
+    @component.state.author.website.should.equal 'https://example.com'
+
   it 'updates image on change', ->
     @component.onImageChange 'https://artsy.net/new-image.jpg'
     @component.state.author.image_url.should.equal 'https://artsy.net/new-image.jpg'
