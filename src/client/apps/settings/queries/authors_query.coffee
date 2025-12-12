@@ -6,6 +6,7 @@ module.exports = (offset = 0) ->
       bio
       twitter_handle
       instagram_handle
+      website
       id
       image_url
       role

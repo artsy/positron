@@ -9,6 +9,7 @@ export function AuthorsQuery(ids) {
         image_url
         role
         instagram_handle
+        website
       }
     }
   `

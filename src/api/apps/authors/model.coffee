@@ -20,6 +20,7 @@ Joi = require '../../lib/joi'
   image_url: @string().allow('', null).default('')
   twitter_handle: @string().allow('', null).default('')
   instagram_handle: @string().allow('', null).default('')
+  website: @string().allow('', null).default('')
   role: @string().allow('', null).default('')
   slug: @string().allow('', null)
 ).call Joi
