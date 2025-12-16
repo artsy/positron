@@ -128,6 +128,22 @@ describe 'Author', ->
         author.website.should.equal 'https://example.com'
         done()
 
+    it 'handles empty website URL', (done) ->
+      Author.save {
+        name: 'Test Author 4'
+        website: ''
+      }, (err, author) ->
+        author.website.should.equal ''
+        done()
+
+    it 'normalizes website URL with whitespace', (done) ->
+      Author.save {
+        name: 'Test Author 5'
+        website: '  example.com  '
+      }, (err, author) ->
+        author.website.should.equal 'https://example.com'
+        done()
+
     it 'can return a validation error', (done) ->
       Author.save {
         name: 500

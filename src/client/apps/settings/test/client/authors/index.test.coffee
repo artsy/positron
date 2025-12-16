@@ -84,9 +84,11 @@ describe 'AuthorsView', ->
 
   it 'saves an author', ->
     @component.saveAuthor(id: '123456', name: 'Kana Abe')
-    Backbone.sync.args[0][2].success()
+    savedAuthor = id: '123456', name: 'Kana Abe', website: 'https://example.com'
+    Backbone.sync.args[0][2].success(null, savedAuthor)
     @component.state.authors.length.should.equal 2
     @component.state.authors[0].name.should.equal 'Kana Abe'
+    @component.state.authors[0].website.should.equal 'https://example.com'
 
   it 'displays a save error', ->
     @component.saveAuthor(id: '123456', name: 123)
