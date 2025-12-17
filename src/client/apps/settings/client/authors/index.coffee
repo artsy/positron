@@ -45,7 +45,7 @@ module.exports.AuthorsView = AuthorsView = React.createClass
   saveAuthor: (author) ->
     new Author().save author,
       success: (model, response) =>
-        savedAuthor = if response then response else model.toJSON()
+        savedAuthor = response or model?.toJSON() or author
         authors = _.reject @state.authors, (a) -> a.id is savedAuthor.id
         authors.unshift savedAuthor
         @closeModal()
