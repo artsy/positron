@@ -82,10 +82,11 @@ describe 'AuthorsView', ->
     @component.closeModal()
     @component.state.isModalOpen.should.be.false()
 
-  it 'saves an author', ->
-    @component.saveAuthor(id: '123456', name: 'Kana Abe')
+  it 'saves an author and updates with server response', ->
+    @component.saveAuthor(id: '123456', name: 'Kana Abe', website: 'example.com')
     savedAuthor = id: '123456', name: 'Kana Abe', website: 'https://example.com'
-    Backbone.sync.args[0][2].success(null, savedAuthor)
+    mockModel = { toJSON: -> savedAuthor }
+    Backbone.sync.args[0][2].success(mockModel, savedAuthor)
     @component.state.authors.length.should.equal 2
     @component.state.authors[0].name.should.equal 'Kana Abe'
     @component.state.authors[0].website.should.equal 'https://example.com'
