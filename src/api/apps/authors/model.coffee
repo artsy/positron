@@ -79,6 +79,13 @@ Joi = require '../../lib/joi'
 #
 # Persistence
 #
+normalizeWebsite = (url) ->
+  return '' unless url and url.trim().length > 0
+  trimmed = url.trim()
+  unless trimmed.match(/^https?:\/\//)
+    return "https://#{trimmed}"
+  trimmed
+
 generateSlug = (name, existingSlug, excludeId, callback) ->
   baseSlug = if existingSlug then existingSlug else _s.slugify(name)
   return callback(null, baseSlug) unless name and baseSlug
@@ -113,6 +120,7 @@ generateSlug = (name, existingSlug, excludeId, callback) ->
       data = extend omit(input, 'id'),
         _id: input.id
         slug: slug
+        website: normalizeWebsite(input.website)
 
       if data._id
         db.collection("authors").updateOne { _id: data._id }, { $set: data }, (err, res) ->

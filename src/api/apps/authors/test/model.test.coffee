@@ -104,6 +104,46 @@ describe 'Author', ->
         author.slug.should.equal 'my-custom-slug'
         done()
 
+    it 'normalizes website URL by adding https:// if no protocol', (done) ->
+      Author.save {
+        name: 'Test Author'
+        website: 'example.com'
+      }, (err, author) ->
+        author.website.should.equal 'https://example.com'
+        done()
+
+    it 'preserves http:// protocol in website URL', (done) ->
+      Author.save {
+        name: 'Test Author 2'
+        website: 'http://example.com'
+      }, (err, author) ->
+        author.website.should.equal 'http://example.com'
+        done()
+
+    it 'preserves https:// protocol in website URL', (done) ->
+      Author.save {
+        name: 'Test Author 3'
+        website: 'https://example.com'
+      }, (err, author) ->
+        author.website.should.equal 'https://example.com'
+        done()
+
+    it 'handles empty website URL', (done) ->
+      Author.save {
+        name: 'Test Author 4'
+        website: ''
+      }, (err, author) ->
+        author.website.should.equal ''
+        done()
+
+    it 'normalizes website URL with whitespace', (done) ->
+      Author.save {
+        name: 'Test Author 5'
+        website: '  example.com  '
+      }, (err, author) ->
+        author.website.should.equal 'https://example.com'
+        done()
+
     it 'can return a validation error', (done) ->
       Author.save {
         name: 500

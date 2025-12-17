@@ -83,7 +83,7 @@ module.exports = AuthorModal = React.createClass
               label {}, 'Personal Website'
               input {
                 className: 'bordered-input author-edit__website'
-                placeholder: 'Enter website URL here...'
+                placeholder: 'https://example.com'
                 value: @state.author?.website or ''
                 name: 'website'
                 onChange: @onInputChange
