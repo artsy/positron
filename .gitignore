@@ -37,3 +37,4 @@ Brewfile.lock.json
 !.env.example
 !.env.test
 !.env.oss
+.claude/settings.local.json
