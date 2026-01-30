@@ -1,36 +1,35 @@
 ---
 name: query-positron
 description: Transforms natural language input into valid MongoDB queries for interrogating Positron's database, issues them to our Mongo cluster, retrieves and optionally analyzes or transforms the results. Use when the user wants to know about Positron's actual data about articles, authors, channels, verticals etc.
+allowed-tools: Bash(.claude/skills/query-positron/scripts/exec.sh:*)
 ---
 
 # Ask Positron
 
 Construct valid MongoDB queries, issue them and present or analyze or transform the results.
 
-- Use `mongosh` to connect to the database.
+- Use the wrapper script at `.claude/skills/query-positron/scripts/exec.sh` to execute queries.
 
-- Use the env var `$POSITRON_PRODUCTION_READONLY_MONGO_URL` as the default connection string.
-
-- Use the `--eval` flag to provide the query, quoted and escaped as necessary for zsh
+- The script handles connection setup and validates that `mongosh` is installed.
 
 ## Examples
 
 ### User question: "How many published articles are there?"
 
 ```sh
-mongosh $POSITRON_PRODUCTION_READONLY_MONGO_URL --eval "db.articles.countDocuments({ published: true })"
+.claude/skills/query-positron/scripts/exec.sh "db.articles.countDocuments({ published: true })"
 ```
 
 ### User question: "Give me the most recent published article where layout is video"
 
 ```sh
-mongosh $POSITRON_PRODUCTION_READONLY_MONGO_URL --eval 'db.articles.find( { published: true, layout: "video" } ).sort({ published_at: 1 }).limit(1)'
+.claude/skills/query-positron/scripts/exec.sh 'db.articles.find( { published: true, layout: "video" } ).sort({ published_at: 1 }).limit(1)'
 ```
 
 ### User question: "Count up the number of published articles for each layout value"
 
 ```sh
-mongosh $POSITRON_PRODUCTION_READONLY_MONGO_URL --eval 'db.articles.aggregate([ { $match: { published: true } }, { $group: { _id: "$layout", count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $project: { _id: 0, layout: "$_id", count: 1 } } ])'
+.claude/skills/query-positron/scripts/exec.sh 'db.articles.aggregate([ { $match: { published: true } }, { $group: { _id: "$layout", count: { $sum: 1 } } }, { $sort: { count: -1 } }, { $project: { _id: 0, layout: "$_id", count: 1 } } ])'
 ```
 
 ## General Rules
@@ -146,5 +145,5 @@ verticals
 You can inspect any of these collections’ document shapes by requesting the most recent documents, e.g:
 
 ```sh
-db.authors.find().sort({ _id: -1 }).limit(3)
+.claude/skills/query-positron/scripts/exec.sh 'db.authors.find().sort({ _id: -1 }).limit(3)'
 ```

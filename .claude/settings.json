@@ -1,6 +1,9 @@
 {
   "permissions": {
-    "allow": ["Bash(mongosh $POSITRON_PRODUCTION_READONLY_MONGO_URL:*)"],
+    "allow": [
+      "Skill(query-positron)",
+      "Bash(.claude/skills/query-positron/scripts/exec.sh:*)"
+    ],
     "deny": [
       "Read(.env)",
       "Read(.env.shared)",
