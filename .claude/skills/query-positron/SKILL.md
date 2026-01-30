@@ -67,6 +67,7 @@ Article-specific rules:
 
 - Assume the user is only interested in articles where `published: true`, unless they explicitly tell you otherwise.
 - The singular `slug` field is not reliable, instead we want to treat the final entry in the `slugs` array as the canonical slug.
+- **IMPORTANT**: When asked about featured artworks (`featured_artwork_ids`), DO NOT conflate that with featured artists (`primary_featured_artist_ids`)
 
 ### Article Authorship Fields
 
@@ -122,6 +123,13 @@ db.articles.aggregate([
 ```
 
 **Do NOT rely solely on `contributing_authors` or `author.name`** - they may not reflect the actual article author. Always join with the `authors` collection using `author_ids`.
+
+### Additional Article Relationships
+
+When needed refer to the following documents:
+
+- [Article Artists](./references/article-artists.md), including "featured artists"
+- [Article Artworks](./references/article-artworks.md), including "featured artworks"
 
 ## Additional Mongo collections
 
