@@ -124,6 +124,14 @@ db.articles.aggregate([
 
 **Do NOT rely solely on `contributing_authors` or `author.name`** - they may not reflect the actual article author. Always join with the `authors` collection using `author_ids`.
 
+#### Known Issue: Partner-authored Articles
+
+It is a known problem that a handful of partners continue to publish articles themselves, even though we officially stopped supporting this capability years ago.
+
+Before querying for articles authored by partners you MUST refer to [Partner-authored Article Problem](./references/partner-authored-articles)
+
+**IMPORTANT**: Do not conflate Partner-authored articles (where `partner_channel_id` is present) with Artsy-authored articles (where `partner_channel_id` is null).
+
 ### Additional Article Relationships
 
 When needed refer to the following documents:
