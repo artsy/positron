@@ -1,8 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Skill(query-positron)",
-      "Bash(.claude/skills/query-positron/scripts/exec.sh:*)"
+      "Skill(querying-positron)",
+      "Bash(.claude/skills/querying-positron/scripts/exec.sh:*)"
     ],
     "deny": [
       "Read(.env)",
