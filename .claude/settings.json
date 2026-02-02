@@ -1,11 +1,15 @@
 {
   "permissions": {
-    "allow": [],
+    "allow": [
+      "Skill(querying-positron)",
+      "Bash(.claude/skills/querying-positron/scripts/exec.sh:*)"
+    ],
     "deny": [
       "Read(.env)",
       "Read(.env.shared)",
       "Bash(hokusai:*)",
-      "Bash(aws:*)"
+      "Bash(aws:*)",
+      "Edit(.claude/skills/querying-positron/scripts/exec.sh)"
     ]
   }
 }
