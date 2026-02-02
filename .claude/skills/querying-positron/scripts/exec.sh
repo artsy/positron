@@ -28,8 +28,8 @@ if [[ -z "$1" ]]; then
     exit 1
 fi
 
-# Execute the mongosh command and capture output (using script to preserve TTY colors)
-OUTPUT=$(script -q /dev/null mongosh "$POSITRON_PRODUCTION_READONLY_MONGO_URL" --eval "$1" 2>&1)
+# Execute the mongosh command and capture output
+OUTPUT=$(mongosh "$POSITRON_PRODUCTION_READONLY_MONGO_URL" --quiet --eval "$1" 2>&1)
 EXIT_CODE=$?
 
 # Check for connection timeout (VPN not connected)
