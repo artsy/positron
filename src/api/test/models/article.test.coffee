@@ -118,3 +118,49 @@ describe "Article", ->
         'artsy-editorial-test3'
       ]
       @article.slug().should.equal 'artsy-editorial-test3'
+
+  describe '#isVisibleToPublic', ->
+
+    it 'returns true for published editorial articles with sections', ->
+      @article.set
+        published: true
+        channel_id: '12345'
+        sections: [{ type: 'text', body: 'test content' }]
+      @article.isVisibleToPublic().should.be.true()
+
+    it 'returns true for published editorial video articles with media', ->
+      @article.set
+        published: true
+        channel_id: '12345'
+        sections: []
+        media: { url: 'https://example.com/video.mp4' }
+      @article.isVisibleToPublic().should.be.true()
+
+    it 'returns false for unpublished articles', ->
+      @article.set
+        published: false
+        channel_id: '12345'
+        sections: [{ type: 'text', body: 'test content' }]
+      @article.isVisibleToPublic().should.be.false()
+
+    it 'returns false for non-editorial articles', ->
+      @article.set
+        published: true
+        partner_channel_id: '67890'
+        sections: [{ type: 'text', body: 'test content' }]
+      @article.isVisibleToPublic().should.be.false()
+
+    it 'returns false for articles with no content', ->
+      @article.set
+        published: true
+        channel_id: '12345'
+        sections: []
+      @article.isVisibleToPublic().should.be.false()
+
+    it 'returns false for video articles without media url', ->
+      @article.set
+        published: true
+        channel_id: '12345'
+        sections: []
+        media: {}
+      @article.isVisibleToPublic().should.be.false()
