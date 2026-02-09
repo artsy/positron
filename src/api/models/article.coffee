@@ -43,7 +43,8 @@ module.exports = class Article extends Backbone.Model
     @get('channel_id')?.toString() is EDITORIAL_CHANNEL
 
   isVisibleToPublic: ->
-    @get('published') && @isEditorial() && @get('sections')?.length > 0
+    hasContent = @get('sections')?.length > 0 || !!@get('media')?.url
+    @get('published') && @isEditorial() && hasContent
 
   replaceTagWith: (htmlStr, findTag, replaceTag) ->
     $ = cheerio.load(htmlStr)
