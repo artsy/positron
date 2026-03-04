@@ -137,7 +137,7 @@
     "typescript": "^5.0.4",
     "typescript-styled-plugin": "0.13.0",
     "uglifyify": "3.0.4",
-    "underscore": "1.13.1",
+    "underscore": "1.13.8",
     "underscore.string": "3.3.5",
     "updeep": "1.0.0",
     "useragent": "2.3.0",
