@@ -15,7 +15,7 @@ _ = require 'underscore'
 @save = (req, res, next) ->
   Tag.find req.body.name, (err, tag) ->
     if tag
-      return res.err 409, 'Tag already exists'
+      return res.sendError 409, 'Tag already exists'
     Tag.save _.extend(req.body, id: req.params.id), (err, tag) ->
       return next err if err
       res.send present tag
@@ -36,5 +36,5 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Tag.find req.params.id, (err, tag) ->
     return next err if err
-    return res.err 404, 'Tag not found.' unless req.tag = tag
+    return res.sendError 404, 'Tag not found.' unless req.tag = tag
     next()

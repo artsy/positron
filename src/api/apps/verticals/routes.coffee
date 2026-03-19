@@ -15,7 +15,7 @@ _ = require 'underscore'
 @save = (req, res, next) ->
   Vertical.find req.body.name, (err, vertical) ->
     if vertical
-      return res.err 409, 'Vertical already exists'
+      return res.sendError 409, 'Vertical already exists'
     Vertical.save _.extend(req.body, id: req.params.id), (err, vertical) ->
       return next err if err
       res.send present vertical
@@ -36,5 +36,5 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Vertical.find req.params.id, (err, vertical) ->
     return next err if err
-    return res.err 404, 'Vertical not found.' unless req.vertical = vertical
+    return res.sendError 404, 'Vertical not found.' unless req.vertical = vertical
     next()

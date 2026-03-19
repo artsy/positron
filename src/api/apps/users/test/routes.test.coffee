@@ -15,7 +15,7 @@ describe 'routes', ->
     routes.__set__ 'jwtDecode', sinon.stub().returns('foo')
 
     @req = { query: {}, body: {}, params: {}, accessToken: 'test-access-token' }
-    @res = { send: sinon.stub(), err: sinon.stub() }
+    @res = { send: sinon.stub(), sendError: sinon.stub() }
     @next = sinon.stub()
 
   afterEach ->
@@ -35,8 +35,8 @@ describe 'routes', ->
       routes.setUser @req, @res, @next
       @User.fromAccessToken.args[0][0].should.equal 'test-access-token'
       @User.fromAccessToken.args[0][1] null, null
-      @res.err.called.should.be.ok
-      @res.err.args[0][0].should.equal 404
+      @res.sendError.called.should.be.ok
+      @res.sendError.args[0][0].should.equal 404
 
     it 'swaps the `me` param with the current user', ->
       @req.query.author_id = 'me'

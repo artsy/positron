@@ -27,5 +27,5 @@
 @find = (req, res, next) ->
   Author.find req.params.id, (err, author) ->
     return next err if err
-    return res.err 404, 'Author not found.' unless req.author = author
+    return res.sendError 404, 'Author not found.' unless req.author = author
     next()

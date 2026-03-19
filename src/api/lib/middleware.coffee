@@ -10,7 +10,7 @@ debug = require('debug') 'api'
 
 @helpers = (req, res, next) ->
   # Error handler helper for predictable JSON responses.
-  res.err = (status, message) ->
+  res.sendError = (status, message) ->
     err = new Error message or "Internal Error"
     err.status = status or 500
     next err
@@ -19,7 +19,7 @@ debug = require('debug') 'api'
   next()
 
 @notFound = (req, res, next) ->
-  res.err 404, "Endpoint does not exist."
+  res.sendError 404, "Endpoint does not exist."
 
 @errorHandler = (err, req, res, next) ->
   debug err.stack
