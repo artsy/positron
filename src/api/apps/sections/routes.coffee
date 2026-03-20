@@ -27,5 +27,5 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Section.find req.params.id, (err, section) ->
     return next err if err
-    return res.err 404, 'Section not found.' unless req.section = section
+    return res.sendError 404, 'Section not found.' unless req.section = section
     next()

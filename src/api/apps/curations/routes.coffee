@@ -27,5 +27,5 @@ _ = require 'underscore'
 @find = (req, res, next) ->
   Curation.find req.params.id, (err, curation) ->
     return next err if err
-    return res.err 404, 'Curation not found.' unless req.curation = curation
+    return res.sendError 404, 'Curation not found.' unless req.curation = curation
     next()

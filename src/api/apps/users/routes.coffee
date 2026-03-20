@@ -9,17 +9,17 @@ jwtDecode = require 'jwt-decode'
 # Require a user middleware
 @authenticated = (req, res, next) ->
   unless req.accessToken
-    return res.err 401, 'You must pass a valid access token'
+    return res.sendError 401, 'You must pass a valid access token'
   next()
 
 # Require an admin middleware
 @adminOnly = (req, res, next) ->
-  return res.err 401, 'Must be an admin' unless req.user?.type is 'Admin'
+  return res.sendError 401, 'Must be an admin' unless req.user?.type is 'Admin'
   next()
 
 # Require team role middleware
 @editorialOnly = (req, res, next) ->
-  return res.err 401, 'Must have editorial role' unless req.user?.roles?.includes("editorial")
+  return res.sendError 401, 'Must have editorial role' unless req.user?.roles?.includes("editorial")
   next()
 
 # Set the user from an access token and alias the `me` param
@@ -29,7 +29,7 @@ jwtDecode = require 'jwt-decode'
     # Stop all further requests if we can't find a user from that access token
     return next() if err?.message?.match 'invalid or has expired'
     return next err if err
-    res.err 404, 'Could not find a user from that access token'  unless user?
+    res.sendError 404, 'Could not find a user from that access token'  unless user?
     # Alias on the request object
     req.user = user
     req.user?.roles = jwtDecode(req.accessToken).roles
@@ -46,7 +46,7 @@ jwtDecode = require 'jwt-decode'
 @refresh = (req, res, next) ->
   return next() unless req.accessToken
   User.refresh req.accessToken, (err, user) ->
-    res.err 404, 'Could not find a user from that access token' unless user?
+    res.sendError 404, 'Could not find a user from that access token' unless user?
     req.user = user
     req.user?.roles = jwtDecode(req.accessToken).roles
     res.send present user
