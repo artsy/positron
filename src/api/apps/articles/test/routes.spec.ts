@@ -29,7 +29,7 @@ describe("routes", () => {
         _id: new ObjectId("5086df098523e60002000012"),
       }),
     }
-    res = { send: sinon.stub(), err: sinon.stub() }
+    res = { send: sinon.stub(), sendError: sinon.stub() }
     next = sinon.stub()
   })
 
@@ -54,8 +54,8 @@ describe("routes", () => {
     it("returns an error if channel_id is not provided for unpublished", () => {
       req.query.published = "false"
       routes.index(req, res, next)
-      res.err.args[0][0].should.equal(401)
-      res.err.args[0][1].should.containEql(
+      res.sendError.args[0][0].should.equal(401)
+      res.sendError.args[0][1].should.containEql(
         "Must pass channel_id to view unpublished articles"
       )
     })
@@ -65,8 +65,10 @@ describe("routes", () => {
       req.query.published = "false"
       req.query.channel_id = "123456"
       routes.index(req, res, next)
-      res.err.args[0][0].should.equal(401)
-      res.err.args[0][1].should.containEql("Must be a member of this channel")
+      res.sendError.args[0][0].should.equal(401)
+      res.sendError.args[0][1].should.containEql(
+        "Must be a member of this channel"
+      )
     })
 
     it("allows unpublished for a channel member", () => {
@@ -98,7 +100,7 @@ describe("routes", () => {
         channel_id: new ObjectId("4d8cd73191a5c50ce210002a"),
       })
       routes.show(req, res, next)
-      res.err.args[0][0].should.equal(404)
+      res.sendError.args[0][0].should.equal(404)
     })
   })
 
@@ -164,7 +166,7 @@ describe("routes", () => {
           title: "Andy Foobar and The Gang",
         })
       )
-      res.err.called.should.not.be.ok
+      res.sendError.called.should.not.be.ok
       req.article.title.should.equal("Andy Foobar and The Gang")
     })
 

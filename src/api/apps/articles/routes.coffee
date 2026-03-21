@@ -7,12 +7,12 @@ User = require '../users/model.coffee'
 # GET /api/articles
 @index = (req, res, next) ->
   if (req.query.published is 'false' or req.query.scheduled is 'true') and not req.query.channel_id
-    return res.err(401, 'Must pass channel_id to view unpublished articles. Or pass ' +
+    return res.sendError(401, 'Must pass channel_id to view unpublished articles. Or pass ' +
       'published=true to only view published articles.')
 
   access = User.hasChannelAccess req.user, req.query.channel_id
   if (req.query.published is 'false' or req.query.scheduled is 'true') and not access
-    return res.err(401,
+    return res.sendError(401,
       'Must be a member of this channel to view unpublished articles. ' +
       'Pass published=true to only view published articles.')
 
@@ -27,12 +27,12 @@ User = require '../users/model.coffee'
   if User.hasChannelAccess req.user, (req.article.channel_id or req.article.partner_channel_id)
     res.send present req.article
   else
-    res.err 404, 'Article not found.'
+    res.sendError 404, 'Article not found.'
 
 # POST /api/articles
 @create = (req, res, next) ->
   unless User.hasChannelAccess req.user, (req.body.channel_id or req.body.partner_channel_id)
-    return res.err(401, 'Unauthorized')
+    return res.sendError(401, 'Unauthorized')
 
   data = _.extend { author_id: req.user._id.toString() }, req.body
   Article.save data, req.user?.access_token, {}, (err, article) ->
@@ -42,7 +42,7 @@ User = require '../users/model.coffee'
 # PUT /api/articles/:id
 @update = (req, res, next) ->
   unless User.hasChannelAccess req.user, (req.body.channel_id or req.body.partner_channel_id)
-    return res.err(401, 'Unauthorized')
+    return res.sendError(401, 'Unauthorized')
 
   Article.save req.body, req.user?.access_token, validation: noDefaults: true , (err, article) ->
     return next err if err
@@ -51,7 +51,7 @@ User = require '../users/model.coffee'
 # DELETE /api/articles/:id
 @delete = (req, res, next) ->
   unless User.hasChannelAccess req.user, (req.article.channel_id or req.article.partner_channel_id)
-    return res.err(401, 'Unauthorized')
+    return res.sendError(401, 'Unauthorized')
 
   Article.destroy req.article._id, (err) ->
     return next err if err
@@ -59,7 +59,7 @@ User = require '../users/model.coffee'
 
 @restrictFeature = (req, res, next) ->
   if !req.user?.roles?.includes("editorial") and req.body.featured
-    res.err 401, 'You must have editorial role to feature an article.'
+    res.sendError 401, 'You must have editorial role to feature an article.'
   else
     next()
 
@@ -67,6 +67,6 @@ User = require '../users/model.coffee'
 @find = (req, res, next) ->
   Article.find (req.params.id or req.query.article_id), (err, article) ->
     return next err if err
-    return res.err 404, 'Article not found.' unless req.article = article
+    return res.sendError 404, 'Article not found.' unless req.article = article
     if req.article?.published then next() else setUser(req, res, next)
 

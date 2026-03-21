@@ -13,17 +13,17 @@ describe 'middleware', ->
       @res[method].returns @res
     @next = sinon.stub()
 
-  describe 'helpers res.err', ->
+  describe 'helpers res.sendError', ->
 
     it 'sends consistent error messages with sensible defaults', ->
       middleware.helpers @req, @res, @next
-      @res.err()
+      @res.sendError()
       @next.args[1][0].status.should.equal 500
       @next.args[1][0].message.should.equal "Internal Error"
 
     it 'sends consistent error messages that is customizable', ->
       middleware.helpers @req, @res, @next
-      @res.err 403, "Game Over"
+      @res.sendError 403, "Game Over"
       @next.args[1][0].status.should.equal 403
       @next.args[1][0].message.should.equal "Game Over"
 
