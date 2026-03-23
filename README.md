@@ -48,7 +48,15 @@ yarn start
 
 #### Using staging database
 
-In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point MONGOHQ_URL env to the staging database. Connecting to staging database requires VPN, please see details on [setting up a VPN connection here](https://github.com/artsy/infrastructure/blob/master/README.md#vpn).
+In order to write articles, you will need to be a member of a channel. If you are an Artsy dev, you can point `MONGOHQ_URL` env to the staging database.
+
+Connecting to staging database requires…
+
+- **VPN access**: Please see details on [setting up a VPN connection here](https://www.notion.so/artsy/VPN-Configuration-60798c292185407687356997bf251d8c)
+
+- **Staging credentials**: These can be obtained from Vault. Follow [the Vault instructions here](https://www.notion.so/artsy/Hashicorp-Vault-developer-instructions-77d94af51f714d51bb44049f4f2027bc) in order to retrieve the staging value for the `MONGOHQ_URL` env var.
+
+- **Staging search url**: Also obtain the `SEARCH_URL` env var via `hokusai staging env` in order to search staging data locally.
 
 #### Using a local database
 
