@@ -18,17 +18,17 @@ const config = {
     rules: [
       {
         test: /\.coffee$/,
-        include: /src/,
+        include: path.resolve(__dirname, "../../src"),
         loader: "coffee-loader",
       },
       {
         test: /\.jade$/,
-        include: /src/,
+        include: path.resolve(__dirname, "../../src"),
         loader: "jade-loader",
       },
       {
         test: /\.(js|ts)x?$/,
-        include: /src/,
+        include: path.resolve(__dirname, "../../src"),
         use: [
           {
             loader: "babel-loader",
@@ -40,17 +40,17 @@ const config = {
       },
       {
         test: /\.json$/,
-        include: /src/,
+        include: path.resolve(__dirname, "../../src"),
         loader: "json-loader",
       },
       {
         test: /\.css$/,
-        include: /src/,
+        include: path.resolve(__dirname, "../../src"),
         use: [{ loader: "style-loader" }, { loader: "css-loader" }],
       },
       {
         test: /\.styl$/,
-        include: /src/,
+        include: path.resolve(__dirname, "../../src"),
         use: [
           { loader: "style-loader" },
           { loader: "css-loader" },
