@@ -77,6 +77,39 @@ describe 'User', ->
           user.partner_ids[0].toString().should.equal '5086df098523e60002000012'
           done()
 
+    it 'syncs channel_ids when channel access is granted after first login', (done) ->
+      fabricate 'users', {
+        _id: new ObjectId '4d8cd73191a5c50ce200002a'
+        channel_ids: []
+        partner_ids: ['5086df098523e60002000012']
+      }, (err, user) ->
+        channel = {
+          _id: new ObjectId '5086df098523e60002000099'
+          user_ids: [new ObjectId '4d8cd73191a5c50ce200002a']
+        }
+        db.collection('channels').insertOne channel, ->
+          User.fromAccessToken fixtures().users.access_token, (err, user) ->
+            user.channel_ids.length.should.equal 1
+            user.channel_ids[0].toString().should.equal '5086df098523e60002000099'
+            done()
+
+    it 'returns user unchanged when channel_ids are already in sync', (done) ->
+      channelId = new ObjectId '5086df098523e60002000099'
+      fabricate 'users', {
+        _id: new ObjectId '4d8cd73191a5c50ce200002a'
+        channel_ids: [channelId]
+        partner_ids: ['5086df098523e60002000012']
+      }, (err, user) ->
+        channel = {
+          _id: channelId
+          user_ids: [new ObjectId '4d8cd73191a5c50ce200002a']
+        }
+        db.collection('channels').insertOne channel, ->
+          User.fromAccessToken fixtures().users.access_token, (err, user) ->
+            user.channel_ids.length.should.equal 1
+            user.channel_ids[0].toString().should.equal '5086df098523e60002000099'
+            done()
+
   describe '#present', ->
 
     it 'converts _id to id', ->

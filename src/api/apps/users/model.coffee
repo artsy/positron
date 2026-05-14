@@ -29,7 +29,18 @@ jwtDecode = require 'jwt-decode'
         # Compare the user's partner access from the database vs JWT token to see if it needs a refresh
         savedPartnerIds = user.partner_ids.map((a) => a.toString())
         latestPartnerIds = jwtDecode(accessToken)?.partner_ids or []
-        return callback null, user if _.isEqual(savedPartnerIds, latestPartnerIds)
+        if _.isEqual(savedPartnerIds, latestPartnerIds)
+          # Also re-check channel membership in case access was granted since last login
+          return db.collection('channels').find({user_ids: new ObjectId(user._id)}).toArray (err, channels) ->
+            return callback err if err
+            latestChannelIds = _.pluck channels, '_id'
+            savedChannelIdsSorted = user.channel_ids.map((a) -> a.toString()).sort()
+            latestChannelIdsSorted = latestChannelIds.map((a) -> a.toString()).sort()
+            return callback null, user if _.isEqual(savedChannelIdsSorted, latestChannelIdsSorted)
+            db.collection('users').updateOne { _id: user._id }, { $set: { channel_ids: latestChannelIds } }, (err) ->
+              return callback err if err
+              user.channel_ids = latestChannelIds
+              callback null, user
       # Otherwise fetch data from Gravity and flatten it into a Positron user
       request
         .get("#{ARTSY_URL}/api/v1/me")
