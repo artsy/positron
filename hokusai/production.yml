@@ -118,7 +118,7 @@ spec:
       - name: secrets
         emptyDir: {}
 ---
-apiVersion: autoscaling/v1
+apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: positron-web
@@ -130,7 +130,13 @@ spec:
     name: positron-web
   minReplicas: 2
   maxReplicas: 6
-  targetCPUUtilizationPercentage: 70
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
 ---
 apiVersion: batch/v1
 kind: CronJob
