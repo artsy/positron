@@ -69,4 +69,24 @@ describe("#sanitizeLink", () => {
       "https://www.anotherwebsite.net/DutchPavilion"
     )
   })
+
+  it("rejects javascript: urls", () => {
+    expect(sanitizeLink("javascript:alert(1)")).toBeUndefined()
+    expect(sanitizeLink("JavaScript:alert(document.domain)")).toBeUndefined()
+  })
+
+  it("rejects data: urls", () => {
+    expect(
+      sanitizeLink("data:text/html,<script>alert(1)</script>")
+    ).toBeUndefined()
+  })
+
+  it("rejects vbscript: urls", () => {
+    expect(sanitizeLink("vbscript:msgbox(1)")).toBeUndefined()
+  })
+
+  it("allows mailto and tel links used in article body text", () => {
+    expect(sanitizeLink("mailto:hello@artsy.net")).toBe("mailto:hello@artsy.net")
+    expect(sanitizeLink("tel:+15551234567")).toBe("tel:+15551234567")
+  })
 })
