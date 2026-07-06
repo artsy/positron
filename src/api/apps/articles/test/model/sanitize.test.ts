@@ -1,4 +1,4 @@
-import { sanitizeLink } from "../../model/sanitize"
+import { sanitizeLink, sanitizeEmbedUrl } from "../../model/sanitize"
 
 describe("#sanitizeLink", () => {
   it("skips sanitizing links that do not have an href", () => {
@@ -88,5 +88,58 @@ describe("#sanitizeLink", () => {
   it("allows mailto and tel links used in article body text", () => {
     expect(sanitizeLink("mailto:hello@artsy.net")).toBe("mailto:hello@artsy.net")
     expect(sanitizeLink("tel:+15551234567")).toBe("tel:+15551234567")
+  })
+})
+
+describe("#sanitizeEmbedUrl", () => {
+  it("keeps valid youtube urls", () => {
+    expect(sanitizeEmbedUrl("https://www.youtube.com/watch?v=QWtsV50_-p4")).toBe(
+      "https://www.youtube.com/watch?v=QWtsV50_-p4"
+    )
+    expect(sanitizeEmbedUrl("https://youtu.be/QWtsV50_-p4")).toBe(
+      "https://youtu.be/QWtsV50_-p4"
+    )
+  })
+
+  it("keeps valid vimeo urls", () => {
+    expect(sanitizeEmbedUrl("https://vimeo.com/143024721")).toBe(
+      "https://vimeo.com/143024721"
+    )
+  })
+
+  it("rejects a youtube id that breaks out of the iframe src", () => {
+    expect(
+      sanitizeEmbedUrl(
+        'https://youtube.com/watch?v="%20onload=alert(document.domain)%20x="'
+      )
+    ).toBeUndefined()
+  })
+
+  it("rejects a youtube id containing markup", () => {
+    expect(
+      sanitizeEmbedUrl("https://youtube.com/watch?v=<script>alert(1)</script>")
+    ).toBeUndefined()
+  })
+
+  it("rejects a non-numeric vimeo id", () => {
+    expect(
+      sanitizeEmbedUrl('https://vimeo.com/"><img src=x onerror=alert(1)>')
+    ).toBeUndefined()
+  })
+
+  it("rejects a youtube url with no video id", () => {
+    expect(
+      sanitizeEmbedUrl("https://www.youtube.com/playlist?list=PL123")
+    ).toBeUndefined()
+  })
+
+  it("rejects disallowed protocols (via sanitizeLink)", () => {
+    expect(sanitizeEmbedUrl("javascript:alert(1)")).toBeUndefined()
+  })
+
+  it("leaves non-youtube/vimeo urls untouched (extractEmbed ignores them)", () => {
+    expect(sanitizeEmbedUrl("https://example.com/video")).toBe(
+      "https://example.com/video"
+    )
   })
 })

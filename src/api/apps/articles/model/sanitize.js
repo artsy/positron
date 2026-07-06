@@ -1,6 +1,11 @@
 // @ts-check
 import { URL } from "url"
 
+// Protocols permitted in article links. Anything else (e.g. javascript:, data:,
+// vbscript:) is rejected so it cannot be rendered as an iframe src / anchor href
+// on article pages, which would allow stored XSS. See security bounty GF658.
+const ALLOWED_PROTOCOLS = ["http:", "https:", "mailto:", "tel:"]
+
 // FIXME: cannot use typescript in yarn task commands
 export const sanitizeLink = urlString => {
   let url
@@ -12,6 +17,9 @@ export const sanitizeLink = urlString => {
     url = new URL(urlString)
   } catch (_e) {
     url = new URL(`https://${urlString}`)
+  }
+  if (!ALLOWED_PROTOCOLS.includes(url.protocol)) {
+    return
   }
   if (url.hostname === "artsy.net") {
     url.hostname = "www.artsy.net"
@@ -34,4 +42,42 @@ export const sanitizeLink = urlString => {
   }
 
   return url.href
+}
+
+const EMBED_ID_PATTERNS = {
+  vimeo: /^[0-9]+$/,
+  youtube: /^[A-Za-z0-9_-]+$/,
+}
+
+const detectEmbedProvider = hostname => {
+  if (hostname.includes("vimeo.com")) return "vimeo"
+  if (hostname.includes("youtu")) return "youtube"
+  return null
+}
+
+// Mirrors metaphysics extractEmbed's detectId.
+const detectEmbedId = (url, provider) => {
+  if (provider === "youtube") {
+    return url.search === ""
+      ? url.pathname.split("/").pop()
+      : url.searchParams.get("v")
+  }
+  return url.pathname.split("/").pop()
+}
+
+export const sanitizeEmbedUrl = urlString => {
+  const sanitized = sanitizeLink(urlString)
+  if (!sanitized) {
+    return sanitized
+  }
+  const url = new URL(sanitized)
+  const provider = detectEmbedProvider(url.hostname)
+  if (!provider) {
+    return sanitized
+  }
+  const id = detectEmbedId(url, provider)
+  if (typeof id !== "string" || !EMBED_ID_PATTERNS[provider].test(id)) {
+    return
+  }
+  return sanitized
 }
