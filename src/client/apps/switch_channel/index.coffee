@@ -10,6 +10,12 @@ Channel = require '../../models/channel.coffee'
 
 app = module.exports = express()
 
+# Only permit same-origin, local redirect targets.
+LOCAL_PATH = /^\/(?![\/\\])[^\x00-\x1f]*$/
+
+safeRedirect = (target) ->
+  if typeof target is 'string' and LOCAL_PATH.test target then target else '/'
+
 app.get '/switch_channel/:id', switchChannel = (req, res, next) ->
   new Channel(id: req.params.id).fetchChannelOrPartner
     success: (channel) =>
@@ -24,6 +30,6 @@ app.get '/switch_channel/:id', switchChannel = (req, res, next) ->
       req.user.set 'current_channel', channel.denormalized()
       req.login req.user, (err) ->
         return next err if err
-        res.redirect req.query['redirect-to'] or '/'
+        res.redirect safeRedirect(req.query['redirect-to'])
     error: (err) ->
       return next err
