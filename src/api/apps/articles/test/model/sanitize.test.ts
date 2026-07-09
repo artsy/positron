@@ -115,21 +115,9 @@ describe("#sanitizeEmbedUrl", () => {
     ).toBeUndefined()
   })
 
-  it("rejects a youtube id containing markup", () => {
+  it("rejects a youtube v param containing markup", () => {
     expect(
       sanitizeEmbedUrl("https://youtube.com/watch?v=<script>alert(1)</script>")
-    ).toBeUndefined()
-  })
-
-  it("rejects a non-numeric vimeo id", () => {
-    expect(
-      sanitizeEmbedUrl('https://vimeo.com/"><img src=x onerror=alert(1)>')
-    ).toBeUndefined()
-  })
-
-  it("rejects a youtube url with no video id", () => {
-    expect(
-      sanitizeEmbedUrl("https://www.youtube.com/playlist?list=PL123")
     ).toBeUndefined()
   })
 
@@ -140,6 +128,27 @@ describe("#sanitizeEmbedUrl", () => {
   it("leaves non-youtube/vimeo urls untouched (extractEmbed ignores them)", () => {
     expect(sanitizeEmbedUrl("https://example.com/video")).toBe(
       "https://example.com/video"
+    )
+  })
+
+  // GF658: these are legitimate but non-standard video URLs found in production.
+  // They must be preserved, not stripped — the id is safe (no breakout chars),
+  // it just isn't a bare provider id.
+  it("preserves youtu.be links that carry query params", () => {
+    expect(sanitizeEmbedUrl("https://youtu.be/zHair5dvG0s?t=4")).toBe(
+      "https://youtu.be/zHair5dvG0s?t=4"
+    )
+    expect(
+      sanitizeEmbedUrl("https://youtu.be/8cLuoy4Z4wg?si=VfER6JqzBznElgAo")
+    ).toBe("https://youtu.be/8cLuoy4Z4wg?si=VfER6JqzBznElgAo")
+  })
+
+  it("preserves vimeo user/showcase and private (id/hash) urls", () => {
+    expect(sanitizeEmbedUrl("https://vimeo.com/gestalten/henrik-vibskov")).toBe(
+      "https://vimeo.com/gestalten/henrik-vibskov"
+    )
+    expect(sanitizeEmbedUrl("https://vimeo.com/334638796/9c8049d04b")).toBe(
+      "https://vimeo.com/334638796/9c8049d04b"
     )
   })
 })

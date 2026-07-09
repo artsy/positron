@@ -44,10 +44,13 @@ export const sanitizeLink = urlString => {
   return url.href
 }
 
-const EMBED_ID_PATTERNS = {
-  vimeo: /^[0-9]+$/,
-  youtube: /^[A-Za-z0-9_-]+$/,
-}
+// A video id is interpolated (unescaped) into an iframe src="..." by metaphysics
+// extractEmbed on render. These characters would let a crafted id break out of
+// that attribute and inject markup/handlers; real youtube/vimeo ids never
+// contain them. We reject only on these, so legitimate but non-standard video
+// URLs (youtu.be links with ?t=/?si=, vimeo user/showcase/private urls, trailing
+// slashes) are preserved rather than destroyed. See security bounty GF658.
+const UNSAFE_EMBED_ID = /["'<>`\s]/
 
 const detectEmbedProvider = hostname => {
   if (hostname.includes("vimeo.com")) return "vimeo"
@@ -76,7 +79,7 @@ export const sanitizeEmbedUrl = urlString => {
     return sanitized
   }
   const id = detectEmbedId(url, provider)
-  if (typeof id !== "string" || !EMBED_ID_PATTERNS[provider].test(id)) {
+  if (typeof id === "string" && UNSAFE_EMBED_ID.test(id)) {
     return
   }
   return sanitized
