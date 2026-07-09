@@ -529,6 +529,77 @@ describe("Save", () => {
         },
       }))
 
+    it("strips javascript: urls from video sections", done =>
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        // @ts-ignore
+        ;(!article.sections[0].url).should.be.true()
+        done()
+      })(null, {
+        sections: [
+          {
+            type: "video",
+            url: "javascript:alert(document.domain)",
+          },
+        ],
+      }))
+
+    it("strips breakout youtube urls from video sections (GF658 Vector A)", done =>
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        // @ts-ignore
+        ;(!article.sections[0].url).should.be.true()
+        done()
+      })(null, {
+        sections: [
+          {
+            type: "video",
+            url:
+              'https://youtube.com/watch?v="%20onload=alert(document.domain)%20x="',
+          },
+        ],
+      }))
+
+    it("strips data: urls from embed sections", done =>
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        // url is stripped on save; the DB round-trip returns null, not undefined
+        // @ts-ignore
+        ;(!article.sections[0].url).should.be.true()
+        done()
+      })(null, {
+        sections: [
+          {
+            type: "embed",
+            url: "data:text/html,<script>alert(document.domain)</script>",
+          },
+        ],
+      }))
+
+    it("preserves valid https video section urls", done =>
+      Save.sanitizeAndSave((err, article) => {
+        if (err) {
+          done(err)
+        }
+        article.sections[0].url.should.containEql(
+          "https://www.youtube.com/watch"
+        )
+        done()
+      })(null, {
+        sections: [
+          {
+            type: "video",
+            url: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          },
+        ],
+      }))
+
     it("can save follow artist links (allowlist data-id)", done =>
       Save.sanitizeAndSave((err, article) => {
         if (err) {

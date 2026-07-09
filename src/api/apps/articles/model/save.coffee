@@ -14,7 +14,7 @@ ArticleModel = require './../../../../api/models/article.coffee'
 { getArticleUrl, indexForSearch } = require './distribute'
 { ARTSY_URL, GEMINI_CLOUDFRONT_URL } = process.env
 artsyXapp = require('artsy-xapp')
-{ sanitizeLink } = require "./sanitize.js"
+{ sanitizeLink, sanitizeEmbedUrl } = require "./sanitize.js"
 chalk = require 'chalk'
 { cloneDeep } = require 'lodash'
 
@@ -174,11 +174,12 @@ sanitize = (article) ->
   if article.sections
     sections = for section in article.sections
       section.body = sanitizeHtml section.body if section.type is 'text'
-      section.url = sanitizeLink section.url if section.type in ['video', 'social_embed', 'embed']
+      section.url = sanitizeEmbedUrl section.url if section.type is 'video'
+      section.url = sanitizeLink section.url if section.type in ['social_embed', 'embed']
       if section.type is 'slideshow'
         for item in section.items when item.type is 'image' or item.type is 'video'
           item.caption = sanitizeHtml item.caption if item.type is 'image'
-          item.url = sanitizeLink item.url if item.type is 'video'
+          item.url = sanitizeEmbedUrl item.url if item.type is 'video'
       if section.type in ['image_collection', 'image_set']
         for item in section.images when item.type is 'image'
           item.caption = sanitizeHtml item.caption
