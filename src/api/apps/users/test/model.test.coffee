@@ -160,9 +160,9 @@ describe 'User', ->
         User.hasChannelAccess(user, '5086df098523e60002000018').should.be.true()
         done()
 
-    it 'returns true for a partner channel member', (done) ->
-      user = _.extend fixtures().users, { partner_ids: [ '5086df098523e60002000012' ] }
-      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.true()
+    it 'returns false for a user who only has partner access via Gravity (not a channel member, not an admin)', (done) ->
+      user = _.extend fixtures().users, { channel_ids: [], partner_ids: [ '5086df098523e60002000012' ], type: 'User' }
+      User.hasChannelAccess(user, '5086df098523e60002000012').should.be.false()
       done()
 
     it 'returns true for a non-partner or non-channel member but admin on a partner channel', (done) ->
