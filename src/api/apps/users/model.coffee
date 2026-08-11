@@ -91,11 +91,9 @@ save = (user, accessToken, callback) ->
   channel_id = channel_id.toString() if channel_id
   @channels = _.find user.channel_ids, (id) ->
     id.toString() is channel_id
-  @partners = _.find user.partner_ids, (id) ->
-    id.toString() is channel_id
 
   return true if @channels
-  return @partners? or user.type is 'Admin'
+  return user.type is 'Admin'
 
 #
 # JSON views
