@@ -138,5 +138,15 @@ describe("Retrieve", () => {
       })
       query._id.should.have.keys("$nin")
     })
+
+    it("filters articles by published_since", () => {
+      const date = "2024-01-01T00:00:00.000Z"
+      const { query } = toQuery({
+        published_since: date,
+        published: true,
+      })
+      query.published_at.should.have.keys("$gte")
+      query.published_at.$gte.should.eql(new Date(date))
+    })
   })
 })
