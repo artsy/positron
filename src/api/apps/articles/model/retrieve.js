@@ -34,7 +34,8 @@ export const toQuery = input => {
     "scheduled",
     "access_token",
     "omit",
-    "in_editorial_feed"
+    "in_editorial_feed",
+    "published_since"
   )
   if (input.fair_id) {
     query.fair_ids = input.fair_id
@@ -141,6 +142,11 @@ export const toQuery = input => {
       { featured_artist_ids: input.artist_id },
       { biography_for_artist_id: input.artist_id }
     )
+  }
+
+  // Filter articles published since a given date
+  if (input.published_since) {
+    query.published_at = { $gte: new Date(input.published_since) }
   }
 
   // Convert query for articles that have video sections
