@@ -289,6 +289,7 @@ ImageCollectionSection = (->
   omit: @array().items(@string())
   partner_id: @string().objectid()
   published: @boolean().default(true)
+  published_since: @date().allow(null)
   q: @string().allow('')
   scheduled: @boolean()
   section_id: @string().objectid()
