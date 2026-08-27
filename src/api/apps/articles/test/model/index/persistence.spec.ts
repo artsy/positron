@@ -321,6 +321,7 @@ describe("Article Persistence", () => {
               title: "Top Ten Shows",
               featured_artist_ids: [new ObjectId("52868347b202a37bb000072a")],
               href: "/article/undefined-ten-shows",
+              published_at: sinon.match.instanceOf(Date),
             })
             .callCount.should.eql(1)
 

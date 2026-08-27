@@ -78,6 +78,7 @@ module.exports = class Article extends Backbone.Model
       featured_artist_ids: @get('primary_featured_artist_ids')
       href: @href()
       title: @get('title')
+      published_at: @get('published_at')
 
     amqp.publish("editorial", "article.published", payload)
 
