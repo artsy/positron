@@ -298,12 +298,14 @@ describe("Article Persistence", () => {
       ))
 
     it("sends RabbitMQ event when publishing", done => {
+      const published_at = new Date("2024-01-15T12:00:00.000Z")
       Article.save(
         {
           title: "Top Ten Shows",
           thumbnail_title: "Ten Shows",
           author_id: "5086df098523e60002000018",
           published: true,
+          published_at,
           id: "5086df098523e60002002222",
           primary_featured_artist_ids: ["52868347b202a37bb000072a"],
           channel_id: "5086df098523e60002000018",
@@ -321,7 +323,7 @@ describe("Article Persistence", () => {
               title: "Top Ten Shows",
               featured_artist_ids: [new ObjectId("52868347b202a37bb000072a")],
               href: "/article/undefined-ten-shows",
-              published_at: sinon.match.instanceOf(Date),
+              published_at,
             })
             .callCount.should.eql(1)
 
