@@ -13,6 +13,7 @@ import { newHeroSection, newSection } from "client/actions/edit/sectionActions"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
+import { IconEditArtworkGrid } from "./icon_edit_artwork_grid"
 
 interface Props {
   article: ArticleData
@@ -105,6 +106,16 @@ export class SectionTool extends Component<Props> {
               <SectionToolMenuItem onClick={() => this.newSection("embed")}>
                 <IconEditEmbed />
                 Embed
+              </SectionToolMenuItem>
+            )}
+
+          {!isPartnerChannel &&
+            !isNews && (
+              <SectionToolMenuItem
+                onClick={() => this.newSection("artwork_grid")}
+              >
+                <IconEditArtworkGrid />
+                Artwork Grid
               </SectionToolMenuItem>
             )}
 

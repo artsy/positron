@@ -154,6 +154,12 @@ export const setupSection = (type: SectionType = "text") => {
         url: "",
         layout: "column_width",
       } as SectionData
+    case "artwork_grid":
+      return {
+        type: "artwork_grid",
+        columns: 3,
+        artworks: [],
+      } as SectionData
     default:
       return {
         type: "text",
