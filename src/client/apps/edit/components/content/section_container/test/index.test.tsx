@@ -6,6 +6,7 @@ import { clone } from "lodash"
 import React from "react"
 import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
+import { SectionArtworkGrid } from "../../sections/artwork_grid"
 import { SectionEmbed } from "../../sections/embed"
 import { SectionImages } from "../../sections/images"
 const SectionSlideshow = require("../../sections/slideshow/index.coffee")
@@ -111,6 +112,12 @@ describe("SectionContainer", () => {
   })
 
   describe("Sections", () => {
+    it("Can render an artwork_grid section", () => {
+      props.section = { type: "artwork_grid", columns: 3, artworks: [] }
+      const component = getWrapper(props)
+      expect(component.find(SectionArtworkGrid).length).toBe(1)
+    })
+
     it("Can render an embed section", () => {
       props.section = { type: "embed" }
       const component = getWrapper(props)
