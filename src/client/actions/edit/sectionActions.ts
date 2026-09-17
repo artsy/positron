@@ -1,7 +1,4 @@
-import {
-  SectionData,
-  SectionType,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { SectionData, SectionType } from "client/typings/sections"
 import {
   changeArticleData,
   debouncedSaveDispatch,

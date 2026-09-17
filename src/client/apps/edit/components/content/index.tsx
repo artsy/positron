@@ -1,8 +1,5 @@
 import { color } from "@artsy/palette"
-import {
-  ArticleData,
-  ArticleLayout,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, ArticleLayout } from "client/typings/sections"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"

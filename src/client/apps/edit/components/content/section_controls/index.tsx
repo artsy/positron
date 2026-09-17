@@ -1,9 +1,6 @@
 import { Box, color } from "@artsy/palette"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { Channel } from "client/typings"
 import React, { Component } from "react"
 import { connect } from "react-redux"

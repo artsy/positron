@@ -1,10 +1,7 @@
 import { color } from "@artsy/palette"
 import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { removeSection } from "client/actions/edit/sectionActions"
 import { maybeRemoveEmptyText } from "client/actions/edit/textSectionActions"
 import { ErrorBoundary } from "client/components/error/error_boundary"

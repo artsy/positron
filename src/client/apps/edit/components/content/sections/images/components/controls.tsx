@@ -1,9 +1,6 @@
 import { Box, Col, Flex } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { logError } from "client/actions/edit/errorActions"
 import {
   onChangeHero,

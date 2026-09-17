@@ -8,10 +8,7 @@ import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/I
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { newHeroSection, newSection } from "client/actions/edit/sectionActions"
 import React, { Component } from "react"
 import { connect } from "react-redux"
