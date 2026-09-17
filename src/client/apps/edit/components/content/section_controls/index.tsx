@@ -178,7 +178,7 @@ const SectionControlsContainer = styled.div<{
   max-width: calc(100vw - 110px);
 
   ${props =>
-    props.type === "social_embed" &&
+    (props.type === "social_embed" || props.type === "artwork_grid") &&
     `
     padding-top: 20px;
   `};

@@ -16,8 +16,11 @@ import React, { Component } from "react"
 import { connect } from "react-redux"
 import { data as sd } from "sharify"
 import styled from "styled-components"
+import {
+  fetchDenormalizedArtwork as fetchArtworkSnapshot,
+  filterArtworkSearchResults,
+} from "../../shared/artworks"
 import { InputArtworkUrl } from "./input_artwork_url"
-const Artwork = require("client/models/artwork.coffee")
 
 interface ImagesControlsProps {
   article: ArticleData
@@ -46,34 +49,15 @@ export class ImagesControls extends Component<ImagesControlsProps> {
     }
   }
 
-  filterAutocomplete = items => {
-    return items._embedded.results.map(item => {
-      const { type } = item
-
-      if (type && type.toLowerCase() === "artwork") {
-        const { title, _links } = item
-        const { thumbnail, self } = _links
-        const _id = self.href.substr(self.href.lastIndexOf("/") + 1)
-        const thumbnail_image = thumbnail && thumbnail.href
-
-        return {
-          _id,
-          title,
-          thumbnail_image,
-          type,
-        }
-      } else {
-        return false
-      }
-    })
+  filterAutocomplete = (items): any[] => {
+    return filterArtworkSearchResults(items)
   }
 
   fetchDenormalizedArtwork = async id => {
     const { logErrorAction } = this.props
 
     try {
-      const artwork = await new Artwork({ id }).fetch()
-      return new Artwork(artwork).denormalized()
+      return await fetchArtworkSnapshot(id)
     } catch (err) {
       logErrorAction({ message: "Artwork not found." })
       return err

@@ -3,18 +3,14 @@ import { DragContainer, DragDropList } from "client/components/drag_drop2"
 import { DraggableCover } from "client/components/drag_drop2/drag_source"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import { RemoveButtonContainer } from "client/components/remove_button"
-import {
-  ArtworkGridArtwork,
-  ArtworkGridColumns,
-  SectionData,
-} from "client/typings/sections"
+import { ArtworkGridArtwork, SectionData } from "client/typings/sections"
 import { without } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
 import { ArtworkGridItem } from "./components/artwork_grid_item"
-
-export const DEFAULT_COLUMNS: ArtworkGridColumns = 3
+import ArtworkGridControls from "./components/controls"
+import { DEFAULT_COLUMNS } from "./constants"
 
 interface Props {
   editing: boolean
@@ -25,7 +21,7 @@ interface Props {
 /**
  * Editor for the `artwork_grid` section: a CSS grid of curated artworks
  * with a configurable column count. Editors can reorder (drag) and remove
- * artworks here; the picker and column controls live in ./components/controls.
+ * artworks here; the picker and column controls are in ./components/controls.
  */
 export class SectionArtworkGrid extends Component<Props> {
   getArtworks = (): ArtworkGridArtwork[] => {
@@ -59,6 +55,8 @@ export class SectionArtworkGrid extends Component<Props> {
 
     return (
       <SectionArtworkGridContainer columns={columns}>
+        {editing && <ArtworkGridControls />}
+
         {artworks.length === 0 ? (
           <EditSectionPlaceholder>Add artworks above</EditSectionPlaceholder>
         ) : editing && artworks.length > 1 ? (

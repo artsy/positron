@@ -4,15 +4,33 @@ import { RemoveButton } from "client/components/remove_button"
 import { ArtworkGridArtwork } from "client/typings/sections"
 import { mount } from "enzyme"
 import React from "react"
+import { Provider } from "react-redux"
+import configureStore from "redux-mock-store"
 import { ArtworkGridItem } from "../components/artwork_grid_item"
+import { ArtworkGridControls } from "../components/controls"
 import { SectionArtworkGrid } from "../index"
+require("typeahead.js")
 
 describe("SectionArtworkGrid", () => {
   let artworks: ArtworkGridArtwork[]
   let props
 
   const getWrapper = (passedProps = props) => {
-    return mount(<SectionArtworkGrid {...passedProps} />)
+    const mockStore = configureStore([])
+    const store = mockStore({
+      app: { channel: { type: "editorial" } },
+      edit: {
+        article: { layout: "standard" },
+        section: passedProps.section,
+        sectionIndex: 0,
+      },
+    })
+
+    return mount(
+      <Provider store={store}>
+        <SectionArtworkGrid {...passedProps} />
+      </Provider>
+    )
   }
 
   beforeEach(() => {
@@ -35,6 +53,21 @@ describe("SectionArtworkGrid", () => {
 
     expect(component.find(ArtworkGridItem).length).toBe(3)
     expect(component.find(DragDropList).exists()).toBe(false)
+  })
+
+  it("renders controls only when editing", () => {
+    expect(
+      getWrapper()
+        .find(ArtworkGridControls)
+        .exists()
+    ).toBe(false)
+
+    props.editing = true
+    expect(
+      getWrapper()
+        .find(ArtworkGridControls)
+        .exists()
+    ).toBe(true)
   })
 
   it("renders a placeholder when there are no artworks", () => {
