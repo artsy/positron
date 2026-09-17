@@ -109,6 +109,35 @@ describe("Article", () => {
       expect(result[1]).toBe("jutta-koether")
       expect(result[2]).toBe("cy-twombly")
     })
+
+    it("Finds artists in artwork_grid sections", () => {
+      const article = {
+        sections: [
+          {
+            type: "artwork_grid",
+            columns: 3,
+            artworks: [
+              { type: "artwork", artists: [{ id: "andy-warhol" }] },
+              {
+                type: "artwork",
+                artists: [
+                  { id: "jasper-johns" },
+                  { id: "robert-rauschenberg" },
+                ],
+              },
+              { type: "artwork" },
+            ],
+          },
+        ],
+      }
+      const result = Article.getMentionedArtistSlugs(article)
+
+      expect(result).toEqual([
+        "andy-warhol",
+        "jasper-johns",
+        "robert-rauschenberg",
+      ])
+    })
   })
 
   describe("#getMentionedArtworkSlugs", () => {
@@ -140,6 +169,25 @@ describe("Article", () => {
       expect(result[0]).toBe("sam-moyer-untitled-29")
       expect(result[1]).toBe("gretta-johnson-untitled")
       expect(result[2]).toBe("chip-hughes-stripes")
+    })
+
+    it("Finds artworks in artwork_grid sections", () => {
+      const article = {
+        sections: [
+          {
+            type: "artwork_grid",
+            columns: 2,
+            artworks: [
+              { type: "artwork", slug: "andy-warhol-soup" },
+              { type: "artwork", slug: "jasper-johns-flag" },
+            ],
+          },
+          { type: "artwork_grid", columns: 2 },
+        ],
+      }
+      const result = Article.getMentionedArtworkSlugs(article)
+
+      expect(result).toEqual(["andy-warhol-soup", "jasper-johns-flag"])
     })
   })
 
