@@ -1,6 +1,6 @@
 import { NewsByline } from "@artsy/reaction/dist/Components/Publishing/Byline/NewsByline"
 import { NewsHeadline } from "@artsy/reaction/dist/Components/Publishing/News/NewsHeadline"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, ReactionArticleData } from "client/typings/sections"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { EditSourceControls } from "client/apps/edit/components/content/sections/news/EditSourceControls"
 import { PlainText } from "client/components/draft/plain_text/plain_text"
@@ -65,10 +65,16 @@ export class EditNews extends Component<EditNewsProps, EditNewsState> {
 
     return (
       <EditNewsContainer>
-        <NewsHeadline article={article} editTitle={this.editTitle()} />
+        <NewsHeadline
+          article={article as ReactionArticleData}
+          editTitle={this.editTitle()}
+        />
         <SectionList />
 
-        <NewsByline article={article} editSource={this.editSource()} />
+        <NewsByline
+          article={article as ReactionArticleData}
+          editSource={this.editSource()}
+        />
         {this.state.isEditSourceOpen && (
           <EditSourceControls
             source={article.news_source as any}

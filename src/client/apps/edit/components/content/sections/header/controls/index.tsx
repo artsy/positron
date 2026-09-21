@@ -1,5 +1,5 @@
 import { Box } from "@artsy/palette"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { onChangeHero } from "client/actions/edit/sectionActions"
 import { ModalBackground } from "client/components/ModalBackground"
 import React, { Component } from "react"

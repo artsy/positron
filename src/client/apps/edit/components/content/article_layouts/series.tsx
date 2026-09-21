@@ -7,7 +7,7 @@ import {
   SeriesTitle,
   SeriesTitleContainer,
 } from "@artsy/reaction/dist/Components/Publishing/Series/SeriesTitle"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { RelatedArticles } from "client/apps/edit/components/content/sections/related_articles"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"

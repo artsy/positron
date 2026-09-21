@@ -2,7 +2,7 @@ import {
   ArticleData,
   ArticleLayout,
   SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+} from "client/typings/sections"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { logError } from "client/actions/edit/errorActions"
 import { setSection } from "client/actions/edit/sectionActions"
