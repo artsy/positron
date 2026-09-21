@@ -59,6 +59,11 @@ export const getMentionedArtistSlugs = article => {
           }
         })
       }
+      case "artwork_grid": {
+        return (section.artworks || []).map(artwork =>
+          (artwork.artists || []).map(artist => artist.id)
+        )
+      }
     }
   })
   return compact(flatten(slugs))
@@ -79,6 +84,9 @@ export const getMentionedArtworkSlugs = article => {
             return getSlugsFromHTML(image.caption, "artwork")
           }
         })
+      }
+      case "artwork_grid": {
+        return (section.artworks || []).map(artwork => artwork.slug)
       }
     }
   })
