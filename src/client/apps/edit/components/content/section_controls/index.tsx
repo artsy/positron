@@ -1,9 +1,6 @@
 import { Box, color } from "@artsy/palette"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { Channel } from "client/typings"
 import React, { Component } from "react"
 import { connect } from "react-redux"
@@ -18,11 +15,13 @@ interface Props {
   isHero: boolean
   showLayouts: boolean
   section: SectionData
+  /** Opt out of the scroll-following (sticky) positioning. */
+  disableSticky?: boolean
 }
 
 /*
  * A container for section inputs
- * Position changes on scroll to stick to section top
+ * Position changes on scroll to stick to section top, unless disableSticky
  */
 export class SectionControls extends Component<Props> {
   private controls
@@ -32,6 +31,9 @@ export class SectionControls extends Component<Props> {
   }
 
   componentDidMount = () => {
+    if (this.props.disableSticky) {
+      return
+    }
     this.setInsideComponent()
 
     window.addEventListener("scroll", this.setInsideComponent)
@@ -100,7 +102,10 @@ export class SectionControls extends Component<Props> {
   }
 
   insideComponent = () => {
-    const { isHero } = this.props
+    const { disableSticky, isHero } = this.props
+    if (disableSticky) {
+      return false
+    }
     if (this.controls) {
       const $section = $(this.controls).closest("section")
 
@@ -181,7 +186,7 @@ const SectionControlsContainer = styled.div<{
   max-width: calc(100vw - 110px);
 
   ${props =>
-    props.type === "social_embed" &&
+    (props.type === "social_embed" || props.type === "artwork_grid") &&
     `
     padding-top: 20px;
   `};
