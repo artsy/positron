@@ -8,14 +8,12 @@ import { IconEditVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/I
 import { IconHeroImage } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroImage"
 import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/IconHeroVideo"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { newHeroSection, newSection } from "client/actions/edit/sectionActions"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"
+import { IconEditArtworkGrid } from "./icon_edit_artwork_grid"
 
 interface Props {
   article: ArticleData
@@ -108,6 +106,16 @@ export class SectionTool extends Component<Props> {
               <SectionToolMenuItem onClick={() => this.newSection("embed")}>
                 <IconEditEmbed />
                 Embed
+              </SectionToolMenuItem>
+            )}
+
+          {!isPartnerChannel &&
+            !isNews && (
+              <SectionToolMenuItem
+                onClick={() => this.newSection("artwork_grid")}
+              >
+                <IconEditArtworkGrid />
+                Artwork Grid
               </SectionToolMenuItem>
             )}
 
