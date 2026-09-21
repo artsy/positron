@@ -74,6 +74,13 @@ export const ArticleSectionsQuery = `
             ...Artwork
           }
         }
+        ... on ArtworkGrid {
+          type
+          columns
+          artworks {
+            ...Artwork
+          }
+        }
       }
     }
   }
