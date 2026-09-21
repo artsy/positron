@@ -282,6 +282,7 @@ export const SectionToolIcon = styled.div<SectionToolProps>`
       position: absolute;
       top: -3px;
       left: 35px;
+      transition: opacity 0.15s ease-out;
     }
   `} &:hover {
     opacity: 1;
@@ -292,8 +293,10 @@ export const SectionToolIcon = styled.div<SectionToolProps>`
       max-width: 100%;
       opacity: 1;
     }
+    /* Fade rather than display: none. Removing the label while the cursor
+       is over it ends the hover, which brings it back, which flickers. */
     &::after {
-      display: none;
+      opacity: 0;
     }
   }
 `
