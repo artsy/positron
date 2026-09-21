@@ -79,8 +79,9 @@ export class InputArtworkUrl extends Component<
 const InputArtworkUrlContainer = styled(Flex)`
   button {
     height: 40px;
+    margin-left: 10px;
   }
   div[class^="Input__Container"] {
-    width: calc(100% - 75px);
+    width: calc(100% - 85px);
   }
 `

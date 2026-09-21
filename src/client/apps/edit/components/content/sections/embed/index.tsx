@@ -1,5 +1,5 @@
 import { Embed } from "@artsy/reaction/dist/Components/Publishing/Sections/Embed"
-import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { SectionData } from "client/typings/sections"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import React from "react"
 import EmbedControls from "./controls"

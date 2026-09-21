@@ -1,4 +1,4 @@
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { DropDownList } from "client/components/drop_down/drop_down_list"
 import React from "react"
 import { connect } from "react-redux"

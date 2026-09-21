@@ -1,6 +1,6 @@
 import { Box, Flex } from "@artsy/palette"
 import { Input } from "@artsy/reaction/dist/Components/Input"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { FormLabel } from "client/components/form_label"
 import { clone } from "lodash"

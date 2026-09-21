@@ -1,5 +1,5 @@
 import { color, Sans, space } from "@artsy/palette"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import React from "react"
 import styled from "styled-components"
 import VideoSectionControls from "../../video/controls"

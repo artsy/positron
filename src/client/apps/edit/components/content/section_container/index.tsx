@@ -1,10 +1,7 @@
 import { color } from "@artsy/palette"
 import { IconDrag } from "@artsy/reaction/dist/Components/Publishing/Icon/IconDrag"
 import { getSectionWidth } from "@artsy/reaction/dist/Components/Publishing/Sections/SectionContainer"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { removeSection } from "client/actions/edit/sectionActions"
 import { maybeRemoveEmptyText } from "client/actions/edit/textSectionActions"
 import { ErrorBoundary } from "client/components/error/error_boundary"
@@ -14,6 +11,7 @@ import { connect } from "react-redux"
 // TODO: Remove sd after text2 is merged
 import { data as sd } from "sharify"
 import styled from "styled-components"
+import SectionArtworkGrid from "../sections/artwork_grid"
 import { SectionEmbed } from "../sections/embed"
 import SectionImages from "../sections/images"
 import { SectionSocialEmbed } from "../sections/social_embed"
@@ -85,6 +83,8 @@ export class SectionContainer extends Component<SectionContainerProps> {
     const { section } = this.props
 
     switch (section.type) {
+      case "artwork_grid":
+        return <SectionArtworkGrid {...this.props} />
       case "embed": {
         return <SectionEmbed {...this.props} />
       }
