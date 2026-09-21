@@ -176,22 +176,30 @@ describe("ImagesControls", () => {
       const items = { _embedded: { results: [rawArtwork] } }
       const filtered = component.filterAutocomplete(items)[0]
 
-      expect(filtered._id).toBe(rawArtwork._id)
-      expect(filtered.title).toBe(rawArtwork.title)
-      expect(filtered.thumbnail_image).toBe(rawArtwork._links.thumbnail.href)
-      expect(filtered.type).toBe(rawArtwork.type)
-      expect(filtered.description).toBe(undefined)
+      expect(filtered).toEqual({
+        _id: rawArtwork._id,
+        title: rawArtwork.title,
+        thumbnail_image: rawArtwork._links.thumbnail.href,
+        type: rawArtwork.type,
+      })
     })
 
-    it("#filterAutocomplete returns false for non-artwork items", () => {
+    it("#filterAutocomplete drops non-artwork items", () => {
       const component = getWrapper()
         .find(ImagesControls)
         .instance() as ImagesControls
-      const items = { _embedded: { results: [rawArtwork, { type: "artist" }] } }
+      const items = {
+        _embedded: {
+          results: [
+            rawArtwork,
+            { type: "artist", _links: { self: { href: "x" } } },
+          ],
+        },
+      }
       const filtered = component.filterAutocomplete(items)
 
+      expect(filtered.length).toBe(1)
       expect(filtered[0].type).toBe("artwork")
-      expect(filtered[1]).toBe(false)
     })
 
     it("#fetchDenormalizedArtwork returns a denormalized artwork", async () => {
