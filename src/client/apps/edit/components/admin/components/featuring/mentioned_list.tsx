@@ -1,5 +1,5 @@
 import { Box, Checkbox, color, Flex, Sans } from "@artsy/palette"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import {
   onAddFeaturedItem,
   setMentionedItems,

@@ -90,6 +90,16 @@ ImageCollectionSection = (->
     images: @array().items([denormalizedArtwork, imageSection])
 ).call Joi
 
+ArtworkGridSection = (->
+  @object().meta(
+    name: 'ArtworkGrid'
+    isTypeOf: (data) -> data.type is 'artwork_grid'
+  ).keys
+    type: @string().valid('artwork_grid').default('artwork_grid')
+    columns: @number().valid(2, 3, 4).default(3)
+    artworks: @array().items([denormalizedArtwork]).default([])
+).call Joi
+
 @inputSchema = (->
   id: @string().objectid()
   internalID: @string().objectid()
@@ -177,6 +187,7 @@ ImageCollectionSection = (->
       title: @string().allow('',null)
       layout: @string().allow('full', 'mini', null)
       images: @array().items([denormalizedArtwork, imageSection])
+    ArtworkGridSection
   ]).allow(null)
   media: @object().default({}).keys(
     url: @string().allow('')

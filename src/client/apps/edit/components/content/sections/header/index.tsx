@@ -9,7 +9,8 @@ import { EditImage } from "@artsy/reaction/dist/Components/Publishing/Header/Lay
 import {
   ArticleData,
   ArticleLayout,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+  ReactionArticleData,
+} from "client/typings/sections"
 import { onChangeArticle } from "client/actions/edit/articleActions"
 import { onChangeHero } from "client/actions/edit/sectionActions"
 import { Paragraph } from "client/components/draft/paragraph/paragraph"
@@ -159,7 +160,7 @@ export class SectionHeader extends Component<
       return (
         <HeaderContainer layout={article.layout}>
           <Header
-            article={article}
+            article={article as ReactionArticleData}
             date={this.getPublishDate()}
             editTitle={this.editTitle()}
             editLeadParagraph={this.editLeadParagraph()}
@@ -177,7 +178,7 @@ export class SectionHeader extends Component<
           {isFeature && <HeaderControls onProgress={this.onProgress} />}
 
           <Header
-            article={article}
+            article={article as ReactionArticleData}
             date={this.getPublishDate()}
             editDeck={isFeature ? this.editFeatureDeck(hero) : undefined}
             editImage={

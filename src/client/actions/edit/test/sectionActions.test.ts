@@ -75,6 +75,14 @@ describe("sectionActions", () => {
         layout: "column_width",
       })
     })
+
+    it("Can create an artwork_grid section", () => {
+      expect(setupSection("artwork_grid")).toEqual({
+        type: "artwork_grid",
+        columns: 3,
+        artworks: [],
+      })
+    })
   })
 
   describe("#newSection", () => {

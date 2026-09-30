@@ -49,6 +49,25 @@ describe("graphql endpoint", () => {
                 _id: new ObjectId("5c9d3c1aa4ba105ad8336956"),
                 author_ids: [new ObjectId("55356a9deca560a0137bb4ae")],
                 channel_id: new ObjectId("5aa99c11da4c00d6bc33a816"),
+                sections: [
+                  {
+                    type: "artwork_grid",
+                    columns: 2,
+                    artworks: [
+                      {
+                        type: "artwork",
+                        id: "5c9d3c1aa4ba105ad8336957",
+                        slug: "andy-warhol-soup",
+                        title: "Soup",
+                        date: "1962",
+                        image: "http://image.png",
+                        partner: { name: "Gagosian", slug: "gagosian" },
+                        artists: [{ name: "Andy Warhol", slug: "andy-warhol" }],
+                        artist: { name: "Andy Warhol", slug: "andy-warhol" },
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 title: "Top Twelve Booths",
@@ -112,6 +131,26 @@ describe("graphql endpoint", () => {
         expect(articles[0].sections[5].url).toEqual(
           "http://youtu.be/yYjLrJRuMnY"
         )
+        done()
+      })
+  })
+
+  it("can get an artwork_grid section in an article", done => {
+    request
+      .post("http://localhost:5000/graphql")
+      .send({ query: ArticleSectionsQuery })
+      .end((err, { body: { data: { articles } } }) => {
+        if (err) {
+          done(err.message)
+        }
+        const grid = articles
+          .map(article => article.sections || [])
+          .reduce((all, sections) => all.concat(sections), [])
+          .find(section => section.type === "artwork_grid")
+        expect(grid.columns).toEqual(2)
+        expect(grid.artworks.length).toEqual(1)
+        expect(grid.artworks[0].slug).toEqual("andy-warhol-soup")
+        expect(grid.artworks[0].artists[0].slug).toEqual("andy-warhol")
         done()
       })
   })

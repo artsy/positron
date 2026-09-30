@@ -1054,6 +1054,67 @@ describe("Article Persistence", () => {
         }
       ))
 
+    it("saves an artwork_grid section", done =>
+      Article.save(
+        {
+          author_id: "5086df098523e60002000018",
+          sections: [
+            {
+              type: "artwork_grid",
+              columns: 4,
+              artworks: [
+                {
+                  type: "artwork",
+                  id: "123",
+                  slug: "andy-warhol-soup",
+                  title: "Soup",
+                  date: "1962",
+                  image: "http://image.png",
+                  partner: { name: "Gagosian", slug: "gagosian" },
+                  artists: [{ name: "Andy Warhol", slug: "andy-warhol" }],
+                },
+              ],
+            },
+          ],
+        },
+        "foo",
+        {},
+        (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.sections[0].type.should.equal("artwork_grid")
+          article.sections[0].columns.should.equal(4)
+          article.sections[0].artworks.length.should.equal(1)
+          article.sections[0].artworks[0].type.should.equal("artwork")
+          article.sections[0].artworks[0].id.should.equal("123")
+          article.sections[0].artworks[0].slug.should.equal("andy-warhol-soup")
+          article.sections[0].artworks[0].artists[0].slug.should.equal(
+            "andy-warhol"
+          )
+          done()
+        }
+      ))
+
+    it("defaults artwork_grid columns and strips unknown keys", done =>
+      Article.save(
+        {
+          author_id: "5086df098523e60002000018",
+          sections: [{ type: "artwork_grid", layout: "fillwidth" }],
+        },
+        "foo",
+        {},
+        (err, article) => {
+          if (err) {
+            done(err)
+          }
+          article.sections[0].columns.should.equal(3)
+          article.sections[0].artworks.should.eql([])
+          article.sections[0].should.not.have.property("layout")
+          done()
+        }
+      ))
+
     it("saves social_embed sections", done =>
       Article.save(
         {

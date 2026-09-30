@@ -1,10 +1,7 @@
 import { Flex } from "@artsy/palette"
 import { IconImageFullscreen } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageFullscreen"
 import { IconImageSet } from "@artsy/reaction/dist/Components/Publishing/Icon/IconImageSet"
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { onChangeSection } from "client/actions/edit/sectionActions"
 import { Channel } from "client/typings"
 import React, { Component } from "react"

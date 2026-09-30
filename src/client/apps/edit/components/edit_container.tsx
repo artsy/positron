@@ -1,4 +1,4 @@
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import {
   startEditingArticle,
   stopEditingArticle,

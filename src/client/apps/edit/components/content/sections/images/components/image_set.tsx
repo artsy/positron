@@ -3,7 +3,7 @@ import {
   ImageSetPreviewProps,
 } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview"
 import { ImageSetPreviewClassic } from "@artsy/reaction/dist/Components/Publishing/Sections/ImageSetPreview/ImageSetPreviewClassic"
-import { ArticleLayout } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleLayout } from "client/typings/sections"
 import React from "react"
 
 export interface ImageSetProps extends ImageSetPreviewProps {

@@ -1,7 +1,4 @@
-import {
-  ArticleData,
-  SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData, SectionData } from "client/typings/sections"
 import { actions } from "client/actions/edit"
 import { clone, cloneDeep, extend, pick } from "lodash"
 import { data as sd } from "sharify"
