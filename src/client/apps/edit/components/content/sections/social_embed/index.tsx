@@ -1,5 +1,5 @@
 import { SocialEmbed } from "@artsy/reaction/dist/Components/Publishing/Sections/SocialEmbed"
-import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ReactionSectionData, SectionData } from "client/typings/sections"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import React from "react"
 import SocialEmbedControls from "./controls"
@@ -19,7 +19,7 @@ export const SectionSocialEmbed: React.SFC<SectionSocialEmbedProps> = ({
       {editing && <SocialEmbedControls />}
 
       {section.url ? (
-        <SocialEmbed section={section} />
+        <SocialEmbed section={section as ReactionSectionData} />
       ) : (
         <EditSectionPlaceholder>
           Add Twitter or Instagram URL above

@@ -1,6 +1,6 @@
 import { StandardArticle } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Articles"
 import { FullScreenProvider } from "@artsy/reaction/dist/Components/Publishing/Sections/FullscreenViewer/FullScreenProvider"
-import { SectionType } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { SectionType } from "client/typings/sections"
 import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"

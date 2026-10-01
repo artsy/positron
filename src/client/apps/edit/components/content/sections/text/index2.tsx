@@ -3,7 +3,7 @@ import {
   ArticleData,
   ArticleLayout,
   SectionData,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+} from "client/typings/sections"
 import {
   onChangeSection,
   removeSection,

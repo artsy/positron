@@ -1,5 +1,5 @@
 import { Input } from "@artsy/reaction/dist/Components/Input"
-import { SectionData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { SectionData } from "client/typings/sections"
 import {
   onChangeSection,
   removeSection,

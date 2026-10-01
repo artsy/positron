@@ -28,6 +28,15 @@ describe "Sections", ->
       ]
       @sections.mentionedArtistSlugs().join('').should.equal 'bazfoobar'
 
+    it 'finds artists in artwork_grid sections', ->
+      @sections.set [
+        { type: 'artwork_grid', columns: 3, artworks: [
+          { type: 'artwork', artists: [ { id: 'baz' }, { id: 'qux' } ] }
+          { type: 'artwork', artists: [ id: 'foo' ] }
+        ] }
+      ]
+      @sections.mentionedArtistSlugs().join('').should.equal 'bazquxfoo'
+
   describe '#mentionedArtworkSlugs', ->
 
     it 'finds artists mentioned in links and artworks', ->
@@ -37,3 +46,10 @@ describe "Sections", ->
         { type: 'image_set', images: [type: 'image', caption: "<p><a href='artsy.net/artworks/bar'>Bar</a></p>"]}
       ]
       @sections.mentionedArtworkSlugs().join('').should.equal 'bazfoobar'
+
+    it 'finds artworks in artwork_grid sections', ->
+      @sections.set [
+        { type: 'artwork_grid', columns: 2, artworks: [ { type: 'artwork', slug: 'baz' }, { type: 'artwork', slug: 'foo' } ] }
+        { type: 'artwork_grid', columns: 2 }
+      ]
+      @sections.mentionedArtworkSlugs().join('').should.equal 'bazfoo'

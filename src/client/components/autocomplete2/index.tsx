@@ -7,8 +7,8 @@ import { data as sd } from "sharify"
 import styled from "styled-components"
 
 export interface Item {
-  name?: string
-  title?: string
+  name?: string | null
+  title?: string | null
 }
 
 export interface SearchResultItem extends Item {
@@ -245,7 +245,8 @@ export const AutocompleteResults = styled.div`
   position: absolute;
   z-index: 10;
   width: 100%;
-  top: calc(100% - 15px);
+  /* flush with the input's bottom edge (the wrapper is exactly input height) */
+  top: 100%;
 `
 
 const AutocompleteResultsBackground = styled.div`

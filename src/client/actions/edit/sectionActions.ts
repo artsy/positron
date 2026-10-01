@@ -1,7 +1,4 @@
-import {
-  SectionData,
-  SectionType,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { SectionData, SectionType } from "client/typings/sections"
 import {
   changeArticleData,
   debouncedSaveDispatch,
@@ -156,6 +153,12 @@ export const setupSection = (type: SectionType = "text") => {
         type: "social_embed",
         url: "",
         layout: "column_width",
+      } as SectionData
+    case "artwork_grid":
+      return {
+        type: "artwork_grid",
+        columns: 3,
+        artworks: [],
       } as SectionData
     default:
       return {

@@ -3,7 +3,7 @@ import {
   ArticleCard,
   ArticleCardImageContainer,
 } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { DragDropList } from "client/components/drag_drop2"
 import { RelatedArticleQuery } from "client/queries/related_articles"
 import { difference, flatten, get, map, uniq, without } from "lodash"

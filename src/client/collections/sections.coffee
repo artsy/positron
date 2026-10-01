@@ -17,6 +17,9 @@ module.exports = class Sections extends Backbone.Collection
               _.map image.artists, (artist) -> artist.id
             else
               section.slugsFromHTML(image.caption, 'artist')
+        when 'artwork_grid'
+          _.map section.get('artworks'), (artwork) ->
+            _.map artwork.artists, (artist) -> artist.id
 
   mentionedArtworkSlugs: ->
     _.compact _.flatten @map (section) ->
@@ -29,6 +32,8 @@ module.exports = class Sections extends Backbone.Collection
               image.slug
             else
               section.slugsFromHTML(image.caption, 'artwork')
+        when 'artwork_grid'
+          _.map section.get('artworks'), (artwork) -> artwork.slug
 
   removeBlank: ->
     blanks = @select (section) ->

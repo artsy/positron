@@ -8,6 +8,7 @@ import { IconHeroVideo } from "@artsy/reaction/dist/Components/Publishing/Icon/I
 import { mount } from "enzyme"
 import { clone } from "lodash"
 import React from "react"
+import { IconEditArtworkGrid } from "../icon_edit_artwork_grid"
 import { SectionTool, SectionToolIcon } from "../index"
 
 describe("SectionTool", () => {
@@ -95,6 +96,7 @@ describe("SectionTool", () => {
         expect(component.find(IconEditImages).exists()).toBe(true)
         expect(component.find(IconEditVideo).exists()).toBe(true)
         expect(component.find(IconEditEmbed).exists()).toBe(false)
+        expect(component.find(IconEditArtworkGrid).exists()).toBe(false)
       })
 
       it("Renders correct icons for Standard layout", () => {
@@ -107,6 +109,7 @@ describe("SectionTool", () => {
         expect(component.find(IconEditVideo).exists()).toBe(true)
         expect(component.find(IconEditEmbed).exists()).toBe(true)
         expect(component.find(IconEditEmbed).length).toBe(2)
+        expect(component.find(IconEditArtworkGrid).exists()).toBe(true)
       })
 
       it("Renders correct icons for Feature layout", () => {
@@ -129,6 +132,7 @@ describe("SectionTool", () => {
         expect(component.find(IconEditImages).exists()).toBe(true)
         expect(component.find(IconEditVideo).exists()).toBe(false)
         expect(component.find(IconEditEmbed).exists()).toBe(true)
+        expect(component.find(IconEditArtworkGrid).exists()).toBe(false)
       })
 
       it("Renders correct icons for first tool in News layout", () => {
@@ -188,6 +192,16 @@ describe("SectionTool", () => {
           .simulate("click")
 
         expect(props.newSectionAction.mock.calls[0][0]).toBe("embed")
+        expect(props.newSectionAction.mock.calls[0][1]).toBe(expectedIndex)
+      })
+
+      it("Can create an artwork grid section", () => {
+        const expectedIndex = props.sections.length
+        const component = getWrapper()
+        component.find(SectionToolIcon).simulate("click")
+        component.find(IconEditArtworkGrid).simulate("click")
+
+        expect(props.newSectionAction.mock.calls[0][0]).toBe("artwork_grid")
         expect(props.newSectionAction.mock.calls[0][1]).toBe(expectedIndex)
       })
 

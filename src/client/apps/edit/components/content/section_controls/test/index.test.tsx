@@ -95,6 +95,16 @@ describe("Section Controls", () => {
       component.setInsideComponent()
       expect(component.state.insideComponent).toBe(false)
     })
+
+    it("returns false when disableSticky is set", () => {
+      props.disableSticky = true
+      const component = getWrapper(props)
+        .find(SectionControls)
+        .instance() as SectionControls
+
+      component.setInsideComponent()
+      expect(component.state.insideComponent).toBe(false)
+    })
   })
 
   describe("#getHeaderSize", () => {

@@ -4,7 +4,7 @@ import {
   ArticleData,
   SectionData,
   SectionLayout,
-} from "@artsy/reaction/dist/Components/Publishing/Typings"
+} from "client/typings/sections"
 import FillWidth from "@artsy/reaction/dist/Utils/fillwidth"
 import {
   onChangeHero,

@@ -5,7 +5,7 @@ import {
   StyledInput,
   Title,
 } from "@artsy/reaction/dist/Components/Input"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import styled from "styled-components"

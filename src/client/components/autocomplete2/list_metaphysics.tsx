@@ -1,5 +1,5 @@
 import { Box } from "@artsy/palette"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { clone, compact, dropRight, uniq } from "lodash"
 import React, { Component } from "react"
 import { connect } from "react-redux"

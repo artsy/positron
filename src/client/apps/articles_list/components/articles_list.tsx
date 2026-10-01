@@ -1,5 +1,5 @@
 import { Box, color, space, Spinner } from "@artsy/palette"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import { viewArticles } from "client/actions/articlesActions"
 import { Channel } from "client/typings"
 import $ from "jquery"

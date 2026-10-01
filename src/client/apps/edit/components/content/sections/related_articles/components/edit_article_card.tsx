@@ -1,7 +1,7 @@
 import { Box, color as Color, Sans } from "@artsy/palette"
 import { IconRemove } from "@artsy/reaction/dist/Components/Publishing/Icon/IconRemove"
 import { ArticleCard } from "@artsy/reaction/dist/Components/Publishing/RelatedArticles/ArticleCards/ArticleCard"
-import { ArticleData } from "@artsy/reaction/dist/Components/Publishing/Typings"
+import { ArticleData } from "client/typings/sections"
 import React, { Component } from "react"
 import styled from "styled-components"
 
