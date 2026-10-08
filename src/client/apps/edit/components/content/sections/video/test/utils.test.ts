@@ -52,6 +52,7 @@ describe("video utils", () => {
       expect(formatAspectRatio(9 / 16)).toBe("9:16")
       expect(formatAspectRatio(0.5625)).toBe("9:16")
       expect(formatAspectRatio(2.39)).toBe("2.39:1")
+      expect(formatAspectRatio(1000 / 1300)).toBe("1:1.3")
     })
   })
 

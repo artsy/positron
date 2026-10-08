@@ -83,7 +83,12 @@ export const formatAspectRatio = (ratio: number) => {
   const option = ASPECT_RATIO_OPTIONS.find(({ value }) =>
     isAspectRatio(value, ratio)
   )
-  return option ? option.label : `${Number(ratio.toFixed(2))}:1`
+  if (option) return option.label
+
+  // Keep the 1 on the short side, e.g. 2.39:1 or 1:1.3
+  return ratio >= 1
+    ? `${Number(ratio.toFixed(2))}:1`
+    : `1:${Number((1 / ratio).toFixed(2))}`
 }
 
 /**

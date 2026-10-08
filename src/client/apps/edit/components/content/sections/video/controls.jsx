@@ -1,6 +1,7 @@
 import PropTypes from "prop-types"
 import React, { Component } from "react"
 import { connect } from "react-redux"
+import styled from "styled-components"
 import { Flex } from "@artsy/palette"
 import FileInput from "client/components/file_input"
 import SectionControls from "../../section_controls/index.tsx"
@@ -27,6 +28,11 @@ export class VideoSectionControls extends Component {
     showLayouts: PropTypes.bool,
     onChange: PropTypes.func,
     onProgress: PropTypes.func,
+  }
+
+  state = {
+    customHeight: "",
+    customWidth: "",
   }
 
   componentWillUnmount = () => {
@@ -73,6 +79,7 @@ export class VideoSectionControls extends Component {
 
     if (isHero) return
     this.detectingUrl = url
+    this.setState({ customHeight: "", customWidth: "" })
 
     const aspectRatio = url ? await detectAspectRatio(url) : null
     if (this.detectingUrl === url) {
@@ -84,6 +91,59 @@ export class VideoSectionControls extends Component {
   selectAspectRatio = aspectRatio => {
     this.detectingUrl = null
     this.props.onChange("aspect_ratio", aspectRatio)
+  }
+
+  selectPreset = aspectRatio => {
+    this.setState({ customHeight: "", customWidth: "" })
+    this.selectAspectRatio(aspectRatio)
+  }
+
+  // For videos we can't detect (e.g. a vertical YouTube video that isn't a
+  // /shorts/ url), the editor can enter the video's size instead
+  onCustomSizeChange = (key, value) => {
+    this.setState({ [key]: value }, () => {
+      const width = parseFloat(this.state.customWidth)
+      const height = parseFloat(this.state.customHeight)
+
+      if (width > 0 && height > 0) {
+        this.selectAspectRatio(width / height)
+      }
+    })
+  }
+
+  renderCustomSize() {
+    const { customHeight, customWidth } = this.state
+
+    return (
+      <Flex alignItems="center" pb={1}>
+        <FormLabel color="white">Custom Size:</FormLabel>
+        <Flex pl={2} alignItems="center">
+          <SizeInput
+            className="bordered-input bordered-input-dark"
+            name="customWidth"
+            type="number"
+            min="1"
+            value={customWidth}
+            onChange={e =>
+              this.onCustomSizeChange("customWidth", e.target.value)
+            }
+            placeholder="Width"
+          />
+          <FormLabel color="white">&nbsp;×&nbsp;</FormLabel>
+          <SizeInput
+            className="bordered-input bordered-input-dark"
+            name="customHeight"
+            type="number"
+            min="1"
+            value={customHeight}
+            onChange={e =>
+              this.onCustomSizeChange("customHeight", e.target.value)
+            }
+            placeholder="Height"
+          />
+        </Flex>
+      </Flex>
+    )
   }
 
   renderAspectRatios() {
@@ -108,7 +168,7 @@ export class VideoSectionControls extends Component {
               <RadioInput
                 data-aspect-ratio={label}
                 isActive={isAspectRatio(current, value)}
-                onClick={() => this.selectAspectRatio(value)}
+                onClick={() => this.selectPreset(value)}
               />
               <FormLabel color="white">{label}</FormLabel>
             </Flex>
@@ -137,6 +197,7 @@ export class VideoSectionControls extends Component {
         />
 
         {!isHero && this.renderAspectRatios()}
+        {!isHero && this.renderCustomSize()}
 
         <FormLabel color="white">Cover Image</FormLabel>
         <FileInput
@@ -162,3 +223,11 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(VideoSectionControls)
+
+// && outranks the global .bordered-input width
+const SizeInput = styled.input`
+  && {
+    width: 90px;
+    margin: 0;
+  }
+`
