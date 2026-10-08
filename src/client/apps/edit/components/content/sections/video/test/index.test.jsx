@@ -10,6 +10,7 @@ import { ProgressBar } from "client/components/file_input/progress_bar"
 import { RemoveButton } from "client/components/remove_button"
 import { VideoSectionControls } from "../controls"
 import { SectionVideo } from "../index.jsx"
+import { Frame, VideoEmbed } from "../video_embed"
 import { Videos } from "@artsy/reaction/dist/Components/Publishing/Fixtures/Components"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 
@@ -67,6 +68,40 @@ describe("Video", () => {
     ).toMatch(video.cover_image_url)
     expect(component.find(EditSectionPlaceholder)).toHaveLength(0)
     expect(component.text()).not.toMatch("Add a video above")
+  })
+
+  it("Renders the player at 16:9 by default", () => {
+    const component = getWrapper()
+
+    expect(component.find("iframe").props().src).toMatch(
+      "https://www.youtube.com/embed/PXi7Kjlsz9A?"
+    )
+    expect(
+      component
+        .find(VideoEmbed)
+        .find(Frame)
+        .props().aspectRatio
+    ).toBe(16 / 9)
+  })
+
+  it("Renders the player at the saved aspect ratio", () => {
+    props.section.aspect_ratio = 9 / 16
+    const component = getWrapper()
+
+    expect(
+      component
+        .find(VideoEmbed)
+        .find(Frame)
+        .props().aspectRatio
+    ).toBe(9 / 16)
+  })
+
+  it("Explains unsupported video urls", () => {
+    props.section.url = "https://example.com/video.mp4"
+    const component = getWrapper()
+
+    expect(component.find("iframe").exists()).toBe(false)
+    expect(component.text()).toMatch("Only YouTube and Vimeo")
   })
 
   it("Renders the section controls when editing", () => {
