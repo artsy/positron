@@ -86,16 +86,18 @@ describe("#sanitizeLink", () => {
   })
 
   it("allows mailto and tel links used in article body text", () => {
-    expect(sanitizeLink("mailto:hello@artsy.net")).toBe("mailto:hello@artsy.net")
+    expect(sanitizeLink("mailto:hello@artsy.net")).toBe(
+      "mailto:hello@artsy.net"
+    )
     expect(sanitizeLink("tel:+15551234567")).toBe("tel:+15551234567")
   })
 })
 
 describe("#sanitizeEmbedUrl", () => {
   it("keeps valid youtube urls", () => {
-    expect(sanitizeEmbedUrl("https://www.youtube.com/watch?v=QWtsV50_-p4")).toBe(
-      "https://www.youtube.com/watch?v=QWtsV50_-p4"
-    )
+    expect(
+      sanitizeEmbedUrl("https://www.youtube.com/watch?v=QWtsV50_-p4")
+    ).toBe("https://www.youtube.com/watch?v=QWtsV50_-p4")
     expect(sanitizeEmbedUrl("https://youtu.be/QWtsV50_-p4")).toBe(
       "https://youtu.be/QWtsV50_-p4"
     )
@@ -141,6 +143,9 @@ describe("#sanitizeEmbedUrl", () => {
     expect(
       sanitizeEmbedUrl("https://youtu.be/8cLuoy4Z4wg?si=VfER6JqzBznElgAo")
     ).toBe("https://youtu.be/8cLuoy4Z4wg?si=VfER6JqzBznElgAo")
+    expect(
+      sanitizeEmbedUrl("https://www.youtube.com/shorts/-Jkcx0Q8X3I?si=abc123")
+    ).toBe("https://www.youtube.com/shorts/-Jkcx0Q8X3I?si=abc123")
   })
 
   it("preserves vimeo user/showcase and private (id/hash) urls", () => {
