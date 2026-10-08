@@ -8,6 +8,12 @@ import { Provider } from "react-redux"
 import configureStore from "redux-mock-store"
 import { SectionControls } from "../../../section_controls"
 import { VideoSectionControls } from "../controls"
+import { detectAspectRatio } from "../utils"
+
+jest.mock("../utils", () => ({
+  ...jest.requireActual("../utils"),
+  detectAspectRatio: jest.fn(),
+}))
 
 describe("Video", () => {
   let props
@@ -51,6 +57,7 @@ describe("Video", () => {
       onProgress: jest.fn(),
     }
 
+    detectAspectRatio.mockReset().mockResolvedValue(null)
     SectionControls.prototype.isScrollingOver = jest.fn().mockReturnValue(true)
     SectionControls.prototype.isScrolledPast = jest.fn().mockReturnValue(false)
   })
@@ -59,7 +66,7 @@ describe("Video", () => {
     const component = getWrapper()
 
     expect(component.find(FileInput).exists()).toBe(true)
-    expect(component.find("input").length).toBe(2)
+    expect(component.find("input").length).toBe(4)
     expect(
       component
         .find("input")
@@ -90,7 +97,7 @@ describe("Video", () => {
 
   it("Can update a video url", () => {
     const component = getWrapper()
-    const input = component.find(".bordered-input")
+    const input = component.find(".bordered-input").first()
     const validUrl = "http://hello.com"
 
     input.instance().value = validUrl
@@ -101,7 +108,7 @@ describe("Video", () => {
 
   it("Does not update video url if invalid", () => {
     const component = getWrapper()
-    const input = component.find(".bordered-input")
+    const input = component.find(".bordered-input").first()
     const value = "invalid url"
 
     input.simulate("change", { target: { value } })
@@ -111,7 +118,7 @@ describe("Video", () => {
   it("Resets the cover url if video url is empty", () => {
     const component = getWrapper()
 
-    const input = component.find(".bordered-input")
+    const input = component.find(".bordered-input").first()
     input.instance().value = ""
     input.simulate("change", { target: { value: "" } })
 
@@ -130,6 +137,159 @@ describe("Video", () => {
       .props.onUpload(src, 400, 300)
     expect(props.onChange.mock.calls[0][0]).toBe("cover_image_url")
     expect(props.onChange.mock.calls[0][1]).toBe(src)
+  })
+
+  describe("Aspect ratio", () => {
+    const flushPromises = () => new Promise(resolve => setImmediate(resolve))
+    const selectedRatio = component =>
+      component
+        .find("[data-aspect-ratio]")
+        .filterWhere(radio => radio.props().isActive)
+        .first()
+        .props()["data-aspect-ratio"]
+
+    it("Defaults to 16:9", () => {
+      expect(selectedRatio(getWrapper())).toBe("16:9")
+    })
+
+    it("Selects the saved ratio", () => {
+      props.section.aspect_ratio = 9 / 16
+      expect(selectedRatio(getWrapper())).toBe("9:16")
+    })
+
+    it("Lists a detected ratio that isn't a preset", () => {
+      props.section.aspect_ratio = 2.39
+      expect(selectedRatio(getWrapper())).toBe("2.39:1")
+
+      props.section.aspect_ratio = 1000 / 1300
+      expect(selectedRatio(getWrapper())).toBe("1:1.3")
+    })
+
+    it("Can pick a ratio", () => {
+      const component = getWrapper()
+
+      component
+        .find('[data-aspect-ratio="9:16"]')
+        .first()
+        .simulate("click")
+      expect(props.onChange).toBeCalledWith("aspect_ratio", 9 / 16)
+    })
+
+    it("Is hidden for hero sections", () => {
+      props.isHero = true
+      const component = getWrapper()
+
+      expect(component.find("[data-aspect-ratio]").exists()).toBe(false)
+    })
+
+    it("Detects the ratio when the url changes", async () => {
+      const url = "https://vimeo.com/265111898"
+      detectAspectRatio.mockResolvedValue(0.5625)
+      const component = getWrapper()
+
+      component
+        .find(".bordered-input")
+        .first()
+        .simulate("change", { target: { value: url } })
+      await flushPromises()
+
+      expect(detectAspectRatio).toBeCalledWith(url)
+      expect(props.onChange).toBeCalledWith("aspect_ratio", 0.5625)
+    })
+
+    it("Clears the ratio when the url is removed", async () => {
+      const component = getWrapper()
+
+      component
+        .find(".bordered-input")
+        .first()
+        .simulate("change", { target: { value: "" } })
+      await flushPromises()
+
+      expect(detectAspectRatio).not.toBeCalled()
+      expect(props.onChange).toBeCalledWith("aspect_ratio", null)
+    })
+
+    it("Ignores a detection that finishes after a manual pick", async () => {
+      detectAspectRatio.mockResolvedValue(0.5625)
+      const component = getWrapper()
+
+      component
+        .find(".bordered-input")
+        .first()
+        .simulate("change", { target: { value: "https://vimeo.com/1" } })
+      component
+        .find('[data-aspect-ratio="1:1"]')
+        .first()
+        .simulate("click")
+      await flushPromises()
+
+      const ratios = props.onChange.mock.calls.filter(
+        ([key]) => key === "aspect_ratio"
+      )
+      expect(ratios).toEqual([["aspect_ratio", 1]])
+    })
+
+    describe("Custom size", () => {
+      const enterSize = (component, width, height) => {
+        component
+          .find('input[name="customWidth"]')
+          .simulate("change", { target: { value: width } })
+        component
+          .find('input[name="customHeight"]')
+          .simulate("change", { target: { value: height } })
+      }
+
+      it("Sets the ratio from a width and height", () => {
+        const component = getWrapper()
+
+        enterSize(component, "1000", "1300")
+        expect(props.onChange).toBeCalledWith("aspect_ratio", 1000 / 1300)
+      })
+
+      it("Waits for both a width and a height", () => {
+        const component = getWrapper()
+
+        enterSize(component, "1000", "")
+        enterSize(component, "1000", "0")
+        expect(props.onChange).not.toBeCalled()
+      })
+
+      it("Clears when a preset is picked", () => {
+        const component = getWrapper()
+
+        enterSize(component, "1000", "1300")
+        component
+          .find('[data-aspect-ratio="16:9"]')
+          .first()
+          .simulate("click")
+
+        expect(component.find('input[name="customWidth"]').props().value).toBe(
+          ""
+        )
+        expect(props.onChange).lastCalledWith("aspect_ratio", 16 / 9)
+      })
+
+      it("Is hidden for hero sections", () => {
+        props.isHero = true
+        const component = getWrapper()
+
+        expect(component.find('input[name="customWidth"]').exists()).toBe(false)
+      })
+    })
+
+    it("Does not detect for hero sections", async () => {
+      props.isHero = true
+      const component = getWrapper()
+
+      component
+        .find(".bordered-input")
+        .first()
+        .simulate("change", { target: { value: "https://vimeo.com/1" } })
+      await flushPromises()
+
+      expect(detectAspectRatio).not.toBeCalled()
+    })
   })
 
   it("Removes the section on unmount if no url", () => {
