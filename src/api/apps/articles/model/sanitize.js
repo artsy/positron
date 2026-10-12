@@ -30,11 +30,12 @@ export const sanitizeLink = urlString => {
   if (url.href.includes("artsy.net/post/")) {
     url.href = url.href.replace("/post/", "/article/")
   }
-  if (url.href.match(/\b(artsy.net\/)\w*\b\/(posts)/gm)) { // e.g: http://artsy.net/agotoronto/posts -> http://artsy.net/agotoronto/articles
-    const regex = /\b(artsy.net\/\w*\b\/)\b(posts)/;
-    const str = url.href;
-    const subst = `$1articles`;
-    const result = str.replace(regex, subst);
+  if (url.href.match(/\b(artsy.net\/)\w*\b\/(posts)/gm)) {
+    // e.g: http://artsy.net/agotoronto/posts -> http://artsy.net/agotoronto/articles
+    const regex = /\b(artsy.net\/\w*\b\/)\b(posts)/
+    const str = url.href
+    const subst = `$1articles`
+    const result = str.replace(regex, subst)
     url.href = result
   }
   if (url.hostname.includes("artsy.net")) {
@@ -60,12 +61,15 @@ const detectEmbedProvider = hostname => {
 
 // Mirrors metaphysics extractEmbed's detectId.
 const detectEmbedId = (url, provider) => {
+  const lastSegment = url.pathname
+    .split("/")
+    .filter(Boolean)
+    .pop()
+
   if (provider === "youtube") {
-    return url.search === ""
-      ? url.pathname.split("/").pop()
-      : url.searchParams.get("v")
+    return url.searchParams.get("v") || lastSegment
   }
-  return url.pathname.split("/").pop()
+  return lastSegment
 }
 
 export const sanitizeEmbedUrl = urlString => {

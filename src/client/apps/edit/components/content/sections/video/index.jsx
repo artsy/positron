@@ -5,7 +5,7 @@ import { Paragraph } from "client/components/draft/paragraph/paragraph"
 import React, { Component } from "react"
 import { connect } from "react-redux"
 import VideoSectionControls from "./controls.jsx"
-import { Video } from "@artsy/reaction/dist/Components/Publishing/Sections/Video"
+import { VideoEmbed } from "./video_embed"
 import { ProgressBar } from "client/components/file_input/progress_bar"
 import { EditSectionPlaceholder } from "client/components/edit_section_placeholder"
 import {
@@ -68,7 +68,7 @@ export class SectionVideo extends Component {
 
     if (hasUrl) {
       return (
-        <Video layout={article.layout} section={section}>
+        <VideoEmbed layout={article.layout} section={section}>
           {editing && this.renderRemoveButton()}
           <Paragraph
             allowedStyles={["I"]}
@@ -79,7 +79,7 @@ export class SectionVideo extends Component {
             stripLinebreaks
             isReadOnly={!editing}
           />
-        </Video>
+        </VideoEmbed>
       )
     } else {
       return <EditSectionPlaceholder>Add a video above</EditSectionPlaceholder>
