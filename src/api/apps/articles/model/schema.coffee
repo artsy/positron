@@ -26,6 +26,8 @@ videoSection = (->
     url: @string().allow('', null)
     caption: @string().allow('', null)
     cover_image_url: @string().allow('', null)
+    # width / height, e.g. 0.5625 for a 9:16 portrait video; unset means 16:9
+    aspect_ratio: @number().positive().allow(null)
     layout: @string().allow('column_width', 'overflow_fillwidth', 'fillwidth', '', null)
     background_color: @string().allow('',null)
 ).call Joi
