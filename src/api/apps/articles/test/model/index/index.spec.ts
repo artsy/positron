@@ -256,26 +256,26 @@ describe("Article", () => {
             .catch(done)
       )))
 
-  // describe("#mongoFetch", () =>
-  //   it("returns results, counts, and totals", done =>
-  //     fabricate(
-  //       "articles",
-  //       { _id: new ObjectId("5086df098523e60002000018"), layout: "video" },
-  //       () =>
-  //         Article.mongoFetch(
-  //           {
-  //             count: true,
-  //             limit: 5,
-  //             offset: 0,
-  //             layout: "standard",
-  //           },
-  //           // @ts-ignore
-  //           (err, res) => {
-  //             res.results.length.should.equal(5)
-  //             res.total.should.equal(11)
-  //             res.count.should.equal(10)
-  //             done()
-  //           }
-  //         )
-  //     )))
+  describe("#mongoFetch", () =>
+    it("returns results, counts, and totals", done =>
+      fabricate(
+        "articles",
+        { _id: new ObjectId("5086df098523e60002000018"), layout: "video" },
+        () =>
+          Article.mongoFetch(
+            {
+              count: true,
+              limit: 5,
+              offset: 0,
+              layout: "standard",
+            },
+            // @ts-ignore
+            (err, res) => {
+              res.results.length.should.equal(5)
+              res.total.should.equal(11)
+              res.count.should.equal(10)
+              done()
+            }
+          )
+      )))
 })
