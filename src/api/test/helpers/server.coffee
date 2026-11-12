@@ -11,17 +11,23 @@
 app = require '../../'
 
 server = null
+baseUrl = null
 
 module.exports.startServer = (portOrDone, maybeDone) ->
   [port, done] = if typeof portOrDone is 'function'
     [0, portOrDone]
   else
     [portOrDone, maybeDone]
-  server = app.listen port, -> done?()
+  server = app.listen port, ->
+    baseUrl = "http://localhost:#{server.address().port}"
+    done?()
   server
 
+# Reads the base URL captured when the server started listening (a string, not
+# `server.address()`) so a request built after an unrelated test closed the
+# shared server can't blow up on a null address.
 module.exports.url = (path = '') ->
-  "http://localhost:#{server.address().port}#{path}"
+  "#{baseUrl}#{path}"
 
 module.exports.closeServer = (done) ->
   s = server
