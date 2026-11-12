@@ -13,6 +13,10 @@ const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const Article = rewire("../../../model/index.js")
 const search = require("../../../../../lib/search_client.coffee")
+const {
+  createArticlesIndex,
+  deleteArticlesIndex,
+} = require("../../../../../test/helpers/search.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 
 process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS = "true"
@@ -25,18 +29,13 @@ describe("Article", () => {
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
-    server = app.listen(5000, () =>
-      search.client.indices.create(
-        { index: "articles_" + process.env.NODE_ENV },
-        () => done()
-      )
-    )
+    server = app.listen(5000, () => createArticlesIndex(done))
   })
   // @ts-ignore
-  after(() => {
-    server.close()
-    search.client.indices.delete({
-      index: "articles_" + process.env.NODE_ENV,
+  after(done => {
+    deleteArticlesIndex(() => {
+      if (!server) return done()
+      server.close(() => done())
     })
   })
 

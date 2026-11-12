@@ -13,8 +13,9 @@ describe 'Show', ->
     @server = app.listen 5000, ->
       done()
 
-  after ->
-    @server.close()
+  after (done) ->
+    return done() unless @server?
+    @server.close -> done()
 
   describe '#find', ->
 

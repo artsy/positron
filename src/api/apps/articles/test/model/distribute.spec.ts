@@ -12,8 +12,9 @@ describe("Save", () => {
   })
 
   // @ts-ignore
-  after(() => {
-    server.close()
+  after(done => {
+    if (!server) return done()
+    server.close(() => done())
   })
 
   describe("#getArticleUrl", () => {

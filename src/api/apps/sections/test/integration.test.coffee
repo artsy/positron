@@ -1,6 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
-app = require '../../../'
+{ startServer, closeServer, url } = require '../../../test/helpers/server'
 request = require 'superagent'
 { ObjectId } = require 'mongodb-legacy'
 
@@ -9,11 +9,10 @@ describe 'sections endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
-          done()
+        startServer done
 
-  afterEach ->
-    @server.close()
+  afterEach (done) ->
+    closeServer done
 
   it 'gets a list of sections by query', (done) ->
     fabricate 'sections', [
@@ -22,7 +21,7 @@ describe 'sections endpoints', ->
       {}
     ], (err, sections) =>
       request
-        .get("http://localhost:5000/sections?q=Miami Basel")
+        .get(url("/sections?q=Miami Basel"))
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -37,7 +36,7 @@ describe 'sections endpoints', ->
       }
     ], (err, sections) =>
       request
-        .get("http://localhost:5000/sections/55356a9deca560a0137aa4b7")
+        .get(url("/sections/55356a9deca560a0137aa4b7"))
         .end (err, res) ->
           res.body.title.should.equal 'Cat Season in the Art World'
           done()
