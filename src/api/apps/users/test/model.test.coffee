@@ -26,8 +26,9 @@ describe 'User', ->
         @server = app.listen 5000, ->
           done()
 
-  afterEach ->
-    @server.close()
+  afterEach (done) ->
+    return done() unless @server?
+    @server.close -> done()
 
   describe '#fromAccessToken', ->
 

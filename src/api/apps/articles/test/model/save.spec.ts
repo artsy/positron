@@ -22,9 +22,10 @@ describe("Save", () => {
   })
 
   // @ts-ignore
-  after(() => {
-    server.close()
+  after(done => {
     sandbox.restore()
+    if (!server) return done()
+    server.close(() => done())
   })
 
   beforeEach(done => {

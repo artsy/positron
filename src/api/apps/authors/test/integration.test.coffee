@@ -1,6 +1,6 @@
 _ = require 'underscore'
 { db, fixtures, fabricate, empty } = require '../../../test/helpers/db'
-app = require '../../../'
+{ startServer, closeServer, url } = require '../../../test/helpers/server'
 request = require 'superagent'
 { ObjectId } = require 'mongodb-legacy'
 
@@ -9,11 +9,10 @@ describe 'authors endpoints', ->
   beforeEach (done) ->
     empty =>
       fabricate 'users', {}, (err, @user) =>
-        @server = app.listen 5000, ->
-          done()
+        startServer done
 
-  afterEach ->
-    @server.close()
+  afterEach (done) ->
+    closeServer done
 
   it 'gets a list of authors', (done) ->
     fabricate 'authors', [
@@ -22,7 +21,7 @@ describe 'authors endpoints', ->
       {}
     ], (err, authors) ->
       request
-        .get("http://localhost:5000/authors?count=true")
+        .get(url("/authors?count=true"))
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 3
@@ -36,7 +35,7 @@ describe 'authors endpoints', ->
       {}
     ], (err, authors) ->
       request
-        .get("http://localhost:5000/authors?q=Alex&count=true")
+        .get(url("/authors?q=Alex&count=true"))
         .end (err, res) ->
           res.body.total.should.equal 3
           res.body.count.should.equal 1
@@ -51,7 +50,7 @@ describe 'authors endpoints', ->
       }
     ], (err, sections) ->
       request
-        .get("http://localhost:5000/authors/55356a9deca560a0137aa4b7")
+        .get(url("/authors/55356a9deca560a0137aa4b7"))
         .end (err, res) ->
           res.body.name.should.equal 'Alex'
           done()

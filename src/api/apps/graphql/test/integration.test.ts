@@ -9,7 +9,11 @@ import {
 } from "api/apps/graphql/test/queries"
 import request from "superagent"
 const { ObjectId } = require("mongodb-legacy")
-const app = require("../../../index.coffee")
+const {
+  startServer,
+  closeServer,
+  url,
+} = require("../../../test/helpers/server.coffee")
 const {
   fabricate,
   fixtures,
@@ -17,16 +21,12 @@ const {
 } = require("../../../test/helpers/db.coffee")
 
 describe("graphql endpoint", () => {
-  let server
-
   beforeAll(done => {
-    server = app.listen(5000, () => {
-      done()
-    })
+    startServer(done)
   })
 
-  afterAll(() => {
-    server.close()
+  afterAll(done => {
+    closeServer(done)
   })
 
   beforeEach(done => {
@@ -102,7 +102,7 @@ describe("graphql endpoint", () => {
         }
       `
     request
-      .post("http://localhost:5000/graphql")
+      .post(url("/graphql"))
       .send({ query })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -118,7 +118,7 @@ describe("graphql endpoint", () => {
 
   it("can get sections in an article", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(url("/graphql"))
       .send({ query: ArticleSectionsQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -137,7 +137,7 @@ describe("graphql endpoint", () => {
 
   it("can get an artwork_grid section in an article", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(url("/graphql"))
       .send({ query: ArticleSectionsQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -157,7 +157,7 @@ describe("graphql endpoint", () => {
 
   it("can get authors in relatedArticles", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(url("/graphql"))
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -174,7 +174,7 @@ describe("graphql endpoint", () => {
 
   it("can get seriesArticle in relatedArticles", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(url("/graphql"))
       .send({ query: RelatedArticlesQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {
@@ -192,7 +192,7 @@ describe("graphql endpoint", () => {
 
   it("can get authors in relatedArticlesCanvas", done => {
     request
-      .post("http://localhost:5000/graphql")
+      .post(url("/graphql"))
       .send({ query: RelatedArticlesCanvasQuery })
       .end((err, { body: { data: { articles } } }) => {
         if (err) {

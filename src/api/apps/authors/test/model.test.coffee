@@ -76,9 +76,9 @@ describe 'Author', ->
         Author.save { id: author._id.toString(), name: 'Jane Doe'}, (err, updatedAuthor) ->
           updatedAuthor._id.toString().should.equal author._id.toString()
           updatedAuthor.name.should.equal 'Jane Doe'
-        db.collection('authors').count (err, count) ->
-          count.should.equal 11
-          done()
+          db.collection('authors').count (err, count) ->
+            count.should.equal 11
+            done()
 
     it 'automatically generates slug from name', (done) ->
       Author.save {
