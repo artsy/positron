@@ -39,9 +39,9 @@ describe 'Curations', ->
         Curations.save {id: curation._id.toString(), name: 'The Updated Title'}, (err, updatedCuration) ->
           updatedCuration._id.toString().should.equal curation._id.toString()
           updatedCuration.name.should.equal 'The Updated Title'
-        db.collection('curations').count (err, count) ->
-          count.should.equal 11
-          done()
+          db.collection('curations').count (err, count) ->
+            count.should.equal 11
+            done()
 
     it 'saves valid curation input data with additional fields', (done) ->
       Curations.save {

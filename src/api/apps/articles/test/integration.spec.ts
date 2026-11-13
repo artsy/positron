@@ -6,14 +6,15 @@ const {
   fabricate,
   empty,
 } = require("../../../test/helpers/db.coffee")
-const app = require("../../../index.coffee")
+const {
+  startServer,
+  closeServer,
+  url,
+} = require("../../../test/helpers/server.coffee")
 
 describe("articles endpoints", () => {
   let user
-  let server
   let token
-  const TEST_PORT = process.env.TEST_PORT || 5001
-  const BASE_URL = `http://localhost:${TEST_PORT}`
 
   beforeEach(done => {
     empty(() => {
@@ -23,13 +24,13 @@ describe("articles endpoints", () => {
           done(err)
         }
         user = u
-        server = app.listen(TEST_PORT, () => done())
+        startServer(done)
       })
     })
   })
 
-  afterEach(() => {
-    server.close()
+  afterEach(done => {
+    closeServer(done)
   })
 
   describe("as a non-logged in user", () =>
@@ -45,7 +46,7 @@ describe("articles endpoints", () => {
           if (err) {
             done(err)
           }
-          request.get(`${BASE_URL}/articles?count=true`).end((error, res) => {
+          request.get(url(`/articles?count=true`)).end((error, res) => {
             if (error) {
               done(error)
             }
@@ -84,7 +85,7 @@ describe("articles endpoints", () => {
 
     it("does not allow featuring", done => {
       request
-        .post(`${BASE_URL}/articles`)
+        .post(url(`/articles`))
         .set({ "X-Access-Token": normieToken })
         .send({ featured: true })
         .end((err, res) => {
@@ -110,7 +111,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get(`${BASE_URL}/articles/5086df098523e60002000012`)
+            .get(url(`/articles/5086df098523e60002000012`))
             .end((error, _res) => {
               if (error) {
                 done(error)
@@ -125,7 +126,7 @@ describe("articles endpoints", () => {
   describe("as a channel member", () => {
     it("creates articles", done => {
       request
-        .post(`${BASE_URL}/articles`)
+        .post(url(`/articles`))
         .set({ "X-Access-Token": token })
         .send({
           title: "Hi",
@@ -155,9 +156,7 @@ describe("articles endpoints", () => {
           }
           request
             .get(
-              `${BASE_URL}/articles?author_id=${
-                user._id
-              }&published=true&count=true`
+              url(`/articles?author_id=${user._id}&published=true&count=true`)
             )
             .set({ "X-Access-Token": token })
             .end((error, res) => {
@@ -218,7 +217,9 @@ describe("articles endpoints", () => {
           // Test the exact browser query with author_id (using string version of ObjectId)
           request
             .get(
-              `${BASE_URL}/articles?published=true&count=true&author_id=6878fe6c9710aed1770fc57f`
+              url(
+                `/articles?published=true&count=true&author_id=6878fe6c9710aed1770fc57f`
+              )
             )
             .set({ "X-Access-Token": token })
             .end((error, res) => {
@@ -238,7 +239,9 @@ describe("articles endpoints", () => {
               // Test with author_ids (using string version of ObjectId)
               request
                 .get(
-                  `${BASE_URL}/articles?published=true&count=true&author_ids=6878fe6c9710aed1770fc57f`
+                  url(
+                    `/articles?published=true&count=true&author_ids=6878fe6c9710aed1770fc57f`
+                  )
                 )
                 .end((error, res) => {
                   if (error) {
@@ -301,7 +304,7 @@ describe("articles endpoints", () => {
           // Test querying for authorId - should find articles where authorId is anywhere in the author_ids array
           request
             .get(
-              `${BASE_URL}/articles?author_ids=${authorId}&published=true&count=true`
+              url(`/articles?author_ids=${authorId}&published=true&count=true`)
             )
             .set({ "X-Access-Token": token })
             .end((error, res) => {
@@ -319,7 +322,9 @@ describe("articles endpoints", () => {
               // Test querying for thirdAuthorId - should find article where it's first in the array
               request
                 .get(
-                  `${BASE_URL}/articles?author_ids=${thirdAuthorId}&published=true&count=true`
+                  url(
+                    `/articles?author_ids=${thirdAuthorId}&published=true&count=true`
+                  )
                 )
                 .end((error, res) => {
                   if (error) {
@@ -353,7 +358,9 @@ describe("articles endpoints", () => {
           }
           request
             .get(
-              `${BASE_URL}/articles?channel_id=5086df098523e60002000012&published=true&count=true`
+              url(
+                `/articles?channel_id=5086df098523e60002000012&published=true&count=true`
+              )
             )
             .set({ "X-Access-Token": token })
             .end((error, res) => {
@@ -381,13 +388,11 @@ describe("articles endpoints", () => {
           if (err) {
             done(err)
           }
-          request
-            .get(`${BASE_URL}/articles?published=false`)
-            .end((error, res) => {
-              error.message.should.containEql("Unauthorized")
-              res.body.message.should.containEql("published=true")
-              done()
-            })
+          request.get(url(`/articles?published=false`)).end((error, res) => {
+            error.message.should.containEql("Unauthorized")
+            res.body.message.should.containEql("published=true")
+            done()
+          })
         }
       ))
 
@@ -412,7 +417,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get(`${BASE_URL}/articles/5086df098523e60002000012`)
+            .get(url(`/articles/5086df098523e60002000012`))
             .set({ "X-Access-Token": token })
             .end((error, res) => {
               if (error) {
@@ -443,7 +448,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .get(`${BASE_URL}/articles/5086df098523e60002000012`)
+            .get(url(`/articles/5086df098523e60002000012`))
             .set({ "X-Access-Token": token })
             .end((error, res) => {
               if (error) {
@@ -472,7 +477,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .put(`${BASE_URL}/articles/5086df098523e60002000012`)
+            .put(url(`/articles/5086df098523e60002000012`))
             .send({
               title: "Hellow Wrld",
               author_id: "5086df098523e60002000012",
@@ -506,7 +511,7 @@ describe("articles endpoints", () => {
             done(err)
           }
           request
-            .del(`${BASE_URL}/articles/5086df098523e60002000012`)
+            .del(url(`/articles/5086df098523e60002000012`))
             .set({ "X-Access-Token": token })
             .end((error, _res) => {
               if (error) {

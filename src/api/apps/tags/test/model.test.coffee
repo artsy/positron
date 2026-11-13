@@ -43,9 +43,9 @@ describe 'Tag', ->
           updatedTag._id.toString().should.equal tag._id.toString()
           updatedTag.name.should.equal 'New York'
           updatedTag.public.should.be.false()
-        db.collection('tags').count (err, count) ->
-          count.should.equal 11
-          done()
+          db.collection('tags').count (err, count) ->
+            count.should.equal 11
+            done()
 
   describe '#present', ->
 

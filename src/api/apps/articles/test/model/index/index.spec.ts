@@ -13,6 +13,10 @@ const gravity = require("@artsy/antigravity").server
 const app = require("express")()
 const Article = rewire("../../../model/index.js")
 const search = require("../../../../../lib/search_client.coffee")
+const {
+  createArticlesIndex,
+  deleteArticlesIndex,
+} = require("../../../../../test/helpers/search.coffee")
 const { amqp } = require("../../../../../lib/amqp")
 
 process.env.ENABLE_PUBLISH_RABBITMQ_EVENTS = "true"
@@ -25,18 +29,13 @@ describe("Article", () => {
   // @ts-ignore
   before(done => {
     app.use("/__gravity", gravity)
-    server = app.listen(5000, () =>
-      search.client.indices.create(
-        { index: "articles_" + process.env.NODE_ENV },
-        () => done()
-      )
-    )
+    server = app.listen(5000, () => createArticlesIndex(done))
   })
   // @ts-ignore
-  after(() => {
-    server.close()
-    search.client.indices.delete({
-      index: "articles_" + process.env.NODE_ENV,
+  after(done => {
+    deleteArticlesIndex(() => {
+      if (!server) return done()
+      server.close(() => done())
     })
   })
 
@@ -216,12 +215,10 @@ describe("Article", () => {
     }))
 
   describe("#getSuperArticleCount", () => {
-    it("returns 0 if the id is invalid", () => {
-      const id = "123"
-      Article.getSuperArticleCount(id).then(count => count.should.equal(0))
-    })
+    it("returns 0 if the id is invalid", () =>
+      Article.getSuperArticleCount("123").then(count => count.should.equal(0)))
 
-    it("returns a count of super articles that have the given id as a related article", () =>
+    it("returns a count of super articles that have the given id as a related article", done =>
       fabricate(
         "articles",
         {
@@ -230,15 +227,18 @@ describe("Article", () => {
             related_articles: [new ObjectId("5086df098523e60002000018")],
           },
         },
-        () => {
-          const id = "5086df098523e60002000018"
-          Article.getSuperArticleCount(id).then(count => count.should.equal(1))
-        }
+        () =>
+          Article.getSuperArticleCount("5086df098523e60002000018")
+            .then(count => {
+              count.should.equal(1)
+              done()
+            })
+            .catch(done)
       ))
   })
 
   describe("#promisedMongoFetch", () =>
-    it("returns results, counts, and totals", () =>
+    it("returns results, counts, and totals", done =>
       fabricate(
         "articles",
         { _id: new ObjectId("5086df098523e60002000018") },
@@ -246,38 +246,36 @@ describe("Article", () => {
           Article.promisedMongoFetch({
             count: true,
             ids: [new ObjectId("5086df098523e60002000018")],
-          }).then(({ count, total, results }) => {
-            count.should.equal(1)
-            total.should.equal(11)
-            results.length.should.equal(1)
           })
+            .then(({ count, total, results }) => {
+              count.should.equal(1)
+              total.should.equal(11)
+              results.length.should.equal(1)
+              done()
+            })
+            .catch(done)
       )))
 
-  // HACK: Blame mc-jones. It needs to be resolved, but let's get the
-  // the node upgrade done first. There seems to be a race condition with the
-  // test above this one, where one of them sometimes returns 0 results.
-  // Skipping for now.
-
-  // describe("#mongoFetch", () =>
-  //   it("returns results, counts, and totals", done =>
-  //     fabricate(
-  //       "articles",
-  //       { _id: new ObjectId("5086df098523e60002000018"), layout: "video" },
-  //       () =>
-  //         Article.mongoFetch(
-  //           {
-  //             count: true,
-  //             limit: 5,
-  //             offset: 0,
-  //             layout: "standard",
-  //           },
-  //           // @ts-ignore
-  //           (err, res) => {
-  //             res.results.length.should.equal(5)
-  //             res.total.should.equal(11)
-  //             res.count.should.equal(10)
-  //             done()
-  //           }
-  //         )
-  //     )))
+  describe("#mongoFetch", () =>
+    it("returns results, counts, and totals", done =>
+      fabricate(
+        "articles",
+        { _id: new ObjectId("5086df098523e60002000018"), layout: "video" },
+        () =>
+          Article.mongoFetch(
+            {
+              count: true,
+              limit: 5,
+              offset: 0,
+              layout: "standard",
+            },
+            // @ts-ignore
+            (err, res) => {
+              res.results.length.should.equal(5)
+              res.total.should.equal(11)
+              res.count.should.equal(10)
+              done()
+            }
+          )
+      )))
 })
