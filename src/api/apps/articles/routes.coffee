@@ -20,6 +20,20 @@ User = require '../users/model.coffee'
     return next err if err
     res.send presentCollection results
 
+# GET /api/articles/counts
+# Published article counts for many artists in one request, as { [artist_id]: count }.
+@counts = (req, res, next) ->
+  artistIds = req.query.artist_ids
+  artistIds = [artistIds] if artistIds and not _.isArray(artistIds)
+  input = {
+    artist_ids: artistIds or []
+    published: req.query.published isnt 'false'
+    in_editorial_feed: req.query.in_editorial_feed is 'true'
+  }
+  Article.countsByArtist input, (err, counts) ->
+    return next err if err
+    res.send counts
+
 # GET /api/articles/:id
 @show = (req, res, next) ->
   return res.send present req.article if req.article.published

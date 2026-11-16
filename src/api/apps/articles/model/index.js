@@ -122,6 +122,83 @@ export const find = (id, callback) => {
   db.collection("articles").findOne(query, callback)
 }
 
+// Count published articles per artist for many artists in one aggregation.
+// Returns a map of { [artist_id]: count }, zero-filled for every requested id.
+// Collapses Metaphysics' per-artist `counts.articles` fan-out into one request.
+export const countsByArtist = (input, callback) => {
+  const ids = (input.artist_ids || [])
+    .filter(id => ObjectId.isValid(id))
+    .map(id => new ObjectId(id))
+
+  if (ids.length === 0) {
+    return callback(null, {})
+  }
+
+  const match = {
+    published: input.published == null ? true : input.published,
+    $or: [
+      { primary_featured_artist_ids: { $in: ids } },
+      { featured_artist_ids: { $in: ids } },
+      { biography_for_artist_id: { $in: ids } },
+    ],
+  }
+
+  if (input.in_editorial_feed) {
+    match.layout = { $in: ["feature", "standard", "series", "video"] }
+  }
+
+  // $setUnion dedupes so an article featuring an artist in more than one field
+  // (e.g. both primary_featured and featured) counts once per artist.
+  const pipeline = [
+    { $match: match },
+    {
+      $project: {
+        matchedArtists: {
+          $setUnion: [
+            {
+              $setIntersection: [
+                { $ifNull: ["$primary_featured_artist_ids", []] },
+                ids,
+              ],
+            },
+            {
+              $setIntersection: [
+                { $ifNull: ["$featured_artist_ids", []] },
+                ids,
+              ],
+            },
+            {
+              $cond: [
+                { $in: ["$biography_for_artist_id", ids] },
+                ["$biography_for_artist_id"],
+                [],
+              ],
+            },
+          ],
+        },
+      },
+    },
+    { $unwind: "$matchedArtists" },
+    { $group: { _id: "$matchedArtists", count: { $sum: 1 } } },
+  ]
+
+  db.collection("articles")
+    .aggregate(pipeline)
+    .toArray((err, rows) => {
+      if (err) {
+        return callback(err)
+      }
+      const counts = {}
+      ids.forEach(id => {
+        counts[id.toString()] = 0
+      })
+      rows.forEach(row => {
+        counts[row._id.toString()] = row.count
+      })
+      return callback(null, counts)
+    })
+}
+
 //
 // Persistence
 //
