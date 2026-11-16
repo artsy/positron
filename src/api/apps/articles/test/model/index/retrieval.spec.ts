@@ -913,7 +913,7 @@ describe("Article Retrieval", () => {
         if (err) {
           done(err)
         }
-        Object.keys(counts).length.should.equal(0)
+        counts.should.eql({})
         done()
       }))
   })
