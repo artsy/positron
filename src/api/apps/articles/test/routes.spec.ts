@@ -113,6 +113,20 @@ describe("routes", () => {
       routes.counts(req, res, next)
       Article.countsByArtist.args[0][0].in_editorial_feed.should.equal(true)
     })
+
+    it("passes biography through", () => {
+      req.query.artist_ids = ["a"]
+      req.query.biography = "true"
+      routes.counts(req, res, next)
+      Article.countsByArtist.args[0][0].biography.should.equal(true)
+    })
+
+    it("rejects more than the max number of artist_ids", () => {
+      req.query.artist_ids = Array.from({ length: 501 }, (_x, i) => String(i))
+      routes.counts(req, res, next)
+      res.sendError.args[0][0].should.equal(400)
+      Article.countsByArtist.called.should.equal(false)
+    })
   })
 
   describe("#show", () => {

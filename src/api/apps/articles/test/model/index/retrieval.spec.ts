@@ -916,5 +916,26 @@ describe("Article Retrieval", () => {
         counts.should.eql({})
         done()
       }))
+
+    it("counts only biography articles in biography mode", done =>
+      fabricate(
+        "articles",
+        [
+          { title: "Bio", biography_for_artist_id: new ObjectId(artistA) },
+          { title: "Featured", featured_artist_ids: [new ObjectId(artistA)] },
+        ],
+        () =>
+          Article.countsByArtist(
+            { artist_ids: [artistA], biography: true },
+            (err, counts) => {
+              if (err) {
+                done(err)
+              }
+              // only the biography article, not the featured one
+              counts[artistA].should.equal(1)
+              done()
+            }
+          )
+      ))
   })
 })

@@ -22,13 +22,19 @@ User = require '../users/model.coffee'
 
 # GET /api/articles/counts
 # Published article counts for many artists in one request, as { [artist_id]: count }.
+MAX_ARTIST_IDS = 500
+
 @counts = (req, res, next) ->
   artistIds = req.query.artist_ids
   artistIds = [artistIds] if artistIds and not _.isArray(artistIds)
+  artistIds or= []
+  if artistIds.length > MAX_ARTIST_IDS
+    return res.sendError 400, "Cannot request more than #{MAX_ARTIST_IDS} artist_ids."
   input = {
-    artist_ids: artistIds or []
+    artist_ids: artistIds
     published: req.query.published isnt 'false'
     in_editorial_feed: req.query.in_editorial_feed is 'true'
+    biography: req.query.biography is 'true'
   }
   Article.countsByArtist input, (err, counts) ->
     return next err if err

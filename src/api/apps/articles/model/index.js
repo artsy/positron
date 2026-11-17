@@ -40,7 +40,7 @@ export const where = (input, callback) => {
 }
 
 export const mongoFetch = (input, callback) => {
-  const { query, limit, offset, sort, count } = toQuery(input)
+  const { query, limit, offset, sort, count, total } = toQuery(input)
   const cursor = db
     .collection("articles")
     .find(query)
@@ -51,7 +51,9 @@ export const mongoFetch = (input, callback) => {
     [
       cb => cursor.toArray(cb),
       cb => {
-        if (!count) {
+        // `total` (unfiltered full-collection count) is opt-in: it's an
+        // expensive scan most callers discard. Skip it unless total=true.
+        if (!count || !total) {
           return cb()
         }
         return db.collection("articles").countDocuments(cb)
@@ -78,7 +80,7 @@ export const mongoFetch = (input, callback) => {
 }
 
 export const promisedMongoFetch = input => {
-  const { query, limit, offset, sort, count } = toQuery(input)
+  const { query, limit, offset, sort, count, total } = toQuery(input)
   const cursor = db
     .collection("articles")
     .find(query)
@@ -90,7 +92,9 @@ export const promisedMongoFetch = input => {
       [
         cb => cursor.toArray(cb),
         cb => {
-          if (!count) {
+          // `total` (unfiltered full-collection count) is opt-in: it's an
+          // expensive scan most callers discard. Skip it unless total=true.
+          if (!count || !total) {
             return cb()
           }
           return db.collection("articles").countDocuments(cb)
@@ -134,53 +138,66 @@ export const countsByArtist = (input, callback) => {
     return callback(null, {})
   }
 
-  const match = {
-    published: input.published == null ? true : input.published,
-    $or: [
-      { primary_featured_artist_ids: { $in: ids } },
-      { featured_artist_ids: { $in: ids } },
-      { biography_for_artist_id: { $in: ids } },
-    ],
-  }
+  const published = input.published == null ? true : input.published
 
-  if (input.in_editorial_feed) {
-    match.layout = { $in: ["feature", "standard", "series", "video"] }
-  }
+  let pipeline
+  if (input.biography) {
+    // Biography mode: count biography articles per artist (the
+    // `biography_for_artist_id` field only), independent of the featured
+    // fields. Backs Metaphysics' `Artist.statuses.biography`.
+    pipeline = [
+      { $match: { published, biography_for_artist_id: { $in: ids } } },
+      { $group: { _id: "$biography_for_artist_id", count: { $sum: 1 } } },
+    ]
+  } else {
+    const match = {
+      published,
+      $or: [
+        { primary_featured_artist_ids: { $in: ids } },
+        { featured_artist_ids: { $in: ids } },
+        { biography_for_artist_id: { $in: ids } },
+      ],
+    }
 
-  // $setUnion dedupes so an article featuring an artist in more than one field
-  // (e.g. both primary_featured and featured) counts once per artist.
-  const pipeline = [
-    { $match: match },
-    {
-      $project: {
-        matchedArtists: {
-          $setUnion: [
-            {
-              $setIntersection: [
-                { $ifNull: ["$primary_featured_artist_ids", []] },
-                ids,
-              ],
-            },
-            {
-              $setIntersection: [
-                { $ifNull: ["$featured_artist_ids", []] },
-                ids,
-              ],
-            },
-            {
-              $cond: [
-                { $in: ["$biography_for_artist_id", ids] },
-                ["$biography_for_artist_id"],
-                [],
-              ],
-            },
-          ],
+    if (input.in_editorial_feed) {
+      match.layout = { $in: ["feature", "standard", "series", "video"] }
+    }
+
+    // $setUnion dedupes so an article featuring an artist in more than one field
+    // (e.g. both primary_featured and featured) counts once per artist.
+    pipeline = [
+      { $match: match },
+      {
+        $project: {
+          matchedArtists: {
+            $setUnion: [
+              {
+                $setIntersection: [
+                  { $ifNull: ["$primary_featured_artist_ids", []] },
+                  ids,
+                ],
+              },
+              {
+                $setIntersection: [
+                  { $ifNull: ["$featured_artist_ids", []] },
+                  ids,
+                ],
+              },
+              {
+                $cond: [
+                  { $in: ["$biography_for_artist_id", ids] },
+                  ["$biography_for_artist_id"],
+                  [],
+                ],
+              },
+            ],
+          },
         },
       },
-    },
-    { $unwind: "$matchedArtists" },
-    { $group: { _id: "$matchedArtists", count: { $sum: 1 } } },
-  ]
+      { $unwind: "$matchedArtists" },
+      { $group: { _id: "$matchedArtists", count: { $sum: 1 } } },
+    ]
+  }
 
   db.collection("articles")
     .aggregate(pipeline)

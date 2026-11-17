@@ -2,7 +2,7 @@ import { each, omit } from "lodash"
 import { ObjectId } from "mongodb-legacy"
 
 export const toQuery = input => {
-  const { limit, offset, sort, count } = input
+  const { limit, offset, sort, count, total } = input
   const query = omit(
     input,
     "limit",
@@ -35,7 +35,8 @@ export const toQuery = input => {
     "access_token",
     "omit",
     "in_editorial_feed",
-    "published_since"
+    "published_since",
+    "total"
   )
   if (input.fair_id) {
     query.fair_ids = input.fair_id
@@ -216,6 +217,7 @@ export const toQuery = input => {
     offset,
     sort: sortParamToQuery(sort),
     count,
+    total,
   }
 }
 
