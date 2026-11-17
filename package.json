@@ -271,7 +271,7 @@
   },
   "lint-staged": {
     "*.@(ts|tsx|js|jsx)": [
-      "yarn lint --fix",
+      "eslint --fix --cache --cache-location .cache/eslint/",
       "yarn prettier-write",
       "git add"
     ],
