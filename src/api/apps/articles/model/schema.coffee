@@ -311,7 +311,6 @@ ArtworkGridSection = (->
   super_article_for: @string().objectid()
   tags: @array().items(@string())
   tier: @number()
-  total: @boolean().default(false)
   tracking_tags: @array().items(@string())
   vertical: @string().objectid()
   weekly_email: @boolean()

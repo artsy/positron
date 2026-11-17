@@ -40,7 +40,7 @@ export const where = (input, callback) => {
 }
 
 export const mongoFetch = (input, callback) => {
-  const { query, limit, offset, sort, count, total } = toQuery(input)
+  const { query, limit, offset, sort, count } = toQuery(input)
   const cursor = db
     .collection("articles")
     .find(query)
@@ -51,9 +51,7 @@ export const mongoFetch = (input, callback) => {
     [
       cb => cursor.toArray(cb),
       cb => {
-        // `total` (unfiltered full-collection count) is opt-in: it's an
-        // expensive scan most callers discard. Skip it unless total=true.
-        if (!count || !total) {
+        if (!count) {
           return cb()
         }
         return db.collection("articles").countDocuments(cb)
@@ -80,7 +78,7 @@ export const mongoFetch = (input, callback) => {
 }
 
 export const promisedMongoFetch = input => {
-  const { query, limit, offset, sort, count, total } = toQuery(input)
+  const { query, limit, offset, sort, count } = toQuery(input)
   const cursor = db
     .collection("articles")
     .find(query)
@@ -92,9 +90,7 @@ export const promisedMongoFetch = input => {
       [
         cb => cursor.toArray(cb),
         cb => {
-          // `total` (unfiltered full-collection count) is opt-in: it's an
-          // expensive scan most callers discard. Skip it unless total=true.
-          if (!count || !total) {
+          if (!count) {
             return cb()
           }
           return db.collection("articles").countDocuments(cb)
