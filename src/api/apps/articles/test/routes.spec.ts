@@ -16,7 +16,7 @@ describe("routes", () => {
     Article = routes.__get__("Article")
     User = routes.__get__("User")
     for (const method of Array.from(
-      (methods = ["where", "save", "destroy", "find"])
+      (methods = ["where", "save", "destroy", "find", "countsByArtist"])
     )) {
       sinon.stub(Article, method)
     }
@@ -82,6 +82,50 @@ describe("routes", () => {
         results: [fixtures().articles],
       })
       res.send.args[0][0].results[0].title.should.containEql("Top Ten")
+    })
+  })
+
+  describe("#counts", () => {
+    it("sends a map of per-artist article counts", () => {
+      req.query.artist_ids = ["a", "b"]
+      routes.counts(req, res, next)
+      Article.countsByArtist.args[0][0].artist_ids.should.eql(["a", "b"])
+      Article.countsByArtist.args[0][1](null, { a: 3, b: 0 })
+      res.send.args[0][0].should.eql({ a: 3, b: 0 })
+    })
+
+    it("wraps a single artist_id into an array", () => {
+      req.query.artist_ids = "a"
+      routes.counts(req, res, next)
+      Article.countsByArtist.args[0][0].artist_ids.should.eql(["a"])
+    })
+
+    it("defaults to published and non-editorial", () => {
+      req.query.artist_ids = ["a"]
+      routes.counts(req, res, next)
+      Article.countsByArtist.args[0][0].published.should.equal(true)
+      Article.countsByArtist.args[0][0].in_editorial_feed.should.equal(false)
+    })
+
+    it("passes in_editorial_feed through", () => {
+      req.query.artist_ids = ["a"]
+      req.query.in_editorial_feed = "true"
+      routes.counts(req, res, next)
+      Article.countsByArtist.args[0][0].in_editorial_feed.should.equal(true)
+    })
+
+    it("passes biography through", () => {
+      req.query.artist_ids = ["a"]
+      req.query.biography = "true"
+      routes.counts(req, res, next)
+      Article.countsByArtist.args[0][0].biography.should.equal(true)
+    })
+
+    it("rejects more than the max number of artist_ids", () => {
+      req.query.artist_ids = Array.from({ length: 501 }, (_x, i) => String(i))
+      routes.counts(req, res, next)
+      res.sendError.args[0][0].should.equal(400)
+      Article.countsByArtist.called.should.equal(false)
     })
   })
 

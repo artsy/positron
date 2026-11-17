@@ -815,4 +815,127 @@ describe("Article Retrieval", () => {
           })
       ))
   })
+
+  describe("#countsByArtist", () => {
+    const artistA = "4dc98d149a96300001003033"
+    const artistB = "4dc98d149a96300001003044"
+
+    it("returns published article counts per artist, deduping across fields", done =>
+      fabricate(
+        "articles",
+        [
+          { title: "Foo", featured_artist_ids: [new ObjectId(artistA)] },
+          {
+            title: "Bar",
+            primary_featured_artist_ids: [new ObjectId(artistA)],
+          },
+          {
+            title: "Baz",
+            featured_artist_ids: [new ObjectId(artistA)],
+            primary_featured_artist_ids: [new ObjectId(artistA)],
+          },
+          { title: "Bio", biography_for_artist_id: new ObjectId(artistB) },
+        ],
+        () =>
+          Article.countsByArtist(
+            { artist_ids: [artistA, artistB] },
+            (err, counts) => {
+              if (err) {
+                done(err)
+              }
+              counts[artistA].should.equal(3)
+              counts[artistB].should.equal(1)
+              done()
+            }
+          )
+      ))
+
+    it("zero-fills artists with no articles", done =>
+      Article.countsByArtist({ artist_ids: [artistA] }, (err, counts) => {
+        if (err) {
+          done(err)
+        }
+        counts[artistA].should.equal(0)
+        done()
+      }))
+
+    it("excludes unpublished articles", done =>
+      fabricate(
+        "articles",
+        [
+          { title: "Pub", featured_artist_ids: [new ObjectId(artistA)] },
+          {
+            title: "Unpub",
+            published: false,
+            featured_artist_ids: [new ObjectId(artistA)],
+          },
+        ],
+        () =>
+          Article.countsByArtist({ artist_ids: [artistA] }, (err, counts) => {
+            if (err) {
+              done(err)
+            }
+            counts[artistA].should.equal(1)
+            done()
+          })
+      ))
+
+    it("filters to editorial feed layouts when in_editorial_feed is set", done =>
+      fabricate(
+        "articles",
+        [
+          {
+            title: "Feature",
+            layout: "feature",
+            featured_artist_ids: [new ObjectId(artistA)],
+          },
+          {
+            title: "Classic",
+            layout: "classic",
+            featured_artist_ids: [new ObjectId(artistA)],
+          },
+        ],
+        () =>
+          Article.countsByArtist(
+            { artist_ids: [artistA], in_editorial_feed: true },
+            (err, counts) => {
+              if (err) {
+                done(err)
+              }
+              counts[artistA].should.equal(1)
+              done()
+            }
+          )
+      ))
+
+    it("returns an empty map when no artist_ids are given", done =>
+      Article.countsByArtist({ artist_ids: [] }, (err, counts) => {
+        if (err) {
+          done(err)
+        }
+        counts.should.eql({})
+        done()
+      }))
+
+    it("counts only biography articles in biography mode", done =>
+      fabricate(
+        "articles",
+        [
+          { title: "Bio", biography_for_artist_id: new ObjectId(artistA) },
+          { title: "Featured", featured_artist_ids: [new ObjectId(artistA)] },
+        ],
+        () =>
+          Article.countsByArtist(
+            { artist_ids: [artistA], biography: true },
+            (err, counts) => {
+              if (err) {
+                done(err)
+              }
+              // only the biography article, not the featured one
+              counts[artistA].should.equal(1)
+              done()
+            }
+          )
+      ))
+  })
 })
